@@ -33,8 +33,8 @@
             "@pages/*": [
                 "src/pages/*"
             ],
-            "@api/*": [
-                "src/api/*"
+            "@services/*": [
+                "src/services/*"
             ],
             "@types/*": [
                 "src/types/*"
@@ -42,8 +42,14 @@
             "@utils/*": [
                 "src/utils/*"
             ],
+            "@utils": [
+                "src/utils/index.ts"
+            ],
             "@hooks/*": [
                 "src/hooks/*"
+            ],
+            "@contexts/*": [
+                "src/contexts/*"
             ],
             "@assets/*": [
                 "src/assets/*"
