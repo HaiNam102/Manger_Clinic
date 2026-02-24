@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -26,6 +27,33 @@ public class GlobalExceptionHandler {
         apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
 
         return ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    ResponseEntity<ApiResponse<?>> handlingHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
+        log.error("JSON Deserialization Error: ", exception);
+        ErrorCode errorCode = ErrorCode.INVALID_KEY;
+
+        String message = "Invalid data format";
+        if (exception.getCause() != null) {
+            String causeMessage = exception.getCause().getMessage();
+            if (causeMessage != null && causeMessage.contains("LocalDate")) {
+                message = "Invalid date format. Expected yyyy-MM-dd";
+            } else if (causeMessage != null && causeMessage.contains("UUID")) {
+                message = "Invalid UUID format";
+            } else if (causeMessage != null) {
+                // Try to extract field name if available in the message
+                message = "Invalid data: "
+                        + (causeMessage.length() > 100 ? causeMessage.substring(0, 100) + "..." : causeMessage);
+            }
+        }
+
+        ApiResponse<?> apiResponse = ApiResponse.builder()
+                .code(errorCode.getCode())
+                .message(message)
+                .build();
+
+        return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }
 
     @ExceptionHandler(value = AppException.class)
@@ -56,18 +84,24 @@ public class GlobalExceptionHandler {
 
         ErrorCode errorCode = ErrorCode.INVALID_KEY;
         Map<String, Object> attributes = null;
+        String message = enumKey; // Default to the actual validation message
+
         try {
             errorCode = ErrorCode.valueOf(enumKey);
 
             var constraintViolation = exception.getBindingResult().getAllErrors().get(0)
                     .unwrap(jakarta.validation.ConstraintViolation.class);
 
-            attributes = constraintViolation.getConstraintDescriptor().getAttributes();
+            @SuppressWarnings("unchecked")
+            var castAttributes = (Map<String, Object>) (Map<?, ?>) constraintViolation.getConstraintDescriptor()
+                    .getAttributes();
+            attributes = castAttributes;
 
             log.info(attributes.toString());
+            message = errorCode.getMessage();
 
         } catch (IllegalArgumentException e) {
-
+            // Keep the original enumKey as message if it's not a valid ErrorCode
         }
 
         ApiResponse<?> apiResponse = new ApiResponse<>();
@@ -75,8 +109,8 @@ public class GlobalExceptionHandler {
         apiResponse.setCode(errorCode.getCode());
         apiResponse.setMessage(
                 Objects.nonNull(attributes)
-                        ? mapAttribute(errorCode.getMessage(), attributes)
-                        : errorCode.getMessage());
+                        ? mapAttribute(message, attributes)
+                        : message);
 
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }

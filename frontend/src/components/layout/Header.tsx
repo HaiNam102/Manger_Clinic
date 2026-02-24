@@ -1,7 +1,10 @@
 import { Menu, Bell } from 'lucide-react';
 import { Avatar } from '@components/ui/Avatar';
+import { useAuth } from '@contexts/AuthContext';
 
 export const Header = ({ onMenuClick }: { onMenuClick?: () => void }) => {
+    const { user } = useAuth();
+
     return (
         <header className="sticky top-0 z-40 w-full border-b border-dark-700 bg-dark-950/80 backdrop-blur-md">
             <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -32,10 +35,10 @@ export const Header = ({ onMenuClick }: { onMenuClick?: () => void }) => {
 
                     <div className="flex items-center gap-3 pl-2">
                         <div className="hidden text-right md:block">
-                            <p className="text-sm font-medium text-dark-50">Dr. Nguyen Van A</p>
-                            <p className="text-xs text-dark-400">Doctor</p>
+                            <p className="text-sm font-medium text-dark-50">{user?.fullName || 'User'}</p>
+                            <p className="text-xs text-dark-400 capitalize">{user?.roles?.[0]?.toLowerCase() || ''}</p>
                         </div>
-                        <Avatar fallback="NV" size="sm" className="cursor-pointer" />
+                        <Avatar fallback={user?.fullName?.charAt(0) || 'U'} size="sm" className="cursor-pointer" />
                     </div>
                 </div>
             </div>

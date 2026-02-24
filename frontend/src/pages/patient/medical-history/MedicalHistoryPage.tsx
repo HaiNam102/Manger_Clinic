@@ -1,36 +1,61 @@
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, FileText } from 'lucide-react';
+import { Search, FileText, Loader2 } from 'lucide-react';
 import { Card, CardHeader, CardContent } from '@components/ui/Card';
 import { Input } from '@components/ui/Input';
 import { Table, Column } from '@components/ui/Table';
 import { Button } from '@components/ui/Button';
-
-interface MedicalRecord {
-    id: string;
-    date: string;
-    doctorName: string;
-    specialtyName: string;
-    diagnosis: string;
-}
-
-const mockRecords: MedicalRecord[] = [
-    { id: '101', date: 'Feb 10, 2026', doctorName: 'Dr. Nguyen Van A', specialtyName: 'Cardiology', diagnosis: 'Mild Hypertension' },
-    { id: '102', date: 'Jan 28, 2026', doctorName: 'Dr. Tran Thi B', specialtyName: 'General Medicine', diagnosis: 'Seasonal Flu' },
-    { id: '103', date: 'Dec 15, 2025', doctorName: 'Dr. Le Van C', specialtyName: 'Dermatology', diagnosis: 'Skin Allergy' },
-];
+import { useAuth } from '@contexts/AuthContext';
+import { getMyRecords } from '@services/patientService';
+import type { MedicalRecordResponse } from '@/types';
 
 const MedicalHistoryPage = () => {
-    const columns: Column<MedicalRecord>[] = [
-        { header: 'Date', accessor: 'date' },
-        { header: 'Doctor', accessor: 'doctorName' },
-        { header: 'Specialty', accessor: 'specialtyName' },
-        { header: 'Diagnosis', accessor: 'diagnosis' },
+    const { user } = useAuth();
+    const [records, setRecords] = useState<MedicalRecordResponse[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
+
+    useEffect(() => {
+        if (!user?.id) return;
+        const load = async () => {
+            try {
+                setIsLoading(true);
+                const data = await getMyRecords();
+                setRecords(data);
+            } catch (error) {
+                console.error('Failed to load medical records:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        load();
+    }, [user?.id]);
+
+    const filteredRecords = useMemo(() => {
+        if (!searchQuery.trim()) return records;
+        const q = searchQuery.toLowerCase();
+        return records.filter(r =>
+            r.doctorName.toLowerCase().includes(q) ||
+            r.diagnosis.toLowerCase().includes(q) ||
+            r.symptoms?.toLowerCase().includes(q)
+        );
+    }, [records, searchQuery]);
+
+    const columns: Column<MedicalRecordResponse>[] = [
         {
-            header: 'Action',
+            header: 'Ngày khám',
+            accessor: (item) => new Date(item.createdAt).toLocaleDateString('vi-VN', {
+                year: 'numeric', month: 'short', day: 'numeric',
+            }),
+        },
+        { header: 'Bác sĩ', accessor: 'doctorName' },
+        { header: 'Chẩn đoán', accessor: 'diagnosis' },
+        {
+            header: 'Hành động',
             accessor: (item) => (
                 <Link to={`/medical-history/${item.id}`}>
                     <Button variant="ghost" size="sm" className="text-primary-500">
-                        View Details
+                        Xem chi tiết
                     </Button>
                 </Link>
             )
@@ -40,40 +65,54 @@ const MedicalHistoryPage = () => {
     return (
         <div className="space-y-8 animate-fade-in">
             <section>
-                <h1 className="text-3xl font-bold text-dark-50 tracking-tight">Medical History</h1>
+                <h1 className="text-3xl font-bold text-dark-50 tracking-tight">Lịch sử khám bệnh</h1>
                 <p className="text-dark-400 mt-2 text-lg">
-                    Keep track of your past consultations, diagnoses, and prescriptions.
+                    Theo dõi các buổi khám, chẩn đoán và đơn thuốc của bạn.
                 </p>
             </section>
 
             <Card>
                 <CardHeader
-                    title="Search History"
-                    description="Filter your records by doctor, date, or diagnosis"
+                    title="Tìm kiếm lịch sử"
+                    description="Lọc hồ sơ theo bác sĩ, ngày hoặc chẩn đoán"
                 />
                 <CardContent>
                     <div className="max-w-md relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-500" size={20} />
-                        <Input placeholder="Search records..." className="pl-10" />
+                        <Input
+                            placeholder="Tìm kiếm hồ sơ..."
+                            className="pl-10"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
                     </div>
                 </CardContent>
             </Card>
 
-            <Card className="overflow-hidden">
-                <Table
-                    columns={columns}
-                    data={mockRecords}
-                    keyExtractor={(item) => item.id}
-                />
-                {mockRecords.length === 0 && (
-                    <div className="p-20 text-center">
-                        <div className="mx-auto h-20 w-20 bg-dark-800 rounded-full flex items-center justify-center text-dark-400 mb-4">
-                            <FileText size={40} />
+            {isLoading ? (
+                <div className="flex items-center justify-center py-20">
+                    <Loader2 size={32} className="animate-spin text-primary-500" />
+                </div>
+            ) : (
+                <Card className="overflow-hidden">
+                    {filteredRecords.length > 0 ? (
+                        <Table
+                            columns={columns}
+                            data={filteredRecords}
+                            keyExtractor={(item) => item.id}
+                        />
+                    ) : (
+                        <div className="p-20 text-center">
+                            <div className="mx-auto h-20 w-20 bg-dark-800 rounded-full flex items-center justify-center text-dark-400 mb-4">
+                                <FileText size={40} />
+                            </div>
+                            <p className="text-dark-400">
+                                {searchQuery ? 'Không tìm thấy hồ sơ phù hợp.' : "Bạn chưa có bệnh án nào."}
+                            </p>
                         </div>
-                        <p className="text-dark-400">You don't have any medical records yet.</p>
-                    </div>
-                )}
-            </Card>
+                    )}
+                </Card>
+            )}
         </div>
     );
 };

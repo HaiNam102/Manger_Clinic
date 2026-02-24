@@ -2,25 +2,25 @@
 -- V7__seed_test_data.sql
 -- Seed sample data for development and testing
 -- Password for all accounts: Password123
--- BCrypt hash (strength 12): $2a$12$D4n09EBRWthp4.yF5.M9E.t7o.5Mv0YV3pBv.l3K.A7H/1h2K.S8m
+-- BCrypt hash (strength 12): $2b$12$6mT1XNqMrJbHnL0OoOv54OG5D34b2M84h3p0TB6DZvpphfFGNbu.q
 -- =====================================================
 
 -- 1. Insert Users (Admin, Doctors, Receptionist, Patients)
 INSERT INTO users (id, email, password_hash, full_name, phone, role_id, is_active, email_verified) VALUES
     -- Admin
-    (gen_random_uuid(), 'admin@clinicpro.com', '$2a$12$D4n09EBRWthp4.yF5.M9E.t7o.5Mv0YV3pBv.l3K.A7H/1h2K.S8m', 'Hệ thống Admin', '0901234567', (SELECT id FROM roles WHERE name = 'ADMIN'), true, true),
+    (gen_random_uuid(), 'admin@clinicpro.com', '$2b$12$6mT1XNqMrJbHnL0OoOv54OG5D34b2M84h3p0TB6DZvpphfFGNbu.q', 'Hệ thống Admin', '0901234567', (SELECT id FROM roles WHERE name = 'ADMIN'), true, true),
     
     -- Doctors
-    (gen_random_uuid(), 'doctor.hung@clinicpro.com', '$2a$12$D4n09EBRWthp4.yF5.M9E.t7o.5Mv0YV3pBv.l3K.A7H/1h2K.S8m', 'BS. Nguyễn Văn Hùng', '0912345678', (SELECT id FROM roles WHERE name = 'DOCTOR'), true, true),
-    (gen_random_uuid(), 'doctor.lan@clinicpro.com', '$2a$12$D4n09EBRWthp4.yF5.M9E.t7o.5Mv0YV3pBv.l3K.A7H/1h2K.S8m', 'BS. Trần Thị Lan', '0923456789', (SELECT id FROM roles WHERE name = 'DOCTOR'), true, true),
+    (gen_random_uuid(), 'doctor.hung@clinicpro.com', '$2b$12$6mT1XNqMrJbHnL0OoOv54OG5D34b2M84h3p0TB6DZvpphfFGNbu.q', 'BS. Nguyễn Văn Hùng', '0912345678', (SELECT id FROM roles WHERE name = 'DOCTOR'), true, true),
+    (gen_random_uuid(), 'doctor.lan@clinicpro.com', '$2b$12$6mT1XNqMrJbHnL0OoOv54OG5D34b2M84h3p0TB6DZvpphfFGNbu.q', 'BS. Trần Thị Lan', '0923456789', (SELECT id FROM roles WHERE name = 'DOCTOR'), true, true),
     
     -- Receptionist
-    (gen_random_uuid(), 'nhanvien.mai@clinicpro.com', '$2a$12$D4n09EBRWthp4.yF5.M9E.t7o.5Mv0YV3pBv.l3K.A7H/1h2K.S8m', 'Nguyễn Thị Mai', '0934567890', (SELECT id FROM roles WHERE name = 'RECEPTIONIST'), true, true),
+    (gen_random_uuid(), 'nhanvien.mai@clinicpro.com', '$2b$12$6mT1XNqMrJbHnL0OoOv54OG5D34b2M84h3p0TB6DZvpphfFGNbu.q', 'Nguyễn Thị Mai', '0934567890', (SELECT id FROM roles WHERE name = 'RECEPTIONIST'), true, true),
     
     -- Patients
-    (gen_random_uuid(), 'benhnhan.tuan@gmail.com', '$2a$12$D4n09EBRWthp4.yF5.M9E.t7o.5Mv0YV3pBv.l3K.A7H/1h2K.S8m', 'Lê Anh Tuấn', '0945678901', (SELECT id FROM roles WHERE name = 'PATIENT'), true, true),
-    (gen_random_uuid(), 'benhnhan.hoa@gmail.com', '$2a$12$D4n09EBRWthp4.yF5.M9E.t7o.5Mv0YV3pBv.l3K.A7H/1h2K.S8m', 'Phạm Minh Hoa', '0956789012', (SELECT id FROM roles WHERE name = 'PATIENT'), true, true),
-    (gen_random_uuid(), 'benhnhan.an@gmail.com', '$2a$12$D4n09EBRWthp4.yF5.M9E.t7o.5Mv0YV3pBv.l3K.A7H/1h2K.S8m', 'Đặng Văn An', '0967890123', (SELECT id FROM roles WHERE name = 'PATIENT'), true, true);
+    (gen_random_uuid(), 'benhnhan.tuan@gmail.com', '$2b$12$6mT1XNqMrJbHnL0OoOv54OG5D34b2M84h3p0TB6DZvpphfFGNbu.q', 'Lê Anh Tuấn', '0945678901', (SELECT id FROM roles WHERE name = 'PATIENT'), true, true),
+    (gen_random_uuid(), 'benhnhan.hoa@gmail.com', '$2b$12$6mT1XNqMrJbHnL0OoOv54OG5D34b2M84h3p0TB6DZvpphfFGNbu.q', 'Phạm Minh Hoa', '0956789012', (SELECT id FROM roles WHERE name = 'PATIENT'), true, true),
+    (gen_random_uuid(), 'benhnhan.an@gmail.com', '$2b$12$6mT1XNqMrJbHnL0OoOv54OG5D34b2M84h3p0TB6DZvpphfFGNbu.q', 'Đặng Văn An', '0967890123', (SELECT id FROM roles WHERE name = 'PATIENT'), true, true);
 
 -- 2. Link Doctors to Specialties and create Doctor profiles
 INSERT INTO doctors (id, user_id, specialty_id, experience_years, consultation_fee, bio) VALUES

@@ -18,4 +18,6 @@ public class UserResponse {
     String avatarUrl;
     String role;
     boolean isActive;
+    UUID doctorId;
+    UUID patientId;
 }

@@ -1,25 +1,40 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Stethoscope, Heart, Eye, Brain, Baby, Bone, Activity, Search } from 'lucide-react';
+import { Stethoscope, Heart, Eye, Brain, Baby, Bone, Activity, Search, Loader2, LucideIcon, Ear, Smile, Pill } from 'lucide-react';
 import { SpecialtyCard } from '@components/appointments/SpecialtyCard';
 import { Input } from '@components/ui/Input';
+import { getAllSpecialties } from '@services/patientService';
+import type { SpecialtyResponse } from '@/types';
 
-const specialties = [
-    { id: '1', name: 'General Medicine', description: 'Comprehensive primary care for adults and children.', icon: Stethoscope },
-    { id: '2', name: 'Cardiology', description: 'Advanced heart care and cardiovascular diagnosis.', icon: Heart },
-    { id: '3', name: 'Ophthalmology', description: 'Complete eye exams and vision health services.', icon: Eye },
-    { id: '4', name: 'Neurology', description: 'Expert care for brain and nervous system disorders.', icon: Brain },
-    { id: '5', name: 'Pediatrics', description: 'Compassionate medical care for infants, children, and teens.', icon: Baby },
-    { id: '6', name: 'Orthopedics', description: 'Specialized care for bones, joints, and ligaments.', icon: Bone },
-    { id: '7', name: 'Dermatology', description: 'Skin health diagnosis and professional treatments.', icon: Activity },
-];
+// Map icon name from DB → Lucide component
+const iconMap: Record<string, LucideIcon> = {
+    Stethoscope, Heart, Eye, Brain, Baby, Bone, Activity, Ear, Smile, Pill,
+};
 
 const SelectSpecialtyPage = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
+    const [specialties, setSpecialties] = useState<SpecialtyResponse[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const filteredSpecialties = specialties.filter(s =>
-        s.name.toLowerCase().includes(searchTerm.toLowerCase())
+    useEffect(() => {
+        const load = async () => {
+            try {
+                setIsLoading(true);
+                const data = await getAllSpecialties();
+                setSpecialties(data);
+            } catch (error) {
+                console.error('Failed to load specialties:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        load();
+    }, []);
+
+    const filteredSpecialties = useMemo(() =>
+        specialties.filter(s => s.name.toLowerCase().includes(searchTerm.toLowerCase())),
+        [specialties, searchTerm]
     );
 
     const handleSelect = (id: string) => {
@@ -29,40 +44,44 @@ const SelectSpecialtyPage = () => {
     return (
         <div className="space-y-8 animate-fade-in">
             <section className="max-w-xl">
-                <h1 className="text-3xl font-bold text-dark-50 tracking-tight">Select a Specialty</h1>
+                <h1 className="text-3xl font-bold text-dark-50 tracking-tight">Chuyên khoa khám bệnh</h1>
                 <p className="text-dark-400 mt-2 text-lg">
-                    Choose the medical department you would like to book an appointment with.
+                    Chọn chuyên khoa bạn muốn đặt lịch khám.
                 </p>
             </section>
 
-            {/* Search Section */}
             <div className="max-w-md relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-500" size={20} />
                 <Input
-                    placeholder="Search specialties..."
+                    placeholder="Tìm kiếm chuyên khoa..."
                     className="pl-10"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
 
-            {/* Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {filteredSpecialties.map((specialty) => (
-                    <SpecialtyCard
-                        key={specialty.id}
-                        name={specialty.name}
-                        description={specialty.description}
-                        icon={specialty.icon}
-                        onClick={() => handleSelect(specialty.id)}
-                    />
-                ))}
-                {filteredSpecialties.length === 0 && (
-                    <div className="col-span-full py-12 text-center bg-dark-900/30 rounded-2xl border border-dashed border-dark-700">
-                        <p className="text-dark-400">No specialties found matching your search.</p>
-                    </div>
-                )}
-            </div>
+            {isLoading ? (
+                <div className="flex items-center justify-center py-20">
+                    <Loader2 size={32} className="animate-spin text-primary-500" />
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {filteredSpecialties.map((specialty) => (
+                        <SpecialtyCard
+                            key={specialty.id}
+                            name={specialty.name}
+                            description={specialty.description || ''}
+                            icon={iconMap[specialty.icon || ''] || Stethoscope}
+                            onClick={() => handleSelect(specialty.id)}
+                        />
+                    ))}
+                    {filteredSpecialties.length === 0 && (
+                        <div className="col-span-full py-12 text-center bg-dark-900/30 rounded-2xl border border-dashed border-dark-700">
+                            <p className="text-dark-400">Không tìm thấy chuyên khoa phù hợp với tìm kiếm của bạn.</p>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 };

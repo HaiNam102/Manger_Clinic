@@ -17,6 +17,16 @@ import BookingSuccessPage from '@pages/patient/appointments/BookingSuccessPage';
 import MedicalHistoryPage from '@pages/patient/medical-history/MedicalHistoryPage';
 import RecordDetailPage from '@pages/patient/medical-history/RecordDetailPage';
 import ProfilePage from '@pages/patient/ProfilePage';
+import MyAppointmentsPage from '@pages/patient/appointments/MyAppointmentsPage';
+import AppointmentDetailPage from '@pages/patient/appointments/AppointmentDetailPage';
+
+// Doctor Pages
+import DoctorDashboardPage from '@pages/doctor/DashboardPage';
+import AppointmentListPage from '@pages/doctor/appointments/AppointmentListPage';
+import CalendarPage from '@pages/doctor/appointments/CalendarPage';
+import SchedulePage from '@pages/doctor/schedule/SchedulePage';
+import PatientListPage from '@pages/doctor/patients/PatientListPage';
+import PatientHistoryPage from '@pages/doctor/patients/PatientHistoryPage';
 
 // Lazy load complex pages later
 
@@ -28,7 +38,7 @@ export const AppRouter = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
 
-            {/* Protected Routes */}
+            {/* Patient Routes */}
             <Route
                 path="/dashboard"
                 element={
@@ -128,9 +138,98 @@ export const AppRouter = () => {
                 }
             />
 
+            <Route
+                path="/appointments"
+                element={
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <MyAppointmentsPage />
+                        </MainLayout>
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/appointments/:id"
+                element={
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <AppointmentDetailPage />
+                        </MainLayout>
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/doctor/dashboard"
+                element={
+                    <ProtectedRoute roles={['DOCTOR']}>
+                        <MainLayout>
+                            <DoctorDashboardPage />
+                        </MainLayout>
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/doctor/appointments"
+                element={
+                    <ProtectedRoute roles={['DOCTOR']}>
+                        <MainLayout>
+                            <AppointmentListPage />
+                        </MainLayout>
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/doctor/calendar"
+                element={
+                    <ProtectedRoute roles={['DOCTOR']}>
+                        <MainLayout>
+                            <CalendarPage />
+                        </MainLayout>
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/doctor/schedule"
+                element={
+                    <ProtectedRoute roles={['DOCTOR']}>
+                        <MainLayout>
+                            <SchedulePage />
+                        </MainLayout>
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/doctor/patients"
+                element={
+                    <ProtectedRoute roles={['DOCTOR']}>
+                        <MainLayout>
+                            <PatientListPage />
+                        </MainLayout>
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/doctor/patients/:patientId"
+                element={
+                    <ProtectedRoute roles={['DOCTOR']}>
+                        <MainLayout>
+                            <PatientHistoryPage />
+                        </MainLayout>
+                    </ProtectedRoute>
+                }
+            />
+
             <Route path="/forbidden" element={<ForbiddenPage />} />
             {/* Fallback */}
             <Route path="*" element={<NotFoundPage />} />
         </Routes>
     );
 };
+

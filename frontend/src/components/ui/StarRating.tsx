@@ -32,11 +32,15 @@ export const StarRating = ({
                         onClick={() => onRatingChange?.(starValue)}
                         className={cn(
                             "transition-all duration-200",
-                            interactive ? "hover:scale-125 cursor-pointer" : "cursor-default",
-                            isActive ? "text-warning fill-warning" : "text-dark-700"
+                            interactive ? "hover:scale-120 active:scale-95 cursor-pointer" : "cursor-default",
+                            isActive ? "text-warning" : "text-dark-700 hover:text-dark-500"
                         )}
                     >
-                        <Star size={size} strokeWidth={isActive ? 0 : 2} />
+                        <Star
+                            size={size}
+                            strokeWidth={2}
+                            fill={isActive ? "currentColor" : "transparent"}
+                        />
                     </button>
                 );
             })}

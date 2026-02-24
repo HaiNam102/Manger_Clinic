@@ -27,9 +27,11 @@ public class SecurityConfig {
             // Public API endpoints
             "/api/public/**",
             "/api/doctors",
-            "/api/doctors/{id}",
-            "/api/doctors/{id}/reviews",
+            "/api/doctors/**",
             "/api/specialties",
+            "/api/specialties/**",
+            "/api/appointments/**",
+            "/api/appointments/available-slots",
             "/api/medicines",
             "/api/payments/vnpay-callback",
 

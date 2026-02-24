@@ -18,31 +18,49 @@ import java.util.UUID;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, UUID> {
 
-    Page<Appointment> findByPatientId(UUID patientId, Pageable pageable);
+        Page<Appointment> findByPatientId(UUID patientId, Pageable pageable);
 
-    Page<Appointment> findByDoctorId(UUID doctorId, Pageable pageable);
+        Page<Appointment> findByDoctorId(UUID doctorId, Pageable pageable);
 
-    List<Appointment> findByDoctorIdAndAppointmentDate(UUID doctorId, LocalDate date);
+        List<Appointment> findByDoctorIdAndAppointmentDate(UUID doctorId, LocalDate date);
 
-    Page<Appointment> findByPatientIdAndStatus(UUID patientId, AppointmentStatus status, Pageable pageable);
+        Page<Appointment> findByPatientIdAndStatus(UUID patientId, AppointmentStatus status, Pageable pageable);
 
-    Page<Appointment> findByDoctorIdAndStatus(UUID doctorId, AppointmentStatus status, Pageable pageable);
+        Page<Appointment> findByDoctorIdAndStatus(UUID doctorId, AppointmentStatus status, Pageable pageable);
 
-    @Query("SELECT a FROM Appointment a WHERE " +
-            "a.doctor.id = :doctorId AND " +
-            "a.appointmentDate = :date AND " +
-            "a.appointmentTime = :time AND " +
-            "a.status NOT IN ('CANCELLED')")
-    Optional<Appointment> findExistingAppointment(
-            @Param("doctorId") UUID doctorId,
-            @Param("date") LocalDate date,
-            @Param("time") LocalTime time);
+        @Query("SELECT a FROM Appointment a WHERE " +
+                        "a.doctor.id = :doctorId AND " +
+                        "a.appointmentDate = :date AND " +
+                        "a.appointmentTime = :time AND " +
+                        "a.status NOT IN ('CANCELLED')")
+        Optional<Appointment> findExistingAppointment(
+                        @Param("doctorId") UUID doctorId,
+                        @Param("date") LocalDate date,
+                        @Param("time") LocalTime time);
 
-    @Query("SELECT COUNT(a) FROM Appointment a WHERE " +
-            "a.doctor.id = :doctorId AND " +
-            "a.appointmentDate = :date AND " +
-            "a.status NOT IN ('CANCELLED')")
-    long countByDoctorAndDate(@Param("doctorId") UUID doctorId, @Param("date") LocalDate date);
+        @Query("SELECT COUNT(a) FROM Appointment a WHERE " +
+                        "a.doctor.id = :doctorId AND " +
+                        "a.appointmentDate = :date AND " +
+                        "a.status NOT IN ('CANCELLED')")
+        long countByDoctorAndDate(@Param("doctorId") UUID doctorId, @Param("date") LocalDate date);
 
-    List<Appointment> findByAppointmentDateAndStatus(LocalDate date, AppointmentStatus status);
+        List<Appointment> findByAppointmentDateAndStatus(LocalDate date, AppointmentStatus status);
+
+        @Query("SELECT a FROM Appointment a " +
+                        "JOIN FETCH a.patient p " +
+                        "JOIN FETCH p.user " +
+                        "JOIN FETCH a.doctor d " +
+                        "JOIN FETCH d.user " +
+                        "WHERE a.id = :id")
+        Optional<Appointment> findByIdWithUser(@Param("id") UUID id);
+
+        @Query("SELECT DISTINCT a FROM Appointment a " +
+                        "JOIN FETCH a.patient p " +
+                        "JOIN FETCH p.user " +
+                        "JOIN FETCH a.doctor d " +
+                        "JOIN FETCH d.user " +
+                        "LEFT JOIN FETCH a.specialty " +
+                        "JOIN FETCH a.timeSlot " +
+                        "WHERE p.user.id = :userId OR d.user.id = :userId")
+        List<Appointment> findAllByUserId(@Param("userId") UUID userId);
 }

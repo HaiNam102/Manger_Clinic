@@ -6,6 +6,8 @@ export interface User {
     fullName?: string;
     role: UserRole;
     avatarUrl?: string;
+    doctorId?: string;
+    patientId?: string;
 }
 
 export interface AuthResponse {

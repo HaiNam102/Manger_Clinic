@@ -10,21 +10,21 @@ const BookingSuccessPage = () => {
             </div>
 
             <div className="text-center space-y-4 max-w-md">
-                <h1 className="text-4xl font-black text-dark-50">Booking Confirmed!</h1>
+                <h1 className="text-4xl font-black text-dark-50">Đặt lịch thành công!</h1>
                 <p className="text-dark-400 text-lg leading-relaxed">
-                    Your appointment has been successfully scheduled. We've sent the details to your email.
+                    Lịch hẹn của bạn đã được sắp xếp thành công. Chúng tôi đã gửi thông tin chi tiết đến email của bạn.
                 </p>
             </div>
 
             <div className="mt-12 flex flex-col sm:flex-row gap-4 w-full max-w-sm">
                 <Link to="/dashboard" className="flex-1">
                     <Button variant="outline" fullWidth className="h-12 border-dark-700 hover:bg-dark-800">
-                        <LayoutDashboard size={18} className="mr-2" /> Dashboard
+                        <LayoutDashboard size={18} className="mr-2" /> Bảng điều khiển
                     </Button>
                 </Link>
                 <Link to="/appointments" className="flex-1">
                     <Button fullWidth className="h-12 bg-primary-600 hover:bg-primary-500 shadow-xl shadow-primary-900/20">
-                        My Appointments <ArrowRight size={18} className="ml-2" />
+                        Lịch hẹn của tôi <ArrowRight size={18} className="ml-2" />
                     </Button>
                 </Link>
             </div>
@@ -34,8 +34,8 @@ const BookingSuccessPage = () => {
                     <Calendar size={24} />
                 </div>
                 <div>
-                    <p className="text-sm font-bold text-dark-50">Add to Calendar</p>
-                    <p className="text-xs text-dark-500 mt-1">Don't miss your appointment.</p>
+                    <p className="text-sm font-bold text-dark-50">Thêm vào lịch</p>
+                    <p className="text-xs text-dark-500 mt-1">Đừng bỏ lỡ buổi khám của bạn.</p>
                 </div>
             </div>
         </div>

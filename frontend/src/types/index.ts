@@ -12,6 +12,8 @@ export interface User {
     role: UserRole;
     isActive: boolean;
     createdAt: string;
+    doctorId?: string;
+    patientId?: string;
 }
 
 export type UserRole = 'PATIENT' | 'DOCTOR' | 'ADMIN';
@@ -189,8 +191,206 @@ export interface AuthResponse {
     refreshToken: string;
 }
 
+// Doctor Dashboard Types
+export interface DoctorDashboardStats {
+    todayAppointments: number;
+    weekAppointments: number;
+    monthAppointments: number;
+    totalPatients: number;
+    averageRating: number;
+    pendingAppointments: number;
+    completedAppointments: number;
+}
+
+// Schedule Types (matches backend ScheduleResponse / ScheduleUpdateRequest)
+export interface ScheduleTimeSlot {
+    id?: number;
+    startTime: string;  // "HH:mm"
+    endTime: string;     // "HH:mm"
+    maxPatients: number;
+    isAvailable: boolean;
+}
+
+export interface Schedule {
+    id?: number;
+    dayOfWeek: number;        // 0=Sunday, 1=Monday ... 6=Saturday
+    specificDate?: string;     // ISO date for overrides / leave days
+    isAvailable: boolean;
+    notes?: string;
+    timeSlots: ScheduleTimeSlot[];
+}
+
+export interface LeaveDay {
+    date: string;
+    reason: string;
+}
+
 // Form Types
 export interface SelectOption {
     value: string;
     label: string;
+}
+
+// ============================================
+// Backend Response Types (match actual API DTOs)
+// ============================================
+
+// Matches AppointmentResponse.java
+export interface AppointmentResponse {
+    id: string;
+    patientId: string;
+    patientName: string;
+    doctorId: string;
+    doctorName: string;
+    specialtyId?: string;
+    specialtyName?: string;
+    timeSlotId?: number;
+    appointmentDate: string;   // "2026-02-14"
+    appointmentTime: string;   // "09:00"
+    status: AppointmentStatus;
+    symptoms?: string;
+    notes?: string;
+    cancelledBy?: string;
+    cancelledReason?: string;
+    confirmedAt?: string;
+    completedAt?: string;
+    createdAt: string;
+    updatedAt?: string;
+}
+
+// Matches PatientResponse.java
+export interface PatientResponse {
+    id: string;
+    fullName: string;
+    email: string;
+    dateOfBirth?: string;
+    gender?: string;
+    phoneNumber?: string;
+    address?: string;
+    city?: string;
+    bloodType?: string;
+    allergies?: string[];
+    chronicDiseases?: string[];
+    emergencyContactName?: string;
+    emergencyContactPhone?: string;
+    insuranceNumber?: string;
+}
+
+// Matches MedicalRecordResponse.java
+export interface MedicalRecordResponse {
+    id: string;
+    appointmentId: string;
+    patientId: string;
+    patientName: string;
+    doctorId: string;
+    doctorName: string;
+    diagnosis: string;
+    symptoms: string;
+    vitalSigns?: Record<string, any>;
+    treatment?: string;
+    notes?: string;
+    followUpDate?: string;
+    attachments?: string[];
+    prescription?: PrescriptionResponse;
+    createdAt: string;
+    updatedAt?: string;
+}
+
+export interface PrescriptionResponse {
+    id: string;
+    prescriptionNumber: string;
+    notes?: string;
+    validUntil?: string;
+    details: PrescriptionDetailResponse[];
+    createdAt: string;
+}
+
+export interface PrescriptionDetailResponse {
+    id: number;
+    medicineId: number;
+    medicineName: string;
+    dosage: string;
+    frequency: string;
+    duration: string;
+    instructions?: string;
+    quantity: number;
+    createdAt?: string;
+}
+
+// Matches MedicineResponse.java
+export interface MedicineResponse {
+    id: number;
+    name: string;
+    genericName?: string;
+    dosageForm?: string;
+    strength?: string;
+    manufacturer?: string;
+    description?: string;
+    sideEffects?: string;
+    contraindications?: string;
+    isPrescription?: boolean;
+    isActive?: boolean;
+}
+
+// Matches ReviewResponse.java
+export interface ReviewResponse {
+    id: string;
+    patientName: string;
+    doctorId: string;
+    doctorName: string;
+    rating: number;
+    comment?: string;
+    isAnonymous?: boolean;
+    adminResponse?: string;
+    createdAt: string;
+}
+
+// Matches SpecialtyResponse.java
+export interface SpecialtyResponse {
+    id: string;
+    name: string;
+    description?: string;
+    icon?: string;
+    isActive?: boolean;
+    displayOrder?: number;
+}
+
+// Matches DoctorResponse.java
+export interface DoctorResponse {
+    id: string;
+    fullName: string;
+    email?: string;
+    phoneNumber?: string;
+    avatarUrl?: string;
+    bio?: string;
+    experienceYears?: number;
+    licenseNumber?: string;
+    consultationFee?: number;
+    isAvailable?: boolean;
+    specialtyName?: string;
+    specialtyId?: string;
+    avgRating?: number;
+    totalReviews?: number;
+    education?: string[];
+    certifications?: string[];
+}
+
+// Matches TimeSlotResponse.java
+export interface TimeSlotResponse {
+    id: number;
+    startTime: string;  // "HH:mm"
+    endTime: string;    // "HH:mm"
+    maxPatients?: number;
+    isAvailable?: boolean;
+}
+
+// Matches UserResponse.java (for profile)
+export interface UserProfileResponse {
+    id: string;
+    email: string;
+    fullName: string;
+    phone?: string;
+    avatarUrl?: string;
+    role: string;
+    isActive: boolean;
 }

@@ -10,6 +10,11 @@ spring:
       minimum-idle: 2
       connection-timeout: 20000
   
+  # Flyway - Development (clean start)
+  flyway:
+    clean-disabled: false
+    clean-on-validation-error: true
+  
   # JPA - Development
   jpa:
     hibernate:

@@ -19,5 +19,13 @@ public interface MedicalRecordRepository extends JpaRepository<MedicalRecord, UU
 
     Optional<MedicalRecord> findByAppointmentId(UUID appointmentId);
 
+    @org.springframework.data.jpa.repository.Query("SELECT r FROM MedicalRecord r " +
+            "JOIN FETCH r.patient p " +
+            "JOIN FETCH p.user " +
+            "JOIN FETCH r.doctor d " +
+            "JOIN FETCH d.user " +
+            "WHERE r.id = :id")
+    Optional<MedicalRecord> findByIdWithUser(@org.springframework.data.repository.query.Param("id") UUID id);
+
     List<MedicalRecord> findByPatientIdOrderByCreatedAtDesc(UUID patientId);
 }

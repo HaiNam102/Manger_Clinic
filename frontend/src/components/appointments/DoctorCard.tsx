@@ -11,6 +11,7 @@ interface DoctorCardProps {
     reviewCount: number;
     location: string;
     avatarSrc?: string;
+    onViewReviews?: () => void;
     onClick?: () => void;
     className?: string;
 }
@@ -22,6 +23,7 @@ export const DoctorCard = ({
     reviewCount,
     location,
     avatarSrc,
+    onViewReviews,
     onClick,
     className,
 }: DoctorCardProps) => {
@@ -49,7 +51,15 @@ export const DoctorCard = ({
                         <div className="flex items-center gap-1 mb-3">
                             <Star className="text-warning fill-warning" size={16} />
                             <span className="text-dark-100 font-bold text-sm">{rating.toFixed(1)}</span>
-                            <span className="text-dark-400 text-xs">({reviewCount} reviews)</span>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onViewReviews?.();
+                                }}
+                                className="text-dark-400 text-xs hover:text-primary-400 transition-colors underline decoration-dotted"
+                            >
+                                ({reviewCount} đánh giá)
+                            </button>
                         </div>
 
                         <div className="flex items-center gap-1 text-dark-400 text-xs mb-4">
@@ -58,7 +68,7 @@ export const DoctorCard = ({
                         </div>
 
                         <Button size="sm" fullWidth onClick={onClick}>
-                            Select Doctor
+                            Chọn bác sĩ
                         </Button>
                     </div>
                 </div>
