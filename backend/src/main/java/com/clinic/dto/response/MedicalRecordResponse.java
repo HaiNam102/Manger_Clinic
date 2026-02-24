@@ -22,7 +22,7 @@ public class MedicalRecordResponse {
     String doctorName;
     String diagnosis;
     String symptoms;
-    String vitalSigns;
+    java.util.Map<String, Object> vitalSigns;
     String treatment;
     String notes;
     LocalDate followUpDate;

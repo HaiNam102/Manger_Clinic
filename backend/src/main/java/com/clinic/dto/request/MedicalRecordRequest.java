@@ -22,10 +22,11 @@ public class MedicalRecordRequest {
     String diagnosis;
 
     String symptoms;
-    String vitalSigns; // JSON string
+    java.util.Map<String, Object> vitalSigns; // JSON object
     String treatment;
     String notes;
     LocalDate followUpDate;
 
+    @jakarta.validation.Valid
     List<PrescriptionDetailRequest> prescriptionDetails;
 }

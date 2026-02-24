@@ -102,6 +102,19 @@ public class AuthService {
 
                 saveRefreshToken(user, refreshToken);
 
+                UUID doctorId = null;
+                UUID patientId = null;
+
+                if (user.getRole().getName() == RoleName.DOCTOR) {
+                        doctorId = doctorRepository.findByUserId(user.getId())
+                                        .map(Doctor::getId)
+                                        .orElse(null);
+                } else if (user.getRole().getName() == RoleName.PATIENT) {
+                        patientId = patientRepository.findByUserId(user.getId())
+                                        .map(Patient::getId)
+                                        .orElse(null);
+                }
+
                 return AuthResponse.builder()
                                 .accessToken(accessToken)
                                 .refreshToken(refreshToken)
@@ -110,6 +123,8 @@ public class AuthService {
                                                 .email(user.getEmail())
                                                 .fullName(user.getFullName())
                                                 .role(user.getRole().getName().name())
+                                                .doctorId(doctorId)
+                                                .patientId(patientId)
                                                 .build())
                                 .build();
         }

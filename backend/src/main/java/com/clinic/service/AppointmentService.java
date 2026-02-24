@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class AppointmentService {
 
         private final AppointmentRepository appointmentRepository;
@@ -35,16 +36,27 @@ public class AppointmentService {
         private final SpecialtyRepository specialtyRepository;
         private final TimeSlotRepository timeSlotRepository;
         private final WorkingScheduleRepository workingScheduleRepository;
+        private final UserRepository userRepository;
 
         @Transactional
         public AppointmentResponse createAppointment(AppointmentRequest request) {
                 CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
                                 .getAuthentication()
                                 .getPrincipal();
-                Patient patient = patientRepository.findByUserId(userDetails.getId())
-                                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-                Doctor doctor = doctorRepository.findById(request.getDoctorId())
+                Patient patient = patientRepository.findByUserIdWithUser(userDetails.getId())
+                                .orElseGet(() -> {
+                                        User user = userRepository.findById(userDetails.getId())
+                                                        .orElseThrow(() -> new AppException(
+                                                                        ErrorCode.USER_NOT_EXISTED));
+
+                                        Patient newPatient = Patient.builder()
+                                                        .user(user)
+                                                        .build();
+                                        return patientRepository.save(newPatient);
+                                });
+
+                Doctor doctor = doctorRepository.findByIdWithUser(request.getDoctorId())
                                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
                 TimeSlot timeSlot = timeSlotRepository.findById(request.getTimeSlotId())
@@ -114,9 +126,7 @@ public class AppointmentService {
 
                 UUID userId = userDetails.getId();
 
-                return appointmentRepository.findAll().stream()
-                                .filter(a -> a.getPatient().getUser().getId().equals(userId) ||
-                                                a.getDoctor().getUser().getId().equals(userId))
+                return appointmentRepository.findAllByUserId(userId).stream()
                                 .map(this::mapToResponse)
                                 .collect(Collectors.toList());
         }
