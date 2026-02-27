@@ -114,6 +114,28 @@ public class DoctorService {
         return mapToResponse(doctorRepository.save(doctor));
     }
 
+    @Transactional
+    public DoctorResponse updateDoctorSpecialty(UUID doctorId, UUID specialtyId) {
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        if (specialtyId != null) {
+            Specialty specialty = specialtyRepository.findById(specialtyId)
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+            doctor.setSpecialty(specialty);
+        } else {
+            doctor.setSpecialty(null);
+        }
+
+        return mapToResponse(doctorRepository.save(doctor));
+    }
+
+    public List<DoctorResponse> getDoctorsNoSpecialty() {
+        return doctorRepository.findBySpecialtyIsNull().stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
     private DoctorResponse mapToResponse(Doctor doctor) {
         User user = doctor.getUser();
         UUID doctorId = doctor.getId();
@@ -129,6 +151,7 @@ public class DoctorService {
 
         return DoctorResponse.builder()
                 .id(doctorId)
+                .userId(user.getId())
                 .fullName(user.getFullName())
                 .email(user.getEmail())
                 .phoneNumber(user.getPhone())
@@ -144,6 +167,7 @@ public class DoctorService {
                 .totalReviews(totalReviews)
                 .education(doctor.getEducation())
                 .certifications(doctor.getCertifications())
+                .isActive(user.getIsActive())
                 .build();
     }
 }

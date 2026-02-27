@@ -16,7 +16,7 @@ export const TimeSlotPicker = ({
     className,
 }: TimeSlotPickerProps) => {
     return (
-        <div className={cn("grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3", className)}>
+        <div className={cn("grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3", className)}>
             {slots.map((slot) => {
                 const isSelected = selectedSlot === slot;
                 const isDisabled = disabledSlots.includes(slot);
@@ -28,15 +28,22 @@ export const TimeSlotPicker = ({
                         disabled={isDisabled}
                         onClick={() => onSelect(slot)}
                         className={cn(
-                            "py-3 px-4 rounded-xl text-sm font-bold transition-all duration-200 border",
+                            "group relative py-3 px-4 rounded-xl text-sm font-bold transition-all duration-300 border overflow-hidden",
                             isSelected
-                                ? "bg-primary-600 border-primary-500 text-white shadow-lg shadow-primary-900/30 scale-105 z-10"
+                                ? "bg-primary-600 border-primary-500 text-white shadow-xl shadow-primary-900/40 scale-105 z-10"
                                 : isDisabled
-                                    ? "bg-dark-900 border-dark-800 text-dark-600 cursor-not-allowed opacity-50"
-                                    : "bg-dark-800 border-dark-700 text-dark-100 hover:border-primary-500/50 hover:bg-dark-700"
+                                    ? "bg-dark-900 border-dark-800 text-dark-600 cursor-not-allowed grayscale"
+                                    : "bg-dark-800 border-dark-700/50 text-dark-100 hover:border-primary-500/50 hover:bg-dark-700 hover:text-primary-400 active:scale-95"
                         )}
                     >
-                        {slot}
+                        {/* Selected Indicator Glow */}
+                        {isSelected && (
+                            <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent animate-pulse" />
+                        )}
+
+                        <div className="relative flex items-center justify-center gap-2">
+                            <span>{slot}</span>
+                        </div>
                     </button>
                 );
             })}

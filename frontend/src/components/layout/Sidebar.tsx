@@ -9,7 +9,9 @@ import {
     PlusCircle,
     FileText,
     Clock,
-    UserCircle
+    UserCircle,
+    UserPlus,
+    Stethoscope
 } from 'lucide-react';
 
 import { clsx, type ClassValue } from 'clsx';
@@ -41,26 +43,22 @@ const patientNavItems = [
 
 const adminNavItems = [
     { name: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard' },
-    { name: 'Doctors', icon: Users, href: '/admin/doctors' },
-    { name: 'Appointments', icon: Calendar, href: '/admin/appointments' },
-    { name: 'Medical Records', icon: ClipboardList, href: '/admin/records' },
-    { name: 'Settings', icon: Settings, href: '/admin/settings' },
+    { name: 'Người dùng', icon: Users, href: '/admin/users' },
+    { name: 'Bác sĩ', icon: UserPlus, href: '/admin/doctors' },
+    { name: 'Bệnh nhân', icon: UserCircle, href: '/admin/patients' },
+    { name: 'Chuyên khoa', icon: Stethoscope, href: '/admin/specialties' },
+    { name: 'Lịch hẹn', icon: Calendar, href: '/admin/appointments' },
 ];
-
-function getNavItems(role?: string) {
-    switch (role) {
-        case 'DOCTOR':
-            return doctorNavItems;
-        case 'ADMIN':
-            return adminNavItems;
-        default:
-            return patientNavItems;
-    }
-}
 
 export const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
     const { user } = useAuth();
-    const navItems = getNavItems(user?.role);
+    const navItems = user?.role === 'DOCTOR' ? doctorNavItems :
+        user?.role === 'ADMIN' ? adminNavItems :
+            patientNavItems;
+
+    const portalTitle = user?.role === 'DOCTOR' ? 'Doctor Portal' :
+        user?.role === 'ADMIN' ? 'Admin Portal' :
+            'Patient Portal';
 
     return (
         <>
@@ -119,7 +117,7 @@ export const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
                     <div className="p-4 border-t border-dark-700">
                         <div className="bg-dark-800/50 rounded-xl p-4 border border-dark-700">
                             <p className="text-xs text-dark-400 mb-1">
-                                {user?.role === 'DOCTOR' ? '🩺 Doctor' : user?.role === 'ADMIN' ? '⚙️ Admin' : '👤 Patient'}
+                                {portalTitle}
                             </p>
                             <p className="text-sm font-semibold text-dark-50 truncate">
                                 {user?.fullName || 'User'}

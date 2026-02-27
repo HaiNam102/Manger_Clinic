@@ -7,7 +7,7 @@ function cn(...inputs: ClassValue[]) {
 }
 
 export interface Column<T> {
-    header: string;
+    header: ReactNode;
     accessor: keyof T | ((item: T) => ReactNode);
     className?: string;
 }

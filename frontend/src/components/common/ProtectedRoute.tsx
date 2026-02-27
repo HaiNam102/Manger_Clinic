@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
-import { UserRole } from '@types/auth';
+import { UserRole } from '@/types/auth';
 import { Loading } from '@components/ui/Loading';
 
 interface ProtectedRouteProps {
-    children: ReactNode;
+    children?: ReactNode;
     roles?: UserRole[];
 }
 
@@ -25,7 +25,7 @@ export const ProtectedRoute = ({ children, roles }: ProtectedRouteProps) => {
         return <Navigate to="/forbidden" replace />;
     }
 
-    return <>{children}</>;
+    return children ? <>{children}</> : <Outlet />;
 };
 
 export const RoleGuard = ({ children, roles }: { children: ReactNode; roles: UserRole[] }) => {

@@ -81,6 +81,7 @@ public class PatientService {
         User user = patient.getUser();
         return PatientResponse.builder()
                 .id(patient.getId())
+                .userId(user.getId())
                 .fullName(user.getFullName())
                 .email(user.getEmail())
                 .phoneNumber(user.getPhone())
@@ -94,6 +95,7 @@ public class PatientService {
                 .emergencyContactName(patient.getEmergencyContactName())
                 .emergencyContactPhone(patient.getEmergencyContactPhone())
                 .insuranceNumber(patient.getInsuranceNumber())
+                .isActive(user.getIsActive())
                 .build();
     }
 

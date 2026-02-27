@@ -5,6 +5,7 @@ import { useToast } from '@hooks/useToast';
 import { AuthLayout } from '@components/layout/AuthLayout';
 import { Input } from '@components/ui/Input';
 import { Button } from '@components/ui/Button';
+import { UserRole } from '@/types/auth';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -16,8 +17,6 @@ const LoginPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const from = location.state?.from?.pathname || '/dashboard';
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!email || !password) {
@@ -27,9 +26,20 @@ const LoginPage = () => {
 
         setIsSubmitting(true);
         try {
-            await login({ email, password });
+            const user = await login({ email, password });
             showToast.success('Login successful! Welcome back.');
-            navigate(from, { replace: true });
+
+            // Redirect based on role if no 'from' state
+            if (!location.state?.from) {
+                const dashboardMap: Record<UserRole, string> = {
+                    'ADMIN': '/admin/dashboard',
+                    'DOCTOR': '/doctor/dashboard',
+                    'PATIENT': '/dashboard'
+                };
+                navigate(dashboardMap[user.role], { replace: true });
+            } else {
+                navigate(location.state.from.pathname, { replace: true });
+            }
         } catch (error: any) {
             showToast.error(error.response?.data?.message || 'Invalid credentials');
         } finally {

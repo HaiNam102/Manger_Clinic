@@ -35,4 +35,8 @@ public interface DoctorRepository extends JpaRepository<Doctor, UUID> {
 
     @Query("SELECT d FROM Doctor d JOIN FETCH d.user WHERE d.id = :id")
     Optional<Doctor> findByIdWithUser(@Param("id") UUID id);
+
+    long countBySpecialtyId(UUID specialtyId);
+
+    List<Doctor> findBySpecialtyIsNull();
 }

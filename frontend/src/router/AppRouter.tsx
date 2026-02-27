@@ -1,235 +1,116 @@
-import { Routes, Route } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute } from '@components/common/ProtectedRoute';
 import { MainLayout } from '@components/layout/MainLayout';
+import { Loading } from '@components/ui/Loading';
 
-// Pages
-import LoginPage from '@pages/auth/LoginPage';
-import RegisterPage from '@pages/auth/RegisterPage';
-import HomePage from '@pages/HomePage';
-import NotFoundPage from '@pages/NotFoundPage';
-import ForbiddenPage from '@pages/ForbiddenPage';
-import DashboardPage from '@pages/patient/DashboardPage';
-import SelectSpecialtyPage from '@pages/patient/appointments/SelectSpecialtyPage';
-import SelectDoctorPage from '@pages/patient/appointments/SelectDoctorPage';
-import SelectDateTimePage from '@pages/patient/appointments/SelectDateTimePage';
-import ConfirmBookingPage from '@pages/patient/appointments/ConfirmBookingPage';
-import BookingSuccessPage from '@pages/patient/appointments/BookingSuccessPage';
-import MedicalHistoryPage from '@pages/patient/medical-history/MedicalHistoryPage';
-import RecordDetailPage from '@pages/patient/medical-history/RecordDetailPage';
-import ProfilePage from '@pages/patient/ProfilePage';
-import MyAppointmentsPage from '@pages/patient/appointments/MyAppointmentsPage';
-import AppointmentDetailPage from '@pages/patient/appointments/AppointmentDetailPage';
+// Public Pages
+const HomePage = lazy(() => import('@pages/HomePage'));
+const LoginPage = lazy(() => import('@pages/auth/LoginPage'));
+const RegisterPage = lazy(() => import('@pages/auth/RegisterPage'));
+const ForbiddenPage = lazy(() => import('@pages/ForbiddenPage'));
+
+// Patient Pages
+const PatientDashboardPage = lazy(() => import('@pages/patient/DashboardPage'));
+const SelectSpecialtyPage = lazy(() => import('@pages/patient/appointments/SelectSpecialtyPage'));
+const SelectDoctorPage = lazy(() => import('@pages/patient/appointments/SelectDoctorPage'));
+const SelectDateTimePage = lazy(() => import('@pages/patient/appointments/SelectDateTimePage'));
+const ConfirmBookingPage = lazy(() => import('@pages/patient/appointments/ConfirmBookingPage'));
+const BookingSuccessPage = lazy(() => import('@pages/patient/appointments/BookingSuccessPage'));
+const MedicalHistoryPage = lazy(() => import('@pages/patient/medical-history/MedicalHistoryPage'));
+const RecordDetailPage = lazy(() => import('@pages/patient/medical-history/RecordDetailPage'));
+const ProfilePage = lazy(() => import('@pages/patient/ProfilePage'));
+const MyAppointmentsPage = lazy(() => import('@pages/patient/appointments/MyAppointmentsPage'));
+const AppointmentDetailPage = lazy(() => import('@pages/patient/appointments/AppointmentDetailPage'));
 
 // Doctor Pages
-import DoctorDashboardPage from '@pages/doctor/DashboardPage';
-import AppointmentListPage from '@pages/doctor/appointments/AppointmentListPage';
-import CalendarPage from '@pages/doctor/appointments/CalendarPage';
-import SchedulePage from '@pages/doctor/schedule/SchedulePage';
-import PatientListPage from '@pages/doctor/patients/PatientListPage';
-import PatientHistoryPage from '@pages/doctor/patients/PatientHistoryPage';
+const DoctorDashboardPage = lazy(() => import('@pages/doctor/DashboardPage'));
+const AppointmentListPage = lazy(() => import('@pages/doctor/appointments/AppointmentListPage'));
+const CalendarPage = lazy(() => import('@pages/doctor/appointments/CalendarPage'));
+const SchedulePage = lazy(() => import('@pages/doctor/schedule/SchedulePage'));
+const PatientListPage = lazy(() => import('@pages/doctor/patients/PatientListPage'));
+const PatientHistoryPage = lazy(() => import('@pages/doctor/patients/PatientHistoryPage'));
 
-// Lazy load complex pages later
+// Admin Pages
+const AdminDashboardPage = lazy(() => import('@pages/admin/DashboardPage'));
+const AdminUserListPage = lazy(() => import('@pages/admin/users/UsersListPage'));
+const AdminDoctorListPage = lazy(() => import('@pages/admin/doctors/DoctorsListPage'));
+const AdminPatientListPage = lazy(() => import('@pages/admin/patients/PatientsListPage'));
+const AdminSpecialtyListPage = lazy(() => import('@pages/admin/specialties/SpecialtiesListPage'));
+const AdminAppointmentListPage = lazy(() => import('@pages/admin/appointments/AppointmentListPage'));
 
 export const AppRouter = () => {
     return (
-        <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+        <Suspense fallback={<Loading fullPage text="Đang tải dữ liệu..." />}>
+            <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
 
-            {/* Patient Routes */}
-            <Route
-                path="/dashboard"
-                element={
-                    <ProtectedRoute>
-                        <MainLayout>
-                            <DashboardPage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
+                {/* Patient Routes */}
+                <Route element={<ProtectedRoute roles={['PATIENT']} />}>
+                    <Route path="/dashboard" element={<MainLayout><PatientDashboardPage /></MainLayout>} />
+                    <Route path="/booking/specialty" element={<MainLayout><SelectSpecialtyPage /></MainLayout>} />
+                    <Route path="/booking/doctor/:specialtyId" element={<MainLayout><SelectDoctorPage /></MainLayout>} />
+                    <Route path="/booking/date-time/:specialtyId/:doctorId" element={<MainLayout><SelectDateTimePage /></MainLayout>} />
+                    <Route path="/booking/confirm/:specialtyId/:doctorId" element={<MainLayout><ConfirmBookingPage /></MainLayout>} />
+                    <Route path="/booking/success" element={<MainLayout><BookingSuccessPage /></MainLayout>} />
+                    <Route path="/medical-history" element={<MainLayout><MedicalHistoryPage /></MainLayout>} />
+                    <Route path="/medical-history/:recordId" element={<MainLayout><RecordDetailPage /></MainLayout>} />
+                    <Route path="/appointments" element={<MainLayout><MyAppointmentsPage /></MainLayout>} />
+                    <Route path="/appointments/:id" element={<MainLayout><AppointmentDetailPage /></MainLayout>} />
+                </Route>
 
-            <Route
-                path="/booking/specialty"
-                element={
-                    <ProtectedRoute>
-                        <MainLayout>
-                            <SelectSpecialtyPage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
+                {/* Doctor Portal Routes */}
+                <Route element={<ProtectedRoute roles={['DOCTOR']} />}>
+                    <Route
+                        path="/doctor/*"
+                        element={
+                            <MainLayout>
+                                <Routes>
+                                    <Route path="dashboard" element={<DoctorDashboardPage />} />
+                                    <Route path="appointments" element={<AppointmentListPage />} />
+                                    <Route path="calendar" element={<CalendarPage />} />
+                                    <Route path="schedule" element={<SchedulePage />} />
+                                    <Route path="patients" element={<PatientListPage />} />
+                                    <Route path="patients/:patientId/history" element={<PatientHistoryPage />} />
+                                </Routes>
+                            </MainLayout>
+                        }
+                    />
+                </Route>
 
-            <Route
-                path="/booking/doctor/:specialtyId"
-                element={
-                    <ProtectedRoute>
-                        <MainLayout>
-                            <SelectDoctorPage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
+                {/* Admin Portal Routes */}
+                <Route element={<ProtectedRoute roles={['ADMIN']} />}>
+                    <Route
+                        path="/admin/*"
+                        element={
+                            <MainLayout>
+                                <Routes>
+                                    <Route path="dashboard" element={<AdminDashboardPage />} />
+                                    <Route path="users" element={<AdminUserListPage />} />
+                                    <Route path="doctors" element={<AdminDoctorListPage />} />
+                                    <Route path="patients" element={<AdminPatientListPage />} />
+                                    <Route path="specialties" element={<AdminSpecialtyListPage />} />
+                                    <Route path="appointments" element={<AdminAppointmentListPage />} />
+                                </Routes>
+                            </MainLayout>
+                        }
+                    />
+                </Route>
 
-            <Route
-                path="/booking/date-time/:specialtyId/:doctorId"
-                element={
-                    <ProtectedRoute>
-                        <MainLayout>
-                            <SelectDateTimePage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
+                {/* Shared Protected Routes */}
+                <Route element={<ProtectedRoute roles={['PATIENT', 'DOCTOR', 'ADMIN']} />}>
+                    <Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />
+                </Route>
 
-            <Route
-                path="/booking/confirm/:specialtyId/:doctorId"
-                element={
-                    <ProtectedRoute>
-                        <MainLayout>
-                            <ConfirmBookingPage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/booking/success"
-                element={
-                    <ProtectedRoute>
-                        <MainLayout>
-                            <BookingSuccessPage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/medical-history"
-                element={
-                    <ProtectedRoute>
-                        <MainLayout>
-                            <MedicalHistoryPage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/medical-history/:recordId"
-                element={
-                    <ProtectedRoute>
-                        <MainLayout>
-                            <RecordDetailPage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/profile"
-                element={
-                    <ProtectedRoute>
-                        <MainLayout>
-                            <ProfilePage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/appointments"
-                element={
-                    <ProtectedRoute>
-                        <MainLayout>
-                            <MyAppointmentsPage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/appointments/:id"
-                element={
-                    <ProtectedRoute>
-                        <MainLayout>
-                            <AppointmentDetailPage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/doctor/dashboard"
-                element={
-                    <ProtectedRoute roles={['DOCTOR']}>
-                        <MainLayout>
-                            <DoctorDashboardPage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/doctor/appointments"
-                element={
-                    <ProtectedRoute roles={['DOCTOR']}>
-                        <MainLayout>
-                            <AppointmentListPage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/doctor/calendar"
-                element={
-                    <ProtectedRoute roles={['DOCTOR']}>
-                        <MainLayout>
-                            <CalendarPage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/doctor/schedule"
-                element={
-                    <ProtectedRoute roles={['DOCTOR']}>
-                        <MainLayout>
-                            <SchedulePage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/doctor/patients"
-                element={
-                    <ProtectedRoute roles={['DOCTOR']}>
-                        <MainLayout>
-                            <PatientListPage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route
-                path="/doctor/patients/:patientId"
-                element={
-                    <ProtectedRoute roles={['DOCTOR']}>
-                        <MainLayout>
-                            <PatientHistoryPage />
-                        </MainLayout>
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route path="/forbidden" element={<ForbiddenPage />} />
-            {/* Fallback */}
-            <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+                <Route path="/forbidden" element={<ForbiddenPage />} />
+                {/* Fallback */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+        </Suspense>
     );
 };
 
+export default AppRouter;

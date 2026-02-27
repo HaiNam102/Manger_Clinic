@@ -6,7 +6,7 @@ interface AuthContextType {
     user: User | null;
     isAuthenticated: boolean;
     isLoading: boolean;
-    login: (data: any) => Promise<void>;
+    login: (data: any) => Promise<User>;
     logout: () => void;
     checkAuth: () => Promise<void>;
 }
@@ -39,13 +39,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    const login = async (credentials: any) => {
+    const login = async (credentials: any): Promise<User> => {
         const response = await authService.login(credentials);
         const { accessToken, refreshToken, user: loggedInUser } = response.result;
 
         localStorage.setItem('access_token', accessToken);
         localStorage.setItem('refresh_token', refreshToken);
         setUser(loggedInUser);
+        return loggedInUser;
     };
 
     const logout = () => {

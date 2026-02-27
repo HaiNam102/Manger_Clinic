@@ -7,6 +7,9 @@ import { DoctorReviewsModal } from '@components/appointments/DoctorReviewsModal'
 import { getDoctorsBySpecialty, getAllSpecialties } from '@services/patientService';
 import type { DoctorResponse, SpecialtyResponse } from '@/types';
 
+import { BookingStepper } from '@components/appointments/BookingStepper';
+import { DoctorSkeleton } from '@components/appointments/BookingSkeletons';
+
 const SelectDoctorPage = () => {
     const { specialtyId } = useParams<{ specialtyId: string }>();
     const navigate = useNavigate();
@@ -46,37 +49,39 @@ const SelectDoctorPage = () => {
     };
 
     return (
-        <div className="space-y-8 animate-fade-in">
-            <section className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                <div className="space-y-2">
+        <div className="max-w-7xl mx-auto space-y-12 animate-fade-in pb-20 px-4 sm:px-0">
+            <BookingStepper currentStep={2} />
+
+            <section className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-dark-900/50 p-8 rounded-3xl border border-dark-700/50 backdrop-blur-sm">
+                <div className="space-y-3">
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="p-0 text-dark-400 hover:text-dark-200"
+                        className="p-0 h-auto text-dark-500 hover:text-primary-400 group flex items-center bg-transparent"
                         onClick={() => navigate('/booking/specialty')}
                     >
-                        <ArrowLeft size={16} className="mr-1" /> Quay lại chuyên khoa
+                        <ArrowLeft size={16} className="mr-2 transition-transform group-hover:-translate-x-1" />
+                        Quay lại chọn chuyên khoa
                     </Button>
-                    <h1 className="text-3xl font-bold text-dark-50 tracking-tight">
-                        Chọn bác sĩ <span className="text-primary-500">{specialtyName}</span>
+                    <h1 className="text-3xl font-extrabold text-dark-50 tracking-tight">
+                        Đội ngũ bác sĩ <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 font-black px-1">{specialtyName}</span>
                     </h1>
                     <p className="text-dark-400 text-lg">
-                        Tìm thấy {doctors.length} bác sĩ trong chuyên khoa này.
+                        Tìm thấy <span className="text-dark-100 font-bold">{doctors.length}</span> chuyên gia hàng đầu sẵn sàng hỗ trợ bạn.
                     </p>
                 </div>
                 <div className="flex gap-3">
-                    <Button variant="outline" size="sm" className="gap-2">
-                        <Filter size={16} /> Bộ lọc
+                    <Button variant="outline" className="gap-2 bg-dark-800 border-dark-700 rounded-2xl group">
+                        <Filter size={16} className="text-dark-500 group-hover:text-primary-500" />
+                        <span>Bộ lọc nâng cao</span>
                     </Button>
                 </div>
             </section>
 
             {isLoading ? (
-                <div className="flex items-center justify-center py-20">
-                    <Loader2 size={32} className="animate-spin text-primary-500" />
-                </div>
+                <DoctorSkeleton />
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {doctors.map((doctor) => (
                         <DoctorCard
                             key={doctor.id}
@@ -90,9 +95,15 @@ const SelectDoctorPage = () => {
                         />
                     ))}
                     {doctors.length === 0 && (
-                        <div className="col-span-full py-16 text-center bg-dark-900/30 rounded-2xl border border-dashed border-dark-700">
-                            <p className="text-dark-400 text-lg">Hiện tại không có bác sĩ nào thuộc chuyên khoa này.</p>
-                            <Button variant="outline" className="mt-4" onClick={() => navigate('/booking/specialty')}>
+                        <div className="col-span-full py-24 text-center bg-dark-900/40 rounded-[2.5rem] border border-dashed border-dark-700">
+                            <div className="h-24 w-24 bg-dark-800 rounded-3xl flex items-center justify-center mx-auto mb-6 text-dark-500">
+                                <Filter size={40} strokeWidth={1.5} />
+                            </div>
+                            <h3 className="text-2xl font-bold text-dark-100 mb-2">Chưa có bác sĩ trong chuyên khoa này</h3>
+                            <p className="text-dark-400 text-lg max-w-md mx-auto mb-8">
+                                Hiện tại chúng tôi đang cập nhật đội ngũ bác sĩ cho chuyên khoa {specialtyName}.
+                            </p>
+                            <Button className="rounded-2xl px-10 py-6" onClick={() => navigate('/booking/specialty')}>
                                 Chọn chuyên khoa khác
                             </Button>
                         </div>

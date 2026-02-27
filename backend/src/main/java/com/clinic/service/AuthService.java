@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -55,7 +54,8 @@ public class AuthService {
 
         @Transactional
         public void register(RegisterRequest request) {
-                if (userRepository.existsByEmail(request.getEmail())) {
+                String email = request.getEmail().trim().toLowerCase();
+                if (userRepository.existsByEmail(email)) {
                         throw new AppException(ErrorCode.EMAIL_ALREADY_REGISTERED);
                 }
 
@@ -64,7 +64,7 @@ public class AuthService {
 
                 User userToRegister = User.builder()
                                 .fullName(request.getFullName())
-                                .email(request.getEmail())
+                                .email(email)
                                 .passwordHash(passwordEncoder.encode(request.getPassword()))
                                 .phone(request.getPhone())
                                 .role(role)
@@ -85,8 +85,17 @@ public class AuthService {
 
         @Transactional
         public AuthResponse login(LoginRequest request) {
+                String email = request.getEmail().trim().toLowerCase();
+                log.info("DEBUG: Attempting login for normalized email: '{}'", email);
+
+                userRepository.findByEmail(email).ifPresentOrElse(
+                                u -> log.info("DEBUG: Found user in DB. Email: '{}', IsActive: {}, Role: {}",
+                                                u.getEmail(), u.getIsActive(),
+                                                u.getRole() != null ? u.getRole().getName() : "NULL"),
+                                () -> log.warn("DEBUG: User NOT found in DB for email: '{}'", email));
+
                 Authentication authentication = authenticationManager.authenticate(
-                                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+                                new UsernamePasswordAuthenticationToken(email, request.getPassword()));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -105,7 +114,7 @@ public class AuthService {
                 UUID doctorId = null;
                 UUID patientId = null;
 
-                if (user.getRole().getName() == RoleName.DOCTOR) {
+                if (user.getRole() != null && user.getRole().getName() == RoleName.DOCTOR) {
                         doctorId = doctorRepository.findByUserId(user.getId())
                                         .map(Doctor::getId)
                                         .orElse(null);
@@ -122,7 +131,7 @@ public class AuthService {
                                                 .id(user.getId())
                                                 .email(user.getEmail())
                                                 .fullName(user.getFullName())
-                                                .role(user.getRole().getName().name())
+                                                .role(user.getRole() != null ? user.getRole().getName().name() : null)
                                                 .doctorId(doctorId)
                                                 .patientId(patientId)
                                                 .build())
@@ -153,7 +162,8 @@ public class AuthService {
 
         @Transactional
         public void forgotPassword(ForgotPasswordRequest request) {
-                User user = userRepository.findByEmail(request.getEmail())
+                String email = request.getEmail().trim().toLowerCase();
+                User user = userRepository.findByEmail(email)
                                 .orElseThrow(() -> new RuntimeException("Email not found"));
 
                 // Delete old tokens for this user
