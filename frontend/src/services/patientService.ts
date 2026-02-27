@@ -6,6 +6,9 @@ import type {
     TimeSlotResponse,
     MedicalRecordResponse,
     UserProfileResponse,
+    PatientResponse,
+    PatientRequest,
+    ProfileUpdateRequest
 } from '@/types';
 
 // ============================================
@@ -81,11 +84,19 @@ export const getMyProfile = async (): Promise<UserProfileResponse> => {
     return response.data.result;
 };
 
-export const updateMyProfile = async (data: {
-    fullName: string;
-    phone?: string;
-    avatarUrl?: string;
-}): Promise<UserProfileResponse> => {
+export const updateMyProfile = async (data: ProfileUpdateRequest): Promise<UserProfileResponse> => {
     const response = await apiClient.put('/users/me', data);
+    return response.data.result;
+};
+
+// ─── Patient Profile (Detailed) ───
+
+export const getPatientById = async (id: string): Promise<PatientResponse> => {
+    const response = await apiClient.get(`/patients/${id}`);
+    return response.data.result;
+};
+
+export const updatePatient = async (id: string, data: PatientRequest): Promise<PatientResponse> => {
+    const response = await apiClient.put(`/patients/${id}`, data);
     return response.data.result;
 };

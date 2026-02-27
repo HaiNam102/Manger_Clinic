@@ -17,6 +17,7 @@ public enum ErrorCode {
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     EMAIL_ALREADY_REGISTERED(1009, "Email already registered", HttpStatus.BAD_REQUEST),
     ROLE_NOT_FOUND(1010, "Role not found", HttpStatus.NOT_FOUND),
+    USER_LOCKED(1011, "Tài khoản của bạn đã bị khóa", HttpStatus.FORBIDDEN),
 
     // Appointment errors
     APPOINTMENT_SLOT_TAKEN(2001, "This time slot is already taken", HttpStatus.BAD_REQUEST),

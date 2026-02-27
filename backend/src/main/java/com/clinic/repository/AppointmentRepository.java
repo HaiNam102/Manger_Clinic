@@ -63,4 +63,30 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
                         "JOIN FETCH a.timeSlot " +
                         "WHERE p.user.id = :userId OR d.user.id = :userId")
         List<Appointment> findAllByUserId(@Param("userId") UUID userId);
+
+        // ── Admin queries ──
+
+        @Query("SELECT COUNT(a) FROM Appointment a WHERE a.appointmentDate BETWEEN :from AND :to AND a.status <> 'CANCELLED'")
+        long countByDateRange(@Param("from") LocalDate from, @Param("to") LocalDate to);
+
+        @Query("SELECT COUNT(a) FROM Appointment a WHERE a.status = :status")
+        long countByStatus(@Param("status") AppointmentStatus status);
+
+        @Query("SELECT s.name, COUNT(a) FROM Appointment a JOIN a.specialty s GROUP BY s.name ORDER BY COUNT(a) DESC")
+        List<Object[]> countBySpecialty();
+
+        @Query("SELECT DISTINCT a FROM Appointment a " +
+                        "LEFT JOIN FETCH a.patient p LEFT JOIN FETCH p.user " +
+                        "LEFT JOIN FETCH a.doctor d LEFT JOIN FETCH d.user " +
+                        "LEFT JOIN FETCH a.specialty " +
+                        "LEFT JOIN FETCH a.timeSlot " +
+                        "WHERE (cast(:dateFrom as string) IS NULL OR a.appointmentDate >= :dateFrom) " +
+                        "AND (cast(:dateTo as string) IS NULL OR a.appointmentDate <= :dateTo) " +
+                        "AND (cast(:doctorId as string) IS NULL OR d.id = :doctorId) " +
+                        "AND (cast(:status as string) IS NULL OR a.status = :status) " +
+                        "ORDER BY a.appointmentDate DESC, a.appointmentTime DESC")
+        List<Appointment> findAllForAdmin(@Param("dateFrom") LocalDate dateFrom,
+                        @Param("dateTo") LocalDate dateTo,
+                        @Param("doctorId") UUID doctorId,
+                        @Param("status") AppointmentStatus status);
 }

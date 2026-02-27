@@ -1,11 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar as CalendarIcon, Clock, Loader2 } from 'lucide-react';
+import { ArrowLeft, Calendar as CalendarIcon, Clock, Loader2, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@components/ui/Button';
 import { Card, CardHeader, CardContent } from '@components/ui/Card';
 import { TimeSlotPicker } from '@components/appointments/TimeSlotPicker';
 import { getAvailableSlots } from '@services/patientService';
 import type { TimeSlotResponse } from '@/types';
+
+import { BookingStepper } from '@components/appointments/BookingStepper';
+import { SlotSkeleton } from '@components/appointments/BookingSkeletons';
 
 const SelectDateTimePage = () => {
     const { specialtyId, doctorId } = useParams<{ specialtyId: string; doctorId: string }>();
@@ -81,90 +84,140 @@ const SelectDateTimePage = () => {
     };
 
     return (
-        <div className="space-y-8 animate-fade-in max-w-4xl">
-            <section className="space-y-2">
+        <div className="max-w-7xl mx-auto space-y-12 animate-fade-in pb-20 px-4 sm:px-0">
+            <BookingStepper currentStep={3} />
+
+            <section className="space-y-4">
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="p-0 text-dark-400 hover:text-dark-200"
+                    className="p-0 h-auto text-dark-500 hover:text-primary-400 group flex items-center bg-transparent"
                     onClick={() => navigate(`/booking/doctor/${specialtyId}`)}
                 >
-                    <ArrowLeft size={16} className="mr-1" /> Quay lại danh sách bác sĩ
+                    <ArrowLeft size={16} className="mr-2 transition-transform group-hover:-translate-x-1" />
+                    Quay lại chọn bác sĩ
                 </Button>
-                <h1 className="text-3xl font-bold text-dark-50 tracking-tight">Chọn ngày & giờ khám</h1>
-                <p className="text-dark-400 text-lg">
-                    Chọn thời gian phù hợp cho buổi khám của bạn.
-                </p>
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div className="space-y-2">
+                        <h1 className="text-4xl font-extrabold text-dark-50 tracking-tight">Lịch khám bác sĩ</h1>
+                        <p className="text-dark-400 text-lg">
+                            Chọn thời gian thuận tiện nhất cho buổi khám của bạn.
+                        </p>
+                    </div>
+                </div>
             </section>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <Card className="lg:col-span-1">
-                    <CardHeader title="Chọn ngày" icon={<CalendarIcon size={20} />} />
-                    <CardContent>
-                        <input
-                            type="date"
-                            className="w-full bg-dark-800 border-dark-700 rounded-xl px-4 py-3 text-dark-50 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
-                            value={selectedDate}
-                            min={new Date().toISOString().split('T')[0]}
-                            onChange={(e) => setSelectedDate(e.target.value)}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                {/* Date Selection Panel */}
+                <div className="lg:col-span-4 space-y-6">
+                    <Card className="border-dark-800 bg-dark-900/40 backdrop-blur-sm overflow-hidden sticky top-8">
+                        <CardHeader
+                            title="Ngày khám bệnh"
+                            icon={<CalendarIcon size={20} className="text-primary-400" />}
+                            className="bg-dark-900 border-b border-dark-700/50"
                         />
-                        <p className="text-dark-400 text-xs mt-4">
-                            * Hiển thị các khung giờ còn trống cho ngày đã chọn.
-                        </p>
-                    </CardContent>
-                </Card>
-
-                <Card className="lg:col-span-2">
-                    <CardHeader title="Lịch khám trống" icon={<Clock size={20} />} />
-                    <CardContent className="space-y-8">
-                        {isLoading ? (
-                            <div className="flex items-center justify-center py-12">
-                                <Loader2 size={24} className="animate-spin text-primary-500" />
+                        <CardContent className="p-6">
+                            <input
+                                type="date"
+                                className="w-full bg-dark-800 border-2 border-dark-700 rounded-2xl px-5 py-4 text-dark-50 font-bold focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all cursor-pointer"
+                                value={selectedDate}
+                                min={new Date().toISOString().split('T')[0]}
+                                onChange={(e) => setSelectedDate(e.target.value)}
+                            />
+                            <div className="mt-8 space-y-4">
+                                <h4 className="text-xs font-bold uppercase tracking-widest text-dark-500">Thông tin lịch khám</h4>
+                                <div className="space-y-3">
+                                    <div className="flex items-center gap-3 text-sm text-dark-200 bg-success/5 p-3 rounded-xl border border-success/10">
+                                        <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
+                                        <span>Đầy đủ khung giờ trống</span>
+                                    </div>
+                                    <div className="flex items-center gap-3 text-sm text-dark-200 bg-primary-500/5 p-3 rounded-xl border border-primary-500/10">
+                                        <div className="h-2 w-2 rounded-full bg-primary-500" />
+                                        <span>Khám trực tiếp tại phòng khám</span>
+                                    </div>
+                                </div>
                             </div>
-                        ) : slots.length === 0 ? (
-                            <div className="text-center py-12">
-                                <p className="text-dark-400">Không có lịch khám trống cho ngày này.</p>
-                                <p className="text-dark-500 text-sm mt-1">Vui lòng chọn một ngày khác.</p>
-                            </div>
-                        ) : (
-                            <>
-                                {morningSlots.length > 0 && (
-                                    <section>
-                                        <h4 className="text-sm font-bold text-dark-400 uppercase tracking-widest mb-4">Buổi sáng</h4>
-                                        <TimeSlotPicker
-                                            slots={morningSlots}
-                                            selectedSlot={selectedSlot}
-                                            onSelect={handleSlotSelect}
-                                            disabledSlots={disabledSlots}
-                                        />
-                                    </section>
-                                )}
-                                {afternoonSlots.length > 0 && (
-                                    <section>
-                                        <h4 className="text-sm font-bold text-dark-400 uppercase tracking-widest mb-4">Buổi chiều</h4>
-                                        <TimeSlotPicker
-                                            slots={afternoonSlots}
-                                            selectedSlot={selectedSlot}
-                                            onSelect={handleSlotSelect}
-                                            disabledSlots={disabledSlots}
-                                        />
-                                    </section>
-                                )}
-                            </>
-                        )}
+                        </CardContent>
+                    </Card>
+                </div>
 
-                        <div className="pt-6 border-t border-dark-700 flex justify-end">
-                            <Button
-                                size="lg"
-                                className="px-10"
-                                disabled={!selectedSlot}
-                                onClick={handleNext}
-                            >
-                                Tiếp tục đặt lịch
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
+                {/* Time Slot Selection Panel */}
+                <div className="lg:col-span-8 space-y-6">
+                    <Card className="border-dark-800 bg-dark-900/40 backdrop-blur-sm overflow-hidden">
+                        <CardHeader
+                            title="Các khung giờ còn trống"
+                            icon={<Clock size={20} className="text-primary-400" />}
+                            className="bg-dark-900 border-b border-dark-700/50"
+                        />
+                        <CardContent className="p-8">
+                            {isLoading ? (
+                                <SlotSkeleton />
+                            ) : slots.length === 0 ? (
+                                <div className="text-center py-20 bg-dark-800/20 rounded-3xl border border-dashed border-dark-800">
+                                    <div className="h-20 w-20 bg-dark-800 rounded-full flex items-center justify-center mx-auto mb-6 text-dark-500">
+                                        <CalendarIcon size={32} />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-dark-200">Không có lịch trống</h3>
+                                    <p className="text-dark-500 mt-2 max-w-xs mx-auto">
+                                        Bác sĩ hiện đã kín lịch trong ngày này. Vui lòng chọn một ngày khác.
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className="space-y-12">
+                                    {morningSlots.length > 0 && (
+                                        <section>
+                                            <div className="flex items-center gap-2 mb-6 text-dark-300 font-bold uppercase tracking-widest text-xs">
+                                                <div className="h-1 w-8 bg-primary-500 rounded-full" />
+                                                <span>Buổi sáng</span>
+                                            </div>
+                                            <TimeSlotPicker
+                                                slots={morningSlots}
+                                                selectedSlot={selectedSlot}
+                                                onSelect={handleSlotSelect}
+                                                disabledSlots={disabledSlots}
+                                            />
+                                        </section>
+                                    )}
+                                    {afternoonSlots.length > 0 && (
+                                        <section>
+                                            <div className="flex items-center gap-2 mb-6 text-dark-300 font-bold uppercase tracking-widest text-xs">
+                                                <div className="h-1 w-8 bg-primary-500 rounded-full" />
+                                                <span>Buổi chiều</span>
+                                            </div>
+                                            <TimeSlotPicker
+                                                slots={afternoonSlots}
+                                                selectedSlot={selectedSlot}
+                                                onSelect={handleSlotSelect}
+                                                disabledSlots={disabledSlots}
+                                            />
+                                        </section>
+                                    )}
+                                </div>
+                            )}
+
+                            <div className="mt-12 pt-8 border-t border-dark-700/50 flex flex-col sm:flex-row items-center justify-between gap-6">
+                                <div className="text-sm">
+                                    {selectedSlot ? (
+                                        <div className="flex items-center gap-2 text-primary-400 font-bold">
+                                            <CheckCircle2 size={16} />
+                                            Đã chọn: {selectedSlot} • {new Date(selectedDate).toLocaleDateString('vi-VN')}
+                                        </div>
+                                    ) : (
+                                        <span className="text-dark-500 italic">Vui lòng chọn khung giờ phù hợp</span>
+                                    )}
+                                </div>
+                                <Button
+                                    size="lg"
+                                    className="px-12 py-7 rounded-2xl text-base font-black shadow-2xl shadow-primary-900/30 w-full sm:w-auto hover:translate-y-[-2px] active:translate-y-0 transition-transform"
+                                    disabled={!selectedSlot}
+                                    onClick={handleNext}
+                                >
+                                    Tiếp tục xác nhận <ArrowRight size={20} className="ml-2" />
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         </div>
     );

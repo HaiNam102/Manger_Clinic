@@ -21,9 +21,11 @@ D:\ManagerClinic\backend\src\main\java\com\clinic\security\MedicalRecordSecurity
 D:\ManagerClinic\backend\src\main\java\com\clinic\repository\UserRepository.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\dto\request\DoctorRequest.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\entity\AuditLog.java
+D:\ManagerClinic\backend\src\main\java\com\clinic\service\AdminService.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\entity\Payment.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\dto\request\SpecialtyRequest.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\controller\PaymentController.java
+D:\ManagerClinic\backend\src\main\java\com\clinic\dto\request\AdminUserRequest.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\service\DoctorService.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\security\jwt\JwtAuthenticationFilter.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\service\SpecialtyService.java
@@ -31,6 +33,7 @@ D:\ManagerClinic\backend\src\main\java\com\clinic\dto\response\ReviewResponse.ja
 D:\ManagerClinic\backend\src\main\java\com\clinic\entity\enums\RoleName.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\controller\MedicalRecordController.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\entity\Appointment.java
+D:\ManagerClinic\backend\src\main\java\com\clinic\controller\AdminController.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\repository\PatientRepository.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\entity\Doctor.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\service\AuthService.java
@@ -56,6 +59,7 @@ D:\ManagerClinic\backend\src\main\java\com\clinic\repository\NewsRepository.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\dto\request\ReviewRequest.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\dto\request\ProfileUpdateRequest.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\dto\request\PrescriptionDetailRequest.java
+D:\ManagerClinic\backend\src\main\java\com\clinic\dto\response\DashboardStatsResponse.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\config\VNPayConfig.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\controller\AppointmentController.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\dto\response\TimeSlotResponse.java

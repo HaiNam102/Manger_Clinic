@@ -172,18 +172,9 @@ public class AppointmentService {
                 return mapToResponse(appointmentRepository.save(appointment));
         }
 
-        private AppointmentResponse mapToResponse(Appointment appointment) {
-                return AppointmentResponse.builder()
+        public AppointmentResponse mapToResponse(Appointment appointment) {
+                AppointmentResponse.AppointmentResponseBuilder builder = AppointmentResponse.builder()
                                 .id(appointment.getId())
-                                .patientId(appointment.getPatient().getId())
-                                .patientName(appointment.getPatient().getUser().getFullName())
-                                .doctorId(appointment.getDoctor().getId())
-                                .doctorName(appointment.getDoctor().getUser().getFullName())
-                                .specialtyId(appointment.getSpecialty() != null ? appointment.getSpecialty().getId()
-                                                : null)
-                                .specialtyName(appointment.getSpecialty() != null ? appointment.getSpecialty().getName()
-                                                : null)
-                                .timeSlotId(appointment.getTimeSlot().getId())
                                 .appointmentDate(appointment.getAppointmentDate())
                                 .appointmentTime(appointment.getAppointmentTime())
                                 .status(appointment.getStatus())
@@ -194,7 +185,31 @@ public class AppointmentService {
                                 .confirmedAt(appointment.getConfirmedAt())
                                 .completedAt(appointment.getCompletedAt())
                                 .createdAt(appointment.getCreatedAt())
-                                .updatedAt(appointment.getUpdatedAt())
-                                .build();
+                                .updatedAt(appointment.getUpdatedAt());
+
+                if (appointment.getPatient() != null) {
+                        builder.patientId(appointment.getPatient().getId());
+                        if (appointment.getPatient().getUser() != null) {
+                                builder.patientName(appointment.getPatient().getUser().getFullName());
+                        }
+                }
+
+                if (appointment.getDoctor() != null) {
+                        builder.doctorId(appointment.getDoctor().getId());
+                        if (appointment.getDoctor().getUser() != null) {
+                                builder.doctorName(appointment.getDoctor().getUser().getFullName());
+                        }
+                }
+
+                if (appointment.getSpecialty() != null) {
+                        builder.specialtyId(appointment.getSpecialty().getId());
+                        builder.specialtyName(appointment.getSpecialty().getName());
+                }
+
+                if (appointment.getTimeSlot() != null) {
+                        builder.timeSlotId(appointment.getTimeSlot().getId());
+                }
+
+                return builder.build();
         }
 }

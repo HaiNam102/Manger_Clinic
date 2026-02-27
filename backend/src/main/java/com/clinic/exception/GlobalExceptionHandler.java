@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -18,15 +19,34 @@ public class GlobalExceptionHandler {
 
     private static final String MIN_ATTRIBUTE = "min";
 
+    @ExceptionHandler(value = AuthenticationException.class)
+    ResponseEntity<ApiResponse<?>> handlingAuthenticationException(AuthenticationException exception) {
+        ErrorCode errorCode = ErrorCode.UNAUTHENTICATED;
+
+        // Specific handling for locked/disabled accounts
+        if (exception instanceof org.springframework.security.authentication.DisabledException
+                || exception instanceof org.springframework.security.authentication.LockedException) {
+            errorCode = ErrorCode.USER_LOCKED;
+        }
+
+        ApiResponse<?> apiResponse = ApiResponse.builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build();
+
+        return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
+    }
+
     @ExceptionHandler(value = Exception.class)
     ResponseEntity<ApiResponse<?>> handlingRuntimeException(RuntimeException exception) {
-        log.error("Exception: ", exception);
+        log.error("Uncaught RuntimeException: {} - {}", exception.getClass().getName(), exception.getMessage(),
+                exception);
         ApiResponse<?> apiResponse = new ApiResponse<>();
 
         apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
-        apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
+        apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage() + ": " + exception.getMessage());
 
-        return ResponseEntity.badRequest().body(apiResponse);
+        return ResponseEntity.status(ErrorCode.UNCATEGORIZED_EXCEPTION.getStatusCode()).body(apiResponse);
     }
 
     @ExceptionHandler(value = HttpMessageNotReadableException.class)

@@ -10,7 +10,7 @@ export interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
     src?: string;
     alt?: string;
     fallback?: string;
-    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 }
 
 const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
@@ -21,6 +21,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
             md: 'h-10 w-10 text-sm',
             lg: 'h-12 w-12 text-base',
             xl: 'h-16 w-16 text-xl',
+            xxl: 'h-32 w-32 text-4xl',
         };
 
         return (

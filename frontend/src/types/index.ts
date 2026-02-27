@@ -261,8 +261,25 @@ export interface AppointmentResponse {
 // Matches PatientResponse.java
 export interface PatientResponse {
     id: string;
+    userId: string;
     fullName: string;
     email: string;
+    dateOfBirth?: string;
+    gender?: string;
+    phoneNumber?: string;
+    address?: string;
+    city?: string;
+    bloodType?: string;
+    allergies?: string[];
+    chronicDiseases?: string[];
+    emergencyContactName?: string;
+    emergencyContactPhone?: string;
+    insuranceNumber?: string;
+    isActive: boolean;
+}
+
+export interface PatientRequest {
+    fullName: string;
     dateOfBirth?: string;
     gender?: string;
     phoneNumber?: string;
@@ -353,11 +370,13 @@ export interface SpecialtyResponse {
     icon?: string;
     isActive?: boolean;
     displayOrder?: number;
+    doctorCount?: number;
 }
 
 // Matches DoctorResponse.java
 export interface DoctorResponse {
     id: string;
+    userId: string;
     fullName: string;
     email?: string;
     phoneNumber?: string;
@@ -371,6 +390,21 @@ export interface DoctorResponse {
     specialtyId?: string;
     avgRating?: number;
     totalReviews?: number;
+    education?: string[];
+    certifications?: string[];
+    isActive: boolean;
+}
+
+export interface DoctorRequest {
+    fullName: string;
+    phoneNumber?: string;
+    bio?: string;
+    experienceYears?: number;
+    licenseNumber?: string;
+    consultationFee?: number;
+    isAvailable?: boolean;
+    specialtyId?: string;
+    userId?: string;
     education?: string[];
     certifications?: string[];
 }
@@ -393,4 +427,115 @@ export interface UserProfileResponse {
     avatarUrl?: string;
     role: string;
     isActive: boolean;
+    doctorId?: string;
+    patientId?: string;
+
+    bio?: string;
+    experienceYears?: number;
+    licenseNumber?: string;
+    consultationFee?: number;
+    dateOfBirth?: string;
+    gender?: string;
+    address?: string;
+    city?: string;
+    bloodType?: string;
+    allergies?: string[];
+    chronicDiseases?: string[];
+    emergencyContactName?: string;
+    emergencyContactPhone?: string;
+    insuranceNumber?: string;
+    education?: string[];
+    certifications?: string[];
+    specialtyName?: string;
+    specialtyId?: string;
+}
+
+export interface ProfileUpdateRequest {
+    fullName: string;
+    phone?: string;
+    avatarUrl?: string;
+
+    // Doctor specific
+    bio?: string;
+    experienceYears?: number;
+    licenseNumber?: string;
+    consultationFee?: number;
+    education?: string[];
+    certifications?: string[];
+    specialtyId?: string;
+
+    // Patient specific
+    dateOfBirth?: string;
+    gender?: string;
+    address?: string;
+    city?: string;
+    bloodType?: string;
+    allergies?: string[];
+    chronicDiseases?: string[];
+    emergencyContactName?: string;
+    emergencyContactPhone?: string;
+    insuranceNumber?: string;
+}
+// Admin Dashboard Types
+export interface MonthlyStatItem {
+    month: string;
+    count: number;
+}
+
+export interface SpecialtyStatItem {
+    name: string;
+    count: number;
+}
+
+export interface RecentActivityItem {
+    action: string;
+    entityType?: string;
+    description: string;
+    timestamp: string;
+}
+
+export interface PaymentStats {
+    totalPayments: number;
+    completedPayments: number;
+    successRate: number;
+}
+
+export interface AdminDashboardStats {
+    totalUsers: number;
+    totalDoctors: number;
+    totalPatients: number;
+    todayAppointments: number;
+    monthAppointments: number;
+    pendingAppointments: number;
+    monthlyAppointmentStats: MonthlyStatItem[];
+    specialtyDistribution: SpecialtyStatItem[];
+    recentActivities: RecentActivityItem[];
+    paymentStats: PaymentStats;
+}
+
+export interface AdminUserRequest {
+    email: string;
+    password?: string;
+    fullName: string;
+    phone?: string;
+    role: string;
+    isActive?: boolean;
+
+    // Doctor specific
+    specialtyId?: string;
+    licenseNumber?: string;
+    experienceYears?: number;
+    consultationFee?: number;
+
+    // Patient specific
+    dateOfBirth?: string;
+    gender?: string;
+    address?: string;
+}
+
+export interface AdminAppointmentFilters {
+    dateFrom?: string;
+    dateTo?: string;
+    doctorId?: string;
+    status?: string;
 }

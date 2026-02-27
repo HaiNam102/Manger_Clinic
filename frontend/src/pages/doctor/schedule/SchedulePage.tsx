@@ -1,23 +1,18 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
-    Clock,
-    Plus,
-    Trash2,
-    Save,
-    Calendar,
-    CalendarOff,
-    ToggleLeft,
-    ToggleRight,
-    AlertCircle,
-    CheckCircle2,
-    X
+    Clock, Plus, Trash2, Save, Calendar, CalendarOff,
+    ToggleLeft, ToggleRight, CheckCircle2, X,
+    Copy, RefreshCcw, Info, AlertCircle
 } from 'lucide-react';
 import { Card, CardHeader, CardContent } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
 import { Badge } from '@components/ui/Badge';
 import { Loading } from '@components/ui/Loading';
+import { Modal } from '@components/ui/Modal';
 import { useAuth } from '@contexts/AuthContext';
+import { useToast } from '@hooks/useToast';
 import { getMySchedule, updateMySchedule } from '@services/doctorService';
+import { cn } from '@utils';
 import type { Schedule, ScheduleTimeSlot, LeaveDay } from '@/types';
 
 // ============ Constants ============
@@ -60,6 +55,7 @@ const tabs: { id: TabId; label: string; icon: React.ReactNode }[] = [
 // ============ Main Component ============
 const SchedulePage = () => {
     const { user } = useAuth();
+    const { showToast } = useToast();
     const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<TabId>('weekly');
     const [schedule, setSchedule] = useState<Schedule[]>(generateDefaultSchedule);
@@ -67,6 +63,8 @@ const SchedulePage = () => {
     const [selectedDay, setSelectedDay] = useState<number>(1);
     const [hasChanges, setHasChanges] = useState(false);
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+    const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
+    const [copyTargetDays, setCopyTargetDays] = useState<number[]>([]);
 
     // Load schedule from API
     useEffect(() => {
@@ -177,18 +175,19 @@ const SchedulePage = () => {
         if (!user?.id) return;
         try {
             setSaveStatus('saving');
+            showToast.loading('Đang lưu lịch làm việc...');
 
-            // 1. Prepare weekly schedules (ensure they have null specificDate)
+            // 1. Prepare weekly schedules
             const weeklyPayload = schedule.map(s => ({
                 ...s,
                 specificDate: undefined
             }));
 
-            // 2. Prepare leave days (map back to Schedule objects)
+            // 2. Prepare leave days
             const leavePayload = leaveDays.map(ld => {
                 const dateObj = new Date(ld.date);
                 return {
-                    dayOfWeek: dateObj.getDay(), // 0=Sunday, 6=Saturday
+                    dayOfWeek: dateObj.getDay(),
                     specificDate: ld.date,
                     isAvailable: false,
                     notes: ld.reason,
@@ -203,11 +202,58 @@ const SchedulePage = () => {
 
             setSaveStatus('saved');
             setHasChanges(false);
+            showToast.success('Đã cập nhật lịch làm việc thành công!');
             setTimeout(() => setSaveStatus('idle'), 2000);
         } catch (error) {
             console.error('Failed to save schedule:', error);
             setSaveStatus('idle');
-            alert('Có lỗi xảy ra khi lưu lịch làm việc. Vui lòng thử lại.');
+            showToast.error('Lưu lịch làm việc thất bại. Vui lòng thử lại.');
+        } finally {
+            showToast.dismiss();
+        }
+    };
+
+    // Copy schedule logic
+    const handleCopySchedule = () => {
+        if (copyTargetDays.length === 0) return;
+        const sourceSchedule = schedule.find(s => s.dayOfWeek === selectedDay);
+        if (!sourceSchedule) return;
+
+        setSchedule(prev => prev.map(s => {
+            if (copyTargetDays.includes(s.dayOfWeek)) {
+                return {
+                    ...s,
+                    isAvailable: sourceSchedule.isAvailable,
+                    timeSlots: JSON.parse(JSON.stringify(sourceSchedule.timeSlots)),
+                    notes: sourceSchedule.notes
+                };
+            }
+            return s;
+        }));
+
+        markChanged();
+        setIsCopyModalOpen(false);
+        setCopyTargetDays([]);
+        showToast.success(`Đã sao chép lịch từ ${DAYS_VI[selectedDay]} sang ${copyTargetDays.length} ngày khác.`);
+    };
+
+    // Reset day to default
+    const handleResetDay = (dayOfWeek: number) => {
+        if (window.confirm(`Bạn có muốn đặt lại lịch cho ${DAYS_VI[dayOfWeek]} về mặc định?`)) {
+            setSchedule(prev => prev.map(s =>
+                s.dayOfWeek === dayOfWeek
+                    ? { ...s, isAvailable: true, timeSlots: [...DEFAULT_SLOTS], notes: '' }
+                    : s
+            ));
+            markChanged();
+            showToast.success(`Đã đặt lại lịch ${DAYS_VI[dayOfWeek]}.`);
+        }
+    };
+
+    const handleRemoveLeaveWithConfirm = (date: string) => {
+        if (window.confirm('Bạn có chắc chắn muốn xóa ngày nghỉ này?')) {
+            removeLeaveDay(date);
+            showToast.success('Đã xóa ngày nghỉ.');
         }
     };
 
@@ -218,32 +264,46 @@ const SchedulePage = () => {
     return (
         <div className="space-y-6 animate-fade-in">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-dark-50">Quản lý lịch làm việc</h1>
-                    <p className="text-dark-400 mt-1">Cài đặt lịch khám, khung giờ và ngày nghỉ</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-8 border-b border-dark-700/50 bg-dark-900/20">
+                <div className="flex items-center gap-4">
+                    <div className="h-14 w-14 rounded-2xl bg-primary-600/10 border border-primary-500/20 flex items-center justify-center shadow-inner">
+                        <Clock size={28} className="text-primary-400" />
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-bold bg-gradient-to-r from-dark-50 to-dark-300 bg-clip-text text-transparent">
+                            Quản lý lịch làm việc
+                        </h1>
+                        <p className="text-sm text-dark-400 font-medium">
+                            Thiết lập thời gian khám bệnh và ngày nghỉ của bạn
+                        </p>
+                    </div>
                 </div>
-                <div className="flex items-center gap-2">
+
+                <div className="flex items-center gap-3">
                     {hasChanges && (
-                        <span className="text-xs text-amber-400 flex items-center gap-1">
-                            <AlertCircle size={14} /> Có thay đổi chưa lưu
-                        </span>
-                    )}
-                    {saveStatus === 'saved' && (
-                        <span className="text-xs text-emerald-400 flex items-center gap-1">
-                            <CheckCircle2 size={14} /> Đã lưu!
-                        </span>
+                        <div className="hidden md:flex flex-col items-end mr-2 animate-fade-in">
+                            <span className="text-[10px] font-bold text-amber-500 uppercase tracking-widest">Thay đổi chưa lưu</span>
+                            <span className="text-xs text-dark-500">Hãy nhấn lưu để cập nhật</span>
+                        </div>
                     )}
                     <Button
-                        className="bg-primary-600 hover:bg-primary-500"
                         onClick={handleSave}
-                        disabled={!hasChanges || saveStatus === 'saving'}
+                        disabled={!hasChanges || saveStatus !== 'idle'}
+                        className={cn(
+                            "gap-2 h-11 px-6 font-bold transition-all duration-300",
+                            hasChanges ? "bg-primary-600 hover:bg-primary-500 shadow-lg shadow-primary-900/30 ring-2 ring-primary-500/20" : "opacity-60 grayscale-[0.5]"
+                        )}
                     >
-                        <Save size={16} className="mr-2" />
-                        {saveStatus === 'saving' ? 'Đang lưu...' : 'Lưu thay đổi'}
+                        {saveStatus === 'saving' ? <Loading size="sm" variant="white" /> : <Save size={18} />}
+                        {saveStatus === 'saving' ? 'Đang lưu...' : 'Lưu lịch làm việc'}
                     </Button>
                 </div>
             </div>
+            {saveStatus === 'saved' && (
+                <span className="text-xs text-emerald-400 flex items-center gap-1">
+                    <CheckCircle2 size={14} /> Đã lưu!
+                </span>
+            )}
 
             {/* Tab Navigation */}
             <div className="flex items-center gap-1 bg-dark-900 rounded-xl p-1 border border-dark-700 w-fit">
@@ -263,34 +323,104 @@ const SchedulePage = () => {
             </div>
 
             {/* Tab Content */}
-            {activeTab === 'weekly' && (
-                <WeeklyScheduleTab
-                    schedule={schedule}
-                    selectedDay={selectedDay}
-                    onSelectDay={setSelectedDay}
-                    onToggleDay={toggleDay}
-                />
-            )}
+            <div className="mt-8">
+                {activeTab === 'weekly' && (
+                    <WeeklyScheduleTab
+                        schedule={schedule}
+                        selectedDay={selectedDay}
+                        onSelectDay={setSelectedDay}
+                        onToggleDay={toggleDay}
+                        onOpenCopy={() => setIsCopyModalOpen(true)}
+                        onResetDay={handleResetDay}
+                    />
+                )}
 
-            {activeTab === 'timeslots' && (
-                <TimeSlotsTab
-                    schedule={schedule}
-                    selectedDay={selectedDay}
-                    selectedSchedule={selectedSchedule}
-                    onSelectDay={setSelectedDay}
-                    onUpdateSlot={updateSlot}
-                    onAddSlot={addSlot}
-                    onRemoveSlot={removeSlot}
-                />
-            )}
+                {activeTab === 'timeslots' && (
+                    <TimeSlotsTab
+                        schedule={schedule}
+                        selectedDay={selectedDay}
+                        selectedSchedule={selectedSchedule}
+                        onSelectDay={setSelectedDay}
+                        onUpdateSlot={updateSlot}
+                        onAddSlot={addSlot}
+                        onRemoveSlot={removeSlot}
+                        onResetDay={handleResetDay}
+                    />
+                )}
 
-            {activeTab === 'leave' && (
-                <LeaveDaysTab
-                    leaveDays={leaveDays}
-                    onAddLeave={addLeaveDay}
-                    onRemoveLeave={removeLeaveDay}
-                />
-            )}
+                {activeTab === 'leave' && (
+                    <LeaveDaysTab
+                        leaveDays={leaveDays}
+                        onAddLeave={addLeaveDay}
+                        onRemoveLeave={handleRemoveLeaveWithConfirm}
+                    />
+                )}
+            </div>
+
+            {/* Copy Schedule Modal */}
+            <Modal
+                isOpen={isCopyModalOpen}
+                onClose={() => setIsCopyModalOpen(false)}
+                title="Sao chép lịch làm việc"
+            >
+                <div className="space-y-6 pt-2">
+                    <p className="text-sm text-dark-400">
+                        Sao chép các khung giờ từ {DAYS_VI[selectedDay]} sang các ngày khác.
+                    </p>
+                    <div className="bg-primary-900/20 border border-primary-800/30 rounded-xl p-4 flex items-start gap-3">
+                        <Info size={18} className="text-primary-400 shrink-0 mt-0.5" />
+                        <p className="text-sm text-primary-200">
+                            Tất cả khung giờ hiện tại của các ngày được chọn sẽ bị thay thế bằng khung giờ của <strong>{DAYS_VI[selectedDay]}</strong>.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                        {DAYS_VI.map((name, day) => (
+                            <button
+                                key={day}
+                                disabled={day === selectedDay}
+                                onClick={() => {
+                                    setCopyTargetDays(prev =>
+                                        prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
+                                    );
+                                }}
+                                className={cn(
+                                    "flex items-center justify-between px-4 py-3 rounded-xl border transition-all text-sm font-medium",
+                                    day === selectedDay
+                                        ? "bg-dark-800/30 border-dark-700 text-dark-500 cursor-not-allowed"
+                                        : copyTargetDays.includes(day)
+                                            ? "bg-primary-600 border-primary-500 text-white shadow-lg shadow-primary-900/20"
+                                            : "bg-dark-900/40 border-dark-700 text-dark-300 hover:border-dark-600 hover:bg-dark-800"
+                                )}
+                            >
+                                {name}
+                                {copyTargetDays.includes(day) && <CheckCircle2 size={16} />}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setCopyTargetDays(copyTargetDays.length === 6 ? [] : [0, 1, 2, 3, 4, 5, 6].filter(d => d !== selectedDay))}
+                        >
+                            {copyTargetDays.length === 6 ? 'Bỏ chọn tất cả' : 'Chọn tất cả'}
+                        </Button>
+                        <div className="flex gap-3">
+                            <Button variant="ghost" onClick={() => setIsCopyModalOpen(false)}>Hủy</Button>
+                            <Button
+                                variant="primary"
+                                onClick={handleCopySchedule}
+                                disabled={copyTargetDays.length === 0}
+                                className="gap-2"
+                            >
+                                <Copy size={16} /> Sao chép ngay
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 };
@@ -301,44 +431,93 @@ interface WeeklyTabProps {
     selectedDay: number;
     onSelectDay: (day: number) => void;
     onToggleDay: (day: number) => void;
+    onOpenCopy: () => void;
+    onResetDay: (day: number) => void;
 }
 
-const WeeklyScheduleTab = ({ schedule, selectedDay, onSelectDay, onToggleDay }: WeeklyTabProps) => (
-    <div className="grid grid-cols-1 lg:grid-cols-7 gap-3">
+const WeeklyScheduleTab = ({ schedule, selectedDay, onSelectDay, onToggleDay, onOpenCopy, onResetDay }: WeeklyTabProps) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
         {schedule.map(day => (
-            <Card
+            <div
                 key={day.dayOfWeek}
-                className={`cursor-pointer transition-all hover:scale-[1.02] ${selectedDay === day.dayOfWeek ? 'ring-2 ring-primary-500/50' : ''
-                    } ${!day.isAvailable ? 'opacity-60' : ''}`}
                 onClick={() => onSelectDay(day.dayOfWeek)}
+                className={cn(
+                    "group relative overflow-hidden rounded-2xl border transition-all duration-300 cursor-pointer",
+                    "bg-dark-900/40 backdrop-blur-md border-dark-700/50 hover:bg-dark-800/60 hover:border-dark-600",
+                    selectedDay === day.dayOfWeek && "ring-2 ring-primary-500/50 border-primary-500/30 bg-primary-950/20",
+                    !day.isAvailable && "opacity-75 grayscale-[0.5]"
+                )}
             >
-                <CardContent className="p-4 text-center">
-                    <p className="text-xs font-semibold text-dark-400 uppercase tracking-wider mb-2">
-                        {DAYS_SHORT[day.dayOfWeek]}
-                    </p>
-                    <p className="text-sm font-bold text-dark-50 mb-3">{DAYS_VI[day.dayOfWeek]}</p>
+                {/* Header Decoration */}
+                <div className={cn(
+                    "h-1.5 w-full",
+                    day.isAvailable ? "bg-primary-500/50" : "bg-dark-700"
+                )} />
 
-                    <button
-                        onClick={(e) => { e.stopPropagation(); onToggleDay(day.dayOfWeek); }}
-                        className={`w-full flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-medium transition-all ${day.isAvailable
-                            ? 'bg-emerald-900/30 text-emerald-400 border border-emerald-700/30'
-                            : 'bg-dark-800 text-dark-500 border border-dark-700'
-                            }`}
-                    >
-                        {day.isAvailable ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
-                        {day.isAvailable ? 'Làm việc' : 'Nghỉ'}
-                    </button>
+                <div className="p-4 pt-5">
+                    <div className="flex items-center justify-between mb-1">
+                        <span className="text-[10px] font-bold text-dark-500 uppercase tracking-[0.2em]">
+                            {DAYS_SHORT[day.dayOfWeek]}
+                        </span>
+                        {day.isAvailable && (
+                            <div className="flex items-center gap-1">
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); onSelectDay(day.dayOfWeek); onOpenCopy(); }}
+                                    className="p-1.5 rounded-lg text-dark-400 hover:text-primary-400 hover:bg-primary-900/20 transition-all opacity-0 group-hover:opacity-100"
+                                    title="Sao chép lịch này"
+                                >
+                                    <Copy size={14} />
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); onResetDay(day.dayOfWeek); }}
+                                    className="p-1.5 rounded-lg text-dark-400 hover:text-amber-400 hover:bg-amber-900/20 transition-all opacity-0 group-hover:opacity-100"
+                                    title="Đặt lại mặc định"
+                                >
+                                    <RefreshCcw size={14} />
+                                </button>
+                            </div>
+                        )}
+                    </div>
 
-                    {day.isAvailable && (
-                        <p className="text-xs text-dark-500 mt-2">
-                            {day.timeSlots.length} khung giờ
-                        </p>
-                    )}
-                    {!day.isAvailable && day.notes && (
-                        <p className="text-[11px] text-dark-500 mt-2 truncate">{day.notes}</p>
-                    )}
-                </CardContent>
-            </Card>
+                    <h3 className="text-lg font-bold text-dark-50">{DAYS_VI[day.dayOfWeek]}</h3>
+
+                    <div className="mt-4 space-y-3">
+                        <button
+                            onClick={(e) => { e.stopPropagation(); onToggleDay(day.dayOfWeek); }}
+                            className={cn(
+                                "w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-semibold transition-all",
+                                day.isAvailable
+                                    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20"
+                                    : "bg-dark-800 text-dark-400 border border-dark-700 hover:bg-dark-700"
+                            )}
+                        >
+                            <span className="flex items-center gap-2">
+                                {day.isAvailable ? <CheckCircle2 size={14} /> : <CalendarOff size={14} />}
+                                {day.isAvailable ? 'Đang làm việc' : 'Đang nghỉ'}
+                            </span>
+                            {day.isAvailable ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
+                        </button>
+
+                        {day.isAvailable && (
+                            <div className="flex items-center gap-2 px-1">
+                                <Badge variant="primary" size="sm" className="bg-primary-500/10 text-primary-400 border-none">
+                                    {day.timeSlots.length} khung giờ
+                                </Badge>
+                                {day.timeSlots.some(s => !s.isAvailable) && (
+                                    <div className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" title="Có khung giờ bị ẩn" />
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Selected Indicator */}
+                {selectedDay === day.dayOfWeek && (
+                    <div className="absolute top-0 right-0 p-1">
+                        <div className="h-2 w-2 rounded-full bg-primary-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+                    </div>
+                )}
+            </div>
         ))}
     </div>
 );
@@ -352,137 +531,202 @@ interface TimeSlotsTabProps {
     onUpdateSlot: (day: number, idx: number, updates: Partial<ScheduleTimeSlot>) => void;
     onAddSlot: (day: number) => void;
     onRemoveSlot: (day: number, idx: number) => void;
+    onResetDay: (day: number) => void;
 }
 
-const TimeSlotsTab = ({ schedule, selectedDay, selectedSchedule, onSelectDay, onUpdateSlot, onAddSlot, onRemoveSlot }: TimeSlotsTabProps) => (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card>
-            <CardHeader title="Chọn ngày" icon={<Calendar size={18} />} />
-            <CardContent className="space-y-1">
-                {schedule.map(day => (
-                    <button
-                        key={day.dayOfWeek}
-                        onClick={() => onSelectDay(day.dayOfWeek)}
-                        disabled={!day.isAvailable}
-                        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-all ${selectedDay === day.dayOfWeek
-                            ? 'bg-primary-900/40 text-primary-400 border border-primary-700/30'
-                            : day.isAvailable
-                                ? 'text-dark-200 hover:bg-dark-800'
-                                : 'text-dark-600 cursor-not-allowed'
-                            }`}
-                    >
-                        <span className="font-medium">{DAYS_VI[day.dayOfWeek]}</span>
-                        {day.isAvailable ? (
-                            <Badge variant="primary" size="sm">{day.timeSlots.length}</Badge>
-                        ) : (
-                            <span className="text-xs text-dark-600">Nghỉ</span>
-                        )}
-                    </button>
-                ))}
-            </CardContent>
-        </Card>
-
-        <Card className="lg:col-span-2">
-            <CardHeader
-                title={`Khung giờ — ${DAYS_VI[selectedDay]}`}
-                description={selectedSchedule?.isAvailable ? `${selectedSchedule.timeSlots.length} khung giờ` : 'Ngày nghỉ'}
-                icon={<Clock size={18} />}
-                action={
-                    selectedSchedule?.isAvailable ? (
-                        <Button size="sm" variant="ghost" onClick={() => onAddSlot(selectedDay)} className="text-primary-400">
-                            <Plus size={16} className="mr-1" /> Thêm
-                        </Button>
-                    ) : undefined
-                }
-            />
-            <CardContent>
-                {selectedSchedule?.isAvailable ? (
-                    <div className="space-y-2">
-                        <div className="grid grid-cols-12 gap-2 px-3 py-2 text-xs font-semibold text-dark-500 uppercase">
-                            <div className="col-span-3">Bắt đầu</div>
-                            <div className="col-span-3">Kết thúc</div>
-                            <div className="col-span-2">Số BN</div>
-                            <div className="col-span-2">Trạng thái</div>
-                            <div className="col-span-2 text-right">Xóa</div>
-                        </div>
-
-                        {selectedSchedule.timeSlots.map((slot, idx) => (
-                            <div
-                                key={idx}
-                                className={`grid grid-cols-12 gap-2 items-center px-3 py-2.5 rounded-lg border transition-all ${slot.isAvailable
-                                    ? 'bg-dark-800/30 border-dark-700/50 hover:border-primary-700/30'
-                                    : 'bg-dark-800/10 border-dark-800 opacity-50'
-                                    }`}
+const TimeSlotsTab = ({ schedule, selectedDay, selectedSchedule, onSelectDay, onUpdateSlot, onAddSlot, onRemoveSlot, onResetDay }: TimeSlotsTabProps) => {
+    return (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* Sidebar Navigation */}
+            <div className="lg:col-span-3 space-y-3">
+                <Card className="bg-dark-900/40 border-dark-700/50">
+                    <CardHeader title="Chọn ngày" icon={<Calendar size={18} />} className="pb-2" />
+                    <CardContent className="space-y-1">
+                        {schedule.map(day => (
+                            <button
+                                key={day.dayOfWeek}
+                                onClick={() => onSelectDay(day.dayOfWeek)}
+                                className={cn(
+                                    "w-full flex items-center justify-between px-3 py-3 rounded-xl transition-all border group",
+                                    selectedDay === day.dayOfWeek
+                                        ? "bg-primary-600 border-primary-500 text-white shadow-lg shadow-primary-900/20"
+                                        : day.isAvailable
+                                            ? "bg-dark-800/40 border-dark-700 text-dark-200 hover:border-dark-600 hover:bg-dark-800"
+                                            : "bg-dark-900 border-transparent text-dark-600 opacity-60"
+                                )}
                             >
-                                <div className="col-span-3">
-                                    <input
-                                        type="time"
-                                        value={slot.startTime}
-                                        onChange={(e) => onUpdateSlot(selectedDay, idx, { startTime: e.target.value })}
-                                        className="bg-dark-800 border border-dark-600 rounded-lg px-2 py-1.5 text-sm text-dark-200 w-full focus:outline-none focus:ring-1 focus:ring-primary-500"
-                                    />
+                                <div className="flex items-center gap-3">
+                                    <div className={cn(
+                                        "h-2 w-2 rounded-full",
+                                        day.isAvailable ? "bg-emerald-500" : "bg-dark-600"
+                                    )} />
+                                    <span className="font-semibold">{DAYS_VI[day.dayOfWeek]}</span>
                                 </div>
-                                <div className="col-span-3">
-                                    <input
-                                        type="time"
-                                        value={slot.endTime}
-                                        onChange={(e) => onUpdateSlot(selectedDay, idx, { endTime: e.target.value })}
-                                        className="bg-dark-800 border border-dark-600 rounded-lg px-2 py-1.5 text-sm text-dark-200 w-full focus:outline-none focus:ring-1 focus:ring-primary-500"
-                                    />
-                                </div>
-                                <div className="col-span-2">
-                                    <input
-                                        type="number"
-                                        min={1}
-                                        max={10}
-                                        value={slot.maxPatients}
-                                        onChange={(e) => onUpdateSlot(selectedDay, idx, { maxPatients: Number(e.target.value) })}
-                                        className="bg-dark-800 border border-dark-600 rounded-lg px-2 py-1.5 text-sm text-dark-200 w-full focus:outline-none focus:ring-1 focus:ring-primary-500"
-                                    />
-                                </div>
-                                <div className="col-span-2">
-                                    <button
-                                        onClick={() => onUpdateSlot(selectedDay, idx, { isAvailable: !slot.isAvailable })}
-                                        className={`flex items-center gap-1 text-xs font-medium px-2 py-1.5 rounded-lg transition-all ${slot.isAvailable
-                                            ? 'bg-emerald-900/30 text-emerald-400'
-                                            : 'bg-dark-800 text-dark-500'
-                                            }`}
-                                    >
-                                        {slot.isAvailable ? <ToggleRight size={14} /> : <ToggleLeft size={14} />}
-                                    </button>
-                                </div>
-                                <div className="col-span-2 text-right">
-                                    <button
-                                        onClick={() => onRemoveSlot(selectedDay, idx)}
-                                        className="p-1.5 rounded-lg text-red-400/60 hover:text-red-400 hover:bg-red-900/20 transition-all"
-                                    >
-                                        <Trash2 size={14} />
-                                    </button>
-                                </div>
-                            </div>
+                                {day.isAvailable ? (
+                                    <span className={cn(
+                                        "text-xs font-bold px-2 py-0.5 rounded-lg",
+                                        selectedDay === day.dayOfWeek ? "bg-white/20" : "bg-dark-700 text-dark-400"
+                                    )}>
+                                        {day.timeSlots.length}
+                                    </span>
+                                ) : (
+                                    <CalendarOff size={14} className="text-dark-700" />
+                                )}
+                            </button>
                         ))}
+                    </CardContent>
+                </Card>
 
-                        {selectedSchedule.timeSlots.length === 0 && (
-                            <div className="text-center py-8">
-                                <Clock size={40} className="mx-auto text-dark-600 mb-3" />
-                                <p className="text-dark-400 text-sm">Chưa có khung giờ nào</p>
-                                <Button size="sm" variant="ghost" onClick={() => onAddSlot(selectedDay)} className="mt-2 text-primary-400">
-                                    <Plus size={14} className="mr-1" /> Thêm khung giờ
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-                ) : (
-                    <div className="text-center py-12">
-                        <CalendarOff size={48} className="mx-auto text-dark-600 mb-3" />
-                        <p className="text-dark-400">Ngày nghỉ — Không có khung giờ</p>
-                        <p className="text-dark-500 text-sm mt-1">Bật "Làm việc" trong tab Lịch tuần để thêm khung giờ</p>
+                {selectedSchedule?.isAvailable && (
+                    <div className="p-4 rounded-2xl bg-amber-900/10 border border-amber-900/20">
+                        <div className="flex items-center gap-2 text-amber-500 mb-2">
+                            <Info size={16} />
+                            <span className="text-xs font-bold uppercase tracking-wider">Mẹo nhỏ</span>
+                        </div>
+                        <p className="text-xs text-amber-200/70 leading-relaxed">
+                            Bác sĩ nên giữ tối thiểu 15-30 phút cho mỗi khung giờ để đảm bảo chất lượng khám bệnh.
+                        </p>
                     </div>
                 )}
-            </CardContent>
-        </Card>
-    </div>
-);
+            </div>
+
+            {/* Main Content Area */}
+            <div className="lg:col-span-9">
+                <Card className="bg-dark-900/40 border-dark-700/50 backdrop-blur-md">
+                    <CardHeader
+                        title={`Lịch khám ${DAYS_VI[selectedDay]}`}
+                        description={selectedSchedule?.isAvailable ? "Dưới đây là các khung giờ bệnh nhân có thể đăng ký" : "Ngày này hiện đang nghỉ"}
+                        icon={<Clock size={20} className="text-primary-400" />}
+                        action={
+                            <div className="flex gap-2">
+                                {selectedSchedule?.isAvailable && (
+                                    <>
+                                        <Button variant="ghost" size="sm" onClick={() => onResetDay(selectedDay)} className="text-dark-400 hover:text-amber-400">
+                                            <RefreshCcw size={16} className="mr-2" /> Đặt lại
+                                        </Button>
+                                        <Button variant="primary" size="sm" onClick={() => onAddSlot(selectedDay)} className="shadow-lg shadow-primary-900/20">
+                                            <Plus size={16} className="mr-2" /> Thêm khung giờ
+                                        </Button>
+                                    </>
+                                )}
+                            </div>
+                        }
+                    />
+                    <CardContent>
+                        {selectedSchedule?.isAvailable ? (
+                            <div className="space-y-4">
+                                {selectedSchedule.timeSlots.length > 0 ? (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {selectedSchedule.timeSlots.map((slot, idx) => (
+                                            <div
+                                                key={idx}
+                                                className={cn(
+                                                    "relative p-4 rounded-2xl border transition-all duration-300",
+                                                    slot.isAvailable
+                                                        ? "bg-dark-800/60 border-dark-700/50 hover:border-primary-500/30 group/slot"
+                                                        : "bg-dark-900/50 border-dark-800 opacity-60"
+                                                )}
+                                            >
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <span className="text-xs font-bold text-dark-500 uppercase tracking-widest">
+                                                        Khung giờ #{idx + 1}
+                                                    </span>
+                                                    <button
+                                                        onClick={() => onRemoveSlot(selectedDay, idx)}
+                                                        className="p-1.5 rounded-lg text-dark-500 hover:text-red-400 hover:bg-red-900/20 transition-all opacity-0 group-hover/slot:opacity-100"
+                                                    >
+                                                        <Trash2 size={14} />
+                                                    </button>
+                                                </div>
+
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div className="space-y-1.5">
+                                                        <label className="text-[10px] font-bold text-dark-400 uppercase ml-1">Bắt đầu</label>
+                                                        <div className="relative">
+                                                            <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-500" />
+                                                            <input
+                                                                type="time"
+                                                                value={slot.startTime}
+                                                                onChange={(e) => onUpdateSlot(selectedDay, idx, { startTime: e.target.value })}
+                                                                className="w-full bg-dark-900 border border-dark-700 rounded-xl pl-9 pr-3 py-2 text-sm text-dark-50 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all font-medium"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="space-y-1.5">
+                                                        <label className="text-[10px] font-bold text-dark-400 uppercase ml-1">Kết thúc</label>
+                                                        <div className="relative">
+                                                            <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-500" />
+                                                            <input
+                                                                type="time"
+                                                                value={slot.endTime}
+                                                                onChange={(e) => onUpdateSlot(selectedDay, idx, { endTime: e.target.value })}
+                                                                className="w-full bg-dark-900 border border-dark-700 rounded-xl pl-9 pr-3 py-2 text-sm text-dark-50 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all font-medium"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="mt-4 pt-4 border-t border-dark-700/50 flex items-center justify-between">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="flex flex-col">
+                                                            <span className="text-[10px] font-bold text-dark-500 uppercase">Tối đa BN</span>
+                                                            <input
+                                                                type="number"
+                                                                min={1}
+                                                                max={20}
+                                                                value={slot.maxPatients}
+                                                                onChange={(e) => onUpdateSlot(selectedDay, idx, { maxPatients: Number(e.target.value) })}
+                                                                className="bg-transparent text-sm font-bold text-primary-400 w-12 focus:outline-none"
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <button
+                                                        onClick={() => onUpdateSlot(selectedDay, idx, { isAvailable: !slot.isAvailable })}
+                                                        className={cn(
+                                                            "flex items-center gap-2 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all",
+                                                            slot.isAvailable
+                                                                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                                                                : "bg-dark-700 text-dark-400 border border-dark-600"
+                                                        )}
+                                                    >
+                                                        {slot.isAvailable ? 'Sẵn sàng' : 'Không nhận'}
+                                                        {slot.isAvailable ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center py-12 bg-dark-900/30 rounded-3xl border border-dashed border-dark-700">
+                                        <div className="h-16 w-16 rounded-full bg-dark-800 flex items-center justify-center mb-4">
+                                            <Clock size={32} className="text-dark-600" />
+                                        </div>
+                                        <h4 className="text-dark-100 font-bold mb-1">Chưa có khung giờ khám</h4>
+                                        <p className="text-dark-500 text-sm mb-6">Hãy thêm khung giờ để bệnh nhân có thể đặt lịch.</p>
+                                        <Button onClick={() => onAddSlot(selectedDay)} className="gap-2">
+                                            <Plus size={18} /> Thêm khung giờ đầu tiên
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center py-20">
+                                <div className="h-20 w-20 rounded-full bg-dark-800/50 flex items-center justify-center mb-6">
+                                    <CalendarOff size={40} className="text-dark-600" />
+                                </div>
+                                <h4 className="text-xl font-bold text-dark-200 mb-2">Ngày nghỉ làm việc</h4>
+                                <p className="text-dark-500 text-center max-w-xs">
+                                    Bạn đã cài đặt nghỉ vào ngày này. Hãy bật "Làm việc" ở tab Lịch tuần để mở lại khung giờ khám.
+                                </p>
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+            </div>
+        </div>
+    );
+};
 
 // ============ Leave Days Tab ============
 interface LeaveDaysTabProps {
@@ -494,104 +738,208 @@ interface LeaveDaysTabProps {
 const LeaveDaysTab = ({ leaveDays, onAddLeave, onRemoveLeave }: LeaveDaysTabProps) => {
     const [newDate, setNewDate] = useState('');
     const [newReason, setNewReason] = useState('');
+    const today = new Date().toISOString().split('T')[0];
+
+    // Group leave days
+    const { upcoming, past } = useMemo(() => {
+        const sorted = [...leaveDays].sort((a, b) => a.date.localeCompare(b.date));
+        return {
+            upcoming: sorted.filter(ld => ld.date >= today),
+            past: sorted.filter(ld => ld.date < today).reverse() // Past in reverse order (nearest first)
+        };
+    }, [leaveDays, today]);
 
     const handleAdd = () => {
-        onAddLeave(newDate, newReason || 'Nghỉ phép');
+        if (!newDate) return;
+        onAddLeave(newDate, newReason);
         setNewDate('');
         setNewReason('');
     };
 
-    const today = new Date().toISOString().split('T')[0];
-
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-                <CardHeader title="Thêm ngày nghỉ" icon={<CalendarOff size={18} />} />
-                <CardContent className="space-y-4">
-                    <div>
-                        <label className="block text-xs font-semibold text-dark-400 mb-1.5 uppercase tracking-wider">
-                            Ngày nghỉ
-                        </label>
-                        <input
-                            type="date"
-                            value={newDate}
-                            min={today}
-                            onChange={(e) => setNewDate(e.target.value)}
-                            className="w-full bg-dark-800 border border-dark-600 rounded-lg px-3 py-2.5 text-sm text-dark-200 focus:outline-none focus:ring-2 focus:ring-primary-500/30"
-                        />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Form Section */}
+            <div className="lg:col-span-4 space-y-6">
+                <Card className="bg-dark-900/40 border-dark-700/50 backdrop-blur-md overflow-hidden relative">
+                    <div className="absolute top-0 right-0 p-4 opacity-10">
+                        <Plus size={80} className="text-primary-500" />
                     </div>
-                    <div>
-                        <label className="block text-xs font-semibold text-dark-400 mb-1.5 uppercase tracking-wider">
-                            Lý do
-                        </label>
-                        <input
-                            type="text"
-                            value={newReason}
-                            onChange={(e) => setNewReason(e.target.value)}
-                            placeholder="VD: Nghỉ phép, Hội nghị..."
-                            className="w-full bg-dark-800 border border-dark-600 rounded-lg px-3 py-2.5 text-sm text-dark-200 placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30"
-                        />
-                    </div>
-                    <Button
-                        className="w-full bg-primary-600 hover:bg-primary-500"
-                        onClick={handleAdd}
-                        disabled={!newDate}
-                    >
-                        <Plus size={16} className="mr-2" /> Thêm ngày nghỉ
-                    </Button>
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader
-                    title="Danh sách ngày nghỉ"
-                    description={`${leaveDays.length} ngày`}
-                    icon={<Calendar size={18} />}
-                />
-                <CardContent className="space-y-2">
-                    {leaveDays.map(leave => {
-                        const dateObj = new Date(leave.date + 'T00:00:00');
-                        const isPast = leave.date < today;
-                        return (
-                            <div
-                                key={leave.date}
-                                className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${isPast
-                                    ? 'bg-dark-800/20 border-dark-800 opacity-50'
-                                    : 'bg-dark-800/40 border-dark-700/50 hover:border-primary-700/30'
-                                    }`}
-                            >
-                                <div className="h-10 w-10 rounded-lg bg-red-900/20 flex items-center justify-center flex-shrink-0">
-                                    <CalendarOff size={18} className="text-red-400" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-semibold text-dark-100">
-                                        {dateObj.toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' })}
-                                    </p>
-                                    <p className="text-xs text-dark-400 truncate">{leave.reason}</p>
-                                </div>
-                                {!isPast && (
-                                    <button
-                                        onClick={() => onRemoveLeave(leave.date)}
-                                        className="p-1.5 rounded-lg text-dark-500 hover:text-red-400 hover:bg-red-900/20 transition-all"
-                                    >
-                                        <X size={16} />
-                                    </button>
-                                )}
-                                {isPast && (
-                                    <span className="text-[10px] text-dark-600 uppercase">Đã qua</span>
-                                )}
-                            </div>
-                        );
-                    })}
-
-                    {leaveDays.length === 0 && (
-                        <div className="text-center py-8">
-                            <CalendarOff size={40} className="mx-auto text-dark-600 mb-3" />
-                            <p className="text-dark-400 text-sm">Chưa có ngày nghỉ nào</p>
+                    <CardHeader
+                        title="Thêm ngày nghỉ"
+                        description="Khóa các khung giờ khám trong ngày này"
+                        icon={<CalendarOff size={22} className="text-red-400" />}
+                    />
+                    <CardContent className="space-y-6 pt-2">
+                        <div className="space-y-2">
+                            <label className="text-[11px] font-bold text-dark-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+                                <Calendar size={14} className="text-primary-500/50" /> Chọn ngày nghỉ
+                            </label>
+                            <input
+                                type="date"
+                                min={today}
+                                value={newDate}
+                                onChange={(e) => setNewDate(e.target.value)}
+                                className="w-full bg-dark-950 border border-dark-700 rounded-2xl px-4 py-3 text-sm text-dark-50 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all font-medium"
+                            />
                         </div>
-                    )}
-                </CardContent>
-            </Card>
+
+                        <div className="space-y-2">
+                            <label className="text-[11px] font-bold text-dark-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+                                <Info size={14} className="text-primary-500/50" /> Lý do nghỉ
+                            </label>
+                            <textarea
+                                value={newReason}
+                                onChange={(e) => setNewReason(e.target.value)}
+                                placeholder="VD: Nghỉ phép, đi học, hội thảo..."
+                                className="w-full bg-dark-950 border border-dark-700 rounded-2xl px-4 py-3 text-sm text-dark-50 placeholder-dark-600 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all resize-none h-32"
+                            />
+                        </div>
+
+                        <Button
+                            className="w-full h-12 shadow-lg shadow-primary-900/20 group font-bold"
+                            onClick={handleAdd}
+                            disabled={!newDate}
+                            variant="primary"
+                        >
+                            <Plus size={20} className="mr-2 group-hover:rotate-90 transition-transform" />
+                            Xác nhận thêm ngày nghỉ
+                        </Button>
+                    </CardContent>
+                </Card>
+
+                <div className="p-5 rounded-2xl bg-amber-900/10 border border-amber-900/20 flex gap-4">
+                    <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center shrink-0">
+                        <AlertCircle size={20} className="text-amber-400" />
+                    </div>
+                    <div>
+                        <h4 className="text-sm font-bold text-amber-500 mb-1">Lưu ý quan quan trọng</h4>
+                        <p className="text-xs text-amber-200/60 leading-relaxed">
+                            Khi thêm ngày nghỉ, tất cả các khung giờ khám hiện có trong ngày đó sẽ bị ẩn và bệnh nhân không thể đặt lịch.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {/* List Section */}
+            <div className="lg:col-span-8 space-y-8">
+                {/* Upcoming Leaves */}
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between px-2">
+                        <div className="flex items-center gap-3">
+                            <h3 className="text-lg font-bold text-dark-50">Ngày nghỉ sắp tới</h3>
+                            <Badge variant="primary" size="sm" className="bg-primary-500/10 text-primary-400 border-none px-2.5">
+                                {upcoming.length} ngày
+                            </Badge>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {upcoming.map((leave: LeaveDay) => {
+                            const dateObj = new Date(leave.date + 'T00:00:00');
+                            const isToday = leave.date === today;
+
+                            return (
+                                <div
+                                    key={leave.date}
+                                    className={cn(
+                                        "group relative flex flex-col p-5 rounded-3xl border transition-all duration-300",
+                                        isToday
+                                            ? "bg-primary-950/20 border-primary-500/30 ring-1 ring-primary-500/20 shadow-lg shadow-primary-900/10"
+                                            : "bg-dark-900/40 border-dark-700/50 backdrop-blur-md hover:bg-dark-800/60 hover:border-dark-600"
+                                    )}
+                                >
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div className={cn(
+                                            "h-12 w-12 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-inner",
+                                            isToday ? "bg-primary-500 text-white" : "bg-red-500/10 text-red-400"
+                                        )}>
+                                            <CalendarOff size={22} />
+                                        </div>
+                                        <div className="flex flex-col items-end gap-2">
+                                            {isToday ? (
+                                                <Badge className="bg-emerald-500 text-white border-none animate-pulse">Hôm nay</Badge>
+                                            ) : (
+                                                <Badge variant="info" className="bg-dark-700/30 text-dark-400 italic font-medium px-2 py-0.5 rounded-lg">Sắp tới</Badge>
+                                            )}
+                                            <button
+                                                onClick={() => onRemoveLeave(leave.date)}
+                                                className="p-2 rounded-xl text-dark-500 hover:text-red-400 hover:bg-red-900/20 transition-all opacity-0 group-hover:opacity-100"
+                                                title="Hủy ngày nghỉ"
+                                            >
+                                                <X size={18} />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <p className="text-lg font-bold text-dark-50 mb-1">
+                                            {dateObj.toLocaleDateString('vi-VN', { weekday: 'long' })}
+                                        </p>
+                                        <p className="text-2xl font-black text-dark-100 tracking-tight">
+                                            {dateObj.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                        </p>
+                                        {leave.reason && (
+                                            <div className="mt-4 pt-4 border-t border-dark-700/50 flex items-start gap-2">
+                                                <Info size={14} className="text-dark-500 shrink-0 mt-0.5" />
+                                                <p className="text-xs text-dark-400 font-medium italic line-clamp-2">
+                                                    {leave.reason}
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Selection Glow */}
+                                    {isToday && (
+                                        <div className="absolute -z-10 inset-0 bg-primary-500/10 blur-2xl rounded-full scale-75 opacity-50" />
+                                    )}
+                                </div>
+                            );
+                        })}
+
+                        {upcoming.length === 0 && (
+                            <div className="col-span-1 md:col-span-2 flex flex-col items-center justify-center py-16 bg-dark-900/20 rounded-3xl border border-dashed border-dark-800">
+                                <div className="h-14 w-14 rounded-full bg-dark-800 flex items-center justify-center mb-4">
+                                    <CalendarOff size={24} className="text-dark-600" />
+                                </div>
+                                <h4 className="text-dark-200 font-bold mb-1">Không có ngày nghỉ sắp tới</h4>
+                                <p className="text-dark-500 text-sm">Lịch làm việc của bạn đang hoạt động bình thường.</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Past Leaves */}
+                {past.length > 0 && (
+                    <div className="space-y-4 pt-4 border-t border-dark-800/50">
+                        <div className="flex items-center gap-3 px-2">
+                            <h3 className="text-sm font-bold text-dark-400 uppercase tracking-widest">Lịch sử ngày nghỉ</h3>
+                            <span className="h-px flex-1 bg-dark-800/50" />
+                        </div>
+
+                        <div className="space-y-2">
+                            {past.map((leave: LeaveDay) => (
+                                <div
+                                    key={leave.date}
+                                    className="flex items-center justify-between p-4 rounded-2xl bg-dark-900/20 border border-dark-800/50 opacity-60 hover:opacity-80 transition-opacity"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="h-8 w-8 rounded-lg bg-dark-800 flex items-center justify-center">
+                                            <CalendarOff size={16} className="text-dark-500" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-bold text-dark-200">
+                                                {new Date(leave.date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                                            </p>
+                                            <p className="text-[11px] text-dark-500 italic mt-0.5">{leave.reason || 'Không rõ lý do'}</p>
+                                        </div>
+                                    </div>
+                                    <Badge variant="info" className="text-[10px] bg-dark-800 text-dark-600 uppercase border-none px-2 py-1 rounded-md">Đã qua</Badge>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
