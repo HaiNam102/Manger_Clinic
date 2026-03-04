@@ -75,11 +75,11 @@ const SpecialtiesListPage = () => {
         <div className="space-y-6 animate-fade-in p-2">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-dark-50 flex items-center gap-2">
+                    <h1 className="text-2xl font-bold text-slate-50 flex items-center gap-2">
                         <ClipboardList className="text-primary-500" size={24} />
                         Quản lý chuyên khoa
                     </h1>
-                    <p className="text-dark-400 text-sm mt-1">
+                    <p className="text-slate-400 text-sm mt-1">
                         Cấu hình các chuyên khoa khám bệnh và thông tin mô tả
                     </p>
                 </div>
@@ -93,7 +93,7 @@ const SpecialtiesListPage = () => {
             <Card>
                 <CardContent className="p-4">
                     <div className="relative w-full">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-500" size={18} />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                         <Input
                             placeholder="Tìm kiếm chuyên khoa..."
                             className="pl-10"
@@ -119,7 +119,7 @@ const SpecialtiesListPage = () => {
                                     </div>
                                     <div className="flex gap-1">
                                         <Button variant="ghost" size="icon" onClick={() => handleEdit(s)}>
-                                            <Edit size={16} className="text-dark-400" />
+                                            <Edit size={16} className="text-slate-400" />
                                         </Button>
                                         <Button variant="ghost" size="icon" onClick={() => handleDelete(s.id)}>
                                             <Trash2 size={16} className="text-error" />
@@ -127,13 +127,13 @@ const SpecialtiesListPage = () => {
                                     </div>
                                 </div>
                                 <div className="mt-4">
-                                    <h3 className="text-lg font-bold text-dark-50">{s.name}</h3>
-                                    <p className="text-sm text-dark-400 mt-2 line-clamp-2 min-h-[40px]">
+                                    <h3 className="text-lg font-bold text-slate-50">{s.name}</h3>
+                                    <p className="text-sm text-slate-400 mt-2 line-clamp-2 min-h-[40px]">
                                         {s.description || 'Chưa có mô tả cho chuyên khoa này.'}
                                     </p>
                                 </div>
-                                <div className="mt-6 pt-6 border-t border-dark-700/50 flex items-center justify-between">
-                                    <div className="flex items-center gap-2 text-dark-300">
+                                <div className="mt-6 pt-6 border-t border-slate-700/50 flex items-center justify-between">
+                                    <div className="flex items-center gap-2 text-slate-300">
                                         <Users size={16} />
                                         <span className="text-xs font-medium">Bác sĩ: {s.doctorCount || 0}</span>
                                     </div>
@@ -152,7 +152,7 @@ const SpecialtiesListPage = () => {
                             </CardContent>
                         </Card>
                     )) : (
-                        <div className="col-span-full py-20 text-center text-dark-500 bg-dark-900/20 rounded-2xl border border-dashed border-dark-700">
+                        <div className="col-span-full py-20 text-center text-slate-500 bg-slate-900/20 rounded-2xl border border-dashed border-slate-700">
                             Không tìm thấy chuyên khoa nào
                         </div>
                     )}

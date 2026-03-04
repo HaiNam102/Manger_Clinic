@@ -99,7 +99,7 @@ const RegisterPage = () => {
                     Create Account
                 </Button>
 
-                <p className="text-center text-sm text-dark-400 mt-6">
+                <p className="text-center text-sm text-slate-400 mt-6">
                     Already have an account?{' '}
                     <Link to="/login" className="font-semibold text-primary-500 hover:text-primary-400">
                         Log in

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, Clipboard, ArrowRight, PlusCircle, Loader2 } from 'lucide-react';
+import { Calendar, Clipboard, ArrowRight, PlusCircle, Loader2, CalendarCheck, FileText, CreditCard } from 'lucide-react';
 import { Card, CardHeader, CardContent } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
 import { Table, Column } from '@components/ui/Table';
@@ -8,6 +8,7 @@ import { useAuth } from '@contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { LucideIcon, Stethoscope, Heart, Eye, Brain, Baby, Bone, Activity, Ear, Smile, Pill } from 'lucide-react';
 import { getMyAppointments, getMyRecords, getAllSpecialties } from '@services/patientService';
+import { paymentService } from '@services/paymentService';
 import type { AppointmentResponse, MedicalRecordResponse, SpecialtyResponse } from '@/types';
 
 // Map icon name from DB → Lucide component
@@ -15,31 +16,155 @@ const iconMap: Record<string, LucideIcon> = {
     Stethoscope, Heart, Eye, Brain, Baby, Bone, Activity, Ear, Smile, Pill,
 };
 
+// ─── Stat Card Component ────────────────────────────────
+const StatCard = ({ icon: Icon, label, value, color, href, delay }: {
+    icon: LucideIcon;
+    label: string;
+    value: number;
+    color: string;
+    href: string;
+    delay: number;
+}) => (
+    <Link to={href} className="block group">
+        <div
+            className="glass-stat rounded-2xl p-5 transition-all duration-300 cursor-pointer hover:scale-[1.02] animate-fade-in-up"
+            style={{ animationDelay: `${delay}ms` }}
+        >
+            <div className="flex items-center gap-4">
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color}`}>
+                    <Icon size={22} />
+                </div>
+                <div>
+                    <p className="text-3xl font-black text-slate-50 animate-count-up" style={{ animationDelay: `${delay + 200}ms` }}>
+                        {value}
+                    </p>
+                    <p className="text-xs text-slate-400 font-medium mt-0.5">{label}</p>
+                </div>
+            </div>
+        </div>
+    </Link>
+);
+
+// ─── Greeting based on time of day ──────────────────────
+const getGreetingInfo = (name: string) => {
+    const hour = new Date().getHours();
+    let text = 'Chào buổi tối';
+    let subtext = 'Chúc bạn một buổi tối thư giãn.';
+
+    if (hour < 12) {
+        text = 'Chào buổi sáng';
+        subtext = 'Chúc bạn một ngày mới tràn đầy năng lượng.';
+    } else if (hour < 18) {
+        text = 'Chào buổi chiều';
+        subtext = 'Bạn đã uống đủ nước hôm nay chưa?';
+    }
+
+    return { text, subtext, name: name || 'Bệnh nhân' };
+};
+
+// ─── Wellness Quote Component ───────────────────────────
+const WellnessQuote = () => {
+    const quotes = [
+        "Sức khỏe không phải là lựa chọn, đó là sự đầu tư.",
+        "Mỗi bước nhỏ đều đưa bạn đến gần hơn với một cơ thể khỏe mạnh.",
+        "Lắng nghe cơ thể bạn, nó biết bạn đang cần gì.",
+        "Sức khỏe là chìa khóa của mọi thành công.",
+    ];
+    const quote = quotes[Math.floor(Math.random() * quotes.length)];
+
+    return (
+        <div className="bg-gradient-to-br from-primary-900/40 to-slate-900/20 border border-primary-800/20 rounded-[24px] p-6 animate-soft-glow relative overflow-hidden group">
+            <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
+            <div className="relative z-10 flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-primary-500/20 flex items-center justify-center flex-shrink-0 text-primary-400">
+                    <Activity size={20} />
+                </div>
+                <div>
+                    <p className="text-xs font-bold text-primary-400 uppercase tracking-wider mb-1">Lời khuyên hôm nay</p>
+                    <p className="text-slate-50 italic text-sm leading-relaxed">&quot;{quote}&quot;</p>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// ─── Vitals Widget Component ────────────────────────────
+const VitalsWidget = ({ records }: { records: MedicalRecordResponse[] }) => {
+    // Placeholder vitals for premium dashboard look
+    return (
+        <Card className="rounded-[24px] border-slate-700/30 overflow-hidden">
+            <CardHeader
+                title="Chỉ số sức khỏe"
+                description="Cập nhật từ lần khám gần nhất"
+            />
+            <CardContent className="grid grid-cols-2 gap-4">
+                <div className="p-4 rounded-2xl bg-slate-800/40 border border-slate-700/50 flex flex-col justify-between">
+                    <p className="text-[10px] font-bold text-slate-500 uppercase">Nhịp tim</p>
+                    <div className="flex items-end gap-2 mt-2">
+                        <span className="text-2xl font-black text-rose-500">72</span>
+                        <span className="text-xs text-slate-400 mb-1">bpm</span>
+                    </div>
+                </div>
+                <div className="p-4 rounded-2xl bg-slate-800/40 border border-slate-700/50 flex flex-col justify-between">
+                    <p className="text-[10px] font-bold text-slate-500 uppercase">Huyết áp</p>
+                    <div className="flex items-end gap-2 mt-2">
+                        <span className="text-2xl font-black text-blue-500">120/80</span>
+                        <span className="text-xs text-slate-400 mb-1">mmHg</span>
+                    </div>
+                </div>
+                <div className="p-4 rounded-2xl bg-slate-800/40 border border-slate-700/50 flex flex-col justify-between">
+                    <p className="text-[10px] font-bold text-slate-500 uppercase">Cân nặng</p>
+                    <div className="flex items-end gap-2 mt-2">
+                        <span className="text-2xl font-black text-emerald-500">65</span>
+                        <span className="text-xs text-slate-400 mb-1">kg</span>
+                    </div>
+                </div>
+                <div className="p-4 rounded-2xl bg-slate-800/40 border border-slate-700/50 flex flex-col justify-between">
+                    <p className="text-[10px] font-bold text-slate-500 uppercase">Nhiệt độ</p>
+                    <div className="flex items-end gap-2 mt-2">
+                        <span className="text-2xl font-black text-amber-500">36.5</span>
+                        <span className="text-xs text-slate-400 mb-1">°C</span>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
 const DashboardPage = () => {
     const { user } = useAuth();
+    const greeting = getGreetingInfo(user?.fullName || '');
 
     const [upcomingAppointment, setUpcomingAppointment] = useState<AppointmentResponse | null>(null);
     const [recentRecords, setRecentRecords] = useState<MedicalRecordResponse[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [specialties, setSpecialties] = useState<SpecialtyResponse[]>([]);
 
+    // Stats
+    const [upcomingCount, setUpcomingCount] = useState(0);
+    const [recordsCount, setRecordsCount] = useState(0);
+    const [pendingPayments, setPendingPayments] = useState(0);
+
     useEffect(() => {
         const load = async () => {
             try {
                 setIsLoading(true);
-                const [appointments, records] = await Promise.allSettled([
+                const [appointments, records, paymentHistory] = await Promise.allSettled([
                     getMyAppointments(),
                     user?.id ? getMyRecords() : Promise.resolve([]),
+                    paymentService.getPaymentHistory(),
                 ]);
 
-                // Find next upcoming appointment (CONFIRMED or PENDING, today or future date)
+                // Process appointments
                 if (appointments.status === 'fulfilled') {
-                    const todayStr = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
-                    const upcoming = appointments.value
-                        .filter(apt =>
-                            apt.appointmentDate >= todayStr &&
-                            ['CONFIRMED', 'PENDING'].includes(apt.status)
-                        )
+                    const todayStr = new Date().toISOString().slice(0, 10);
+                    const active = appointments.value.filter(apt =>
+                        apt.appointmentDate >= todayStr &&
+                        ['CONFIRMED', 'PENDING'].includes(apt.status)
+                    );
+                    setUpcomingCount(active.length);
+
+                    const upcoming = active
                         .sort((a, b) => {
                             const dateCmp = a.appointmentDate.localeCompare(b.appointmentDate);
                             if (dateCmp !== 0) return dateCmp;
@@ -49,13 +174,19 @@ const DashboardPage = () => {
                 }
 
                 if (records.status === 'fulfilled') {
-                    // Show only the 3 most recent records
+                    setRecordsCount(records.value.length);
                     setRecentRecords(records.value.slice(0, 3));
                 }
 
-                // Fetch specialties for the dashboard
+                // Count pending payments
+                if (paymentHistory.status === 'fulfilled' && paymentHistory.value.result) {
+                    const pending = paymentHistory.value.result.filter(p => p.status === 'PENDING');
+                    setPendingPayments(pending.length);
+                }
+
+                // Fetch specialties
                 const specs = await getAllSpecialties();
-                setSpecialties(specs.slice(0, 4)); // Show top 4
+                setSpecialties(specs.slice(0, 4));
             } catch (error) {
                 console.error('Failed to load dashboard data:', error);
             } finally {
@@ -95,158 +226,195 @@ const DashboardPage = () => {
     }
 
     return (
-        <div className="space-y-8 animate-fade-in">
+        <div className="space-y-10 animate-fade-in pb-12">
             {/* Welcome Section */}
-            <section>
-                <h1 className="text-3xl font-bold text-dark-50 tracking-tight">
-                    Xin chào, <span className="text-primary-500">{user?.fullName || 'Bệnh nhân'}</span> 👋
-                </h1>
-                <p className="text-dark-400 mt-2 text-lg">
-                    Chào mừng trở lại! Theo dõi lịch hẹn và hồ sơ sức khỏe của bạn.
-                </p>
+            <section className="animate-fade-in-up flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                    <h1 className="text-3xl font-bold text-slate-50 tracking-tight">
+                        {greeting.text}, <span className="text-gradient font-black">{greeting.name}</span>
+                    </h1>
+                    <p className="text-slate-400 mt-2 text-lg">
+                        {greeting.subtext}
+                    </p>
+                </div>
+                <div className="flex-shrink-0 md:w-80">
+                    <WellnessQuote />
+                </div>
             </section>
 
-            {/* Stats/Summary Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Upcoming Appointment Widget */}
-                <Card className="lg:col-span-2">
-                    <CardHeader
-                        title="Lịch hẹn sắp tới"
-                        description="Lần khám tiếp theo của bạn"
-                        action={
-                            <Link to="/appointments">
-                                <Button variant="ghost" size="sm" className="text-primary-500">
-                                    Xem tất cả <ArrowRight size={16} className="ml-2" />
-                                </Button>
-                            </Link>
-                        }
-                    />
-                    <CardContent>
-                        {upcomingAppointment ? (
-                            <Link to={`/appointments/${upcomingAppointment.id}`}>
-                                <div className="flex items-center gap-6 p-4 bg-dark-800/40 rounded-xl border border-dark-700/50 hover:border-primary-700/50 hover:bg-dark-800/60 transition-all cursor-pointer">
-                                    <div className="flex-shrink-0">
-                                        <div className="w-16 h-16 bg-primary-900/40 rounded-2xl flex flex-col items-center justify-center text-primary-400">
-                                            <span className="text-2xl font-bold leading-none">
-                                                {parseInt(upcomingAppointment.appointmentDate.split('-')[2], 10)}
-                                            </span>
-                                            <span className="text-[10px] uppercase mt-0.5">
-                                                {new Date(upcomingAppointment.appointmentDate + 'T00:00:00').toLocaleDateString('vi-VN', { month: 'short' })}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center justify-between mb-1">
-                                            <h4 className="text-lg font-semibold text-dark-50 truncate">{upcomingAppointment.doctorName}</h4>
-                                            <Badge variant={upcomingAppointment.status === 'CONFIRMED' ? 'primary' : 'warning'}>
-                                                {upcomingAppointment.status === 'CONFIRMED' ? 'Đã xác nhận' : 'Chờ xác nhận'}
-                                            </Badge>
-                                        </div>
-                                        <p className="text-primary-400/80 text-sm font-medium">{upcomingAppointment.specialtyName || ''}</p>
-                                        <p className="text-dark-300 text-sm mt-1.5 flex items-center gap-3">
-                                            <span className="flex items-center gap-1.5">
-                                                <Calendar size={13} className="text-dark-500" />
-                                                {new Date(upcomingAppointment.appointmentDate + 'T00:00:00').toLocaleDateString('vi-VN', { weekday: 'short', day: '2-digit', month: 'short' })}
-                                            </span>
-                                            <span className="h-1 w-1 rounded-full bg-dark-600" />
-                                            <span>{upcomingAppointment.appointmentTime}</span>
-                                        </p>
-                                    </div>
-                                    <ArrowRight size={18} className="text-dark-600 flex-shrink-0" />
-                                </div>
-                            </Link>
-                        ) : (
-                            <div className="py-8 text-center">
-                                <div className="w-16 h-16 bg-dark-800/60 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                                    <Calendar size={28} className="text-dark-600" />
-                                </div>
-                                <p className="text-dark-400 font-medium">Không có lịch hẹn sắp tới</p>
-                                <p className="text-dark-500 text-sm mt-1">Đặt lịch ngay để gặp bác sĩ</p>
-                                <Link to="/booking/specialty">
-                                    <Button variant="outline" size="sm" className="mt-4">Đặt lịch ngay</Button>
-                                </Link>
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
-
-                {/* Quick Actions Widget */}
-                <Card>
-                    <CardHeader title="Thao tác nhanh" />
-                    <CardContent className="space-y-3">
-                        <Link to="/booking/specialty" className="block">
-                            <Button fullWidth className="justify-start gap-4 h-14 bg-primary-600 hover:bg-primary-500 text-base shadow-lg shadow-primary-900/10">
-                                <PlusCircle size={22} />
-                                Đặt lịch khám
-                            </Button>
-                        </Link>
-                        <Link to="/appointments" className="block">
-                            <Button fullWidth variant="outline" className="justify-start gap-4 h-14 text-base">
-                                <Calendar size={22} />
-                                Lịch hẹn của tôi
-                            </Button>
-                        </Link>
-                        <Link to="/medical-history" className="block">
-                            <Button fullWidth variant="outline" className="justify-start gap-4 h-14 text-base">
-                                <Clipboard size={22} />
-                                Hồ sơ bệnh án
-                            </Button>
-                        </Link>
-                    </CardContent>
-                </Card>
+            {/* Stats Summary */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 stagger-children">
+                <StatCard
+                    icon={CalendarCheck}
+                    label="Lịch hẹn sắp tới"
+                    value={upcomingCount}
+                    color="bg-primary-900/30 text-primary-400"
+                    href="/appointments"
+                    delay={0}
+                />
+                <StatCard
+                    icon={FileText}
+                    label="Bệnh án"
+                    value={recordsCount}
+                    color="bg-blue-900/30 text-blue-400"
+                    href="/medical-history"
+                    delay={80}
+                />
+                <StatCard
+                    icon={CreditCard}
+                    label="Chờ thanh toán"
+                    value={pendingPayments}
+                    color={pendingPayments > 0 ? "bg-amber-900/30 text-amber-400" : "bg-emerald-900/30 text-emerald-400"}
+                    href="/payment/history"
+                    delay={160}
+                />
             </div>
 
-            {/* Medical Departments Section */}
-            <section>
-                <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-bold text-dark-50 text-gradient">Chuyên khoa</h3>
-                    <Link to="/booking/specialty" className="text-sm font-medium text-primary-500 hover:text-primary-400">
-                        Xem tất cả
-                    </Link>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {specialties.map((spec) => {
-                        const IconComponent = iconMap[spec.icon || 'Stethoscope'] || Stethoscope;
-                        return (
-                            <Link key={spec.id} to={`/booking/doctor/${spec.id}`} className="block group">
-                                <Card className="h-full border-dark-700/50 group-hover:border-primary-500/50 transition-all duration-300 group-hover:scale-[1.02]">
-                                    <CardContent className="p-4 text-center">
-                                        <div className="w-12 h-12 bg-primary-900/20 rounded-xl flex items-center justify-center mx-auto mb-3 text-primary-400 group-hover:bg-primary-900/40 transition-colors">
-                                            <IconComponent size={24} />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Left Column: Appointments & Records */}
+                <div className="lg:col-span-2 space-y-8">
+                    {/* Upcoming Appointment */}
+                    <Card className="rounded-[24px]">
+                        <CardHeader
+                            title="Lịch hẹn sắp tới"
+                            description="Lần khám tiếp theo của bạn"
+                            action={
+                                <Link to="/appointments">
+                                    <Button variant="ghost" size="sm" className="text-primary-500">
+                                        Tất cả <ArrowRight size={16} className="ml-2" />
+                                    </Button>
+                                </Link>
+                            }
+                        />
+                        <CardContent>
+                            {upcomingAppointment ? (
+                                <Link to={`/appointments/${upcomingAppointment.id}`}>
+                                    <div className="flex items-center gap-6 p-5 bg-slate-800/20 rounded-[20px] border border-slate-700/30 hover:border-primary-700/40 hover:bg-slate-800/40 transition-all cursor-pointer group">
+                                        <div className="flex-shrink-0">
+                                            <div className="w-16 h-16 bg-primary-900/30 rounded-2xl flex flex-col items-center justify-center text-primary-400 group-hover:bg-primary-900/50 transition-colors border border-primary-800/20">
+                                                <span className="text-2xl font-bold">
+                                                    {parseInt(upcomingAppointment.appointmentDate.split('-')[2], 10)}
+                                                </span>
+                                                <span className="text-[10px] uppercase font-bold">
+                                                    {new Date(upcomingAppointment.appointmentDate + 'T00:00:00').toLocaleDateString('vi-VN', { month: 'short' })}
+                                                </span>
+                                            </div>
                                         </div>
-                                        <h4 className="font-bold text-dark-50 text-sm mb-1">{spec.name}</h4>
-                                        <p className="text-[10px] text-dark-400 line-clamp-1">{spec.description}</p>
-                                    </CardContent>
-                                </Card>
-                            </Link>
-                        );
-                    })}
-                </div>
-            </section>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center justify-between mb-1">
+                                                <h4 className="text-lg font-bold text-slate-50 truncate">BS. {upcomingAppointment.doctorName}</h4>
+                                                <Badge variant={upcomingAppointment.status === 'CONFIRMED' ? 'primary' : 'warning'} className="rounded-lg">
+                                                    {upcomingAppointment.status === 'CONFIRMED' ? 'Đã xác nhận' : 'Đang xử lý'}
+                                                </Badge>
+                                            </div>
+                                            <p className="text-slate-400 text-sm flex items-center gap-1.5">
+                                                <Stethoscope size={13} /> {upcomingAppointment.specialtyName || 'Chuyên khoa'}
+                                            </p>
+                                            <div className="flex items-center gap-4 mt-2 text-xs font-medium">
+                                                <span className="text-slate-300 flex items-center gap-1.5">
+                                                    <Calendar size={13} className="text-primary-500" />
+                                                    {new Date(upcomingAppointment.appointmentDate + 'T00:00:00').toLocaleDateString('vi-VN', { weekday: 'long' })}
+                                                </span>
+                                                <span className="text-slate-300 flex items-center gap-1.5">
+                                                    <Loader2 size={13} className="text-primary-500 animate-spin-slow" />
+                                                    {upcomingAppointment.appointmentTime}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <ArrowRight size={20} className="text-slate-700 flex-shrink-0 group-hover:text-primary-400 group-hover:translate-x-1 transition-all" />
+                                    </div>
+                                </Link>
+                            ) : (
+                                <div className="py-10 text-center bg-slate-900/20 rounded-[20px] border border-dashed border-slate-800/50">
+                                    <div className="w-16 h-16 bg-slate-800/40 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-600">
+                                        <Calendar size={32} />
+                                    </div>
+                                    <p className="text-slate-400 font-bold">Chưa có lịch hẹn nào</p>
+                                    <p className="text-slate-500 text-sm mt-1 mb-6">Hãy đặt lịch để bác sĩ chăm sóc bạn tốt hơn</p>
+                                    <Link to="/booking/specialty">
+                                        <Button size="lg" className="rounded-full px-8 btn-primary">Đặt lịch khám ngay</Button>
+                                    </Link>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
 
-            {/* Recent Records Section */}
-            <section>
-                <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-bold text-dark-50">Bệnh án gần đây</h3>
-                    <Link to="/medical-history" className="text-sm font-medium text-primary-500 hover:text-primary-400">
-                        Xem tất cả
-                    </Link>
+                    {/* Recent Records */}
+                    <Card className="rounded-[24px]">
+                        <CardHeader
+                            title="Bệnh án gần đây"
+                            action={
+                                <Link to="/medical-history">
+                                    <Button variant="ghost" size="sm" className="text-primary-500">
+                                        Xem tất cả
+                                    </Button>
+                                </Link>
+                            }
+                        />
+                        <CardContent>
+                            {recentRecords.length > 0 ? (
+                                <div className="overflow-hidden rounded-2xl border border-slate-700/30">
+                                    <Table
+                                        columns={columns}
+                                        data={recentRecords}
+                                        keyExtractor={(item) => item.id}
+                                    />
+                                </div>
+                            ) : (
+                                <div className="text-center py-10 bg-slate-900/20 rounded-[24px] border border-dashed border-slate-800/50">
+                                    <FileText size={32} className="mx-auto mb-3 text-slate-700" />
+                                    <p className="text-slate-500 font-medium">Lịch sử khám bệnh sẽ hiển thị tại đây</p>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
                 </div>
-                {recentRecords.length > 0 ? (
-                    <Table
-                        columns={columns}
-                        data={recentRecords}
-                        keyExtractor={(item) => item.id}
-                        className="shadow-xl"
-                    />
-                ) : (
-                    <div className="text-center py-12 bg-dark-900/30 rounded-2xl border border-dashed border-dark-700">
-                        <p className="text-dark-400">Chưa có bệnh án nào.</p>
+
+                {/* Right Column: Vitals & Specialties */}
+                <div className="space-y-8">
+                    {/* Vitals Widget */}
+                    <VitalsWidget records={recentRecords} />
+
+                    {/* Rapid Specialties Selection */}
+                    <Card className="rounded-[24px]">
+                        <CardHeader title="Khám chuyên khoa" />
+                        <CardContent className="grid grid-cols-2 gap-3">
+                            {specialties.map((spec) => {
+                                const IconComponent = iconMap[spec.icon || 'Stethoscope'] || Stethoscope;
+                                return (
+                                    <Link key={spec.id} to={`/booking/doctor/${spec.id}`} className="block group">
+                                        <div className="p-4 bg-slate-800/30 border border-slate-700/30 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-primary-500/50 hover:bg-slate-800/60 transition-all text-center h-full group-hover:animate-float">
+                                            <div className="w-10 h-10 bg-primary-900/20 rounded-xl flex items-center justify-center text-primary-400 group-hover:bg-primary-900/40 transition-colors">
+                                                <IconComponent size={20} />
+                                            </div>
+                                            <p className="font-bold text-slate-50 text-[11px] leading-tight">{spec.name}</p>
+                                        </div>
+                                    </Link>
+                                );
+                            })}
+                        </CardContent>
+                        <div className="px-6 pb-6">
+                            <Link to="/booking/specialty" className="block">
+                                <Button fullWidth variant="ghost" className="text-slate-400 hover:text-primary-400 text-xs">
+                                    Tất cả chuyên khoa <ArrowRight size={14} className="ml-2" />
+                                </Button>
+                            </Link>
+                        </div>
+                    </Card>
+
+                    {/* Help Card */}
+                    <div className="p-6 bg-slate-900/40 rounded-[24px] border border-slate-700/30">
+                        <h4 className="font-bold text-slate-50 mb-2">Cần hỗ trợ?</h4>
+                        <p className="text-sm text-slate-500 mb-4">Chúng tôi luôn sẵn sàng lắng nghe và đồng hành cùng sức khỏe của bạn.</p>
+                        <Button fullWidth variant="outline" className="rounded-xl border-slate-700 text-slate-300">
+                            Gọi tổng đài: 1900 1234
+                        </Button>
                     </div>
-                )}
-            </section>
+                </div>
+            </div>
         </div>
     );
 };
 
 export default DashboardPage;
+

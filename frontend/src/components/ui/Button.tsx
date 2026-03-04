@@ -16,9 +16,9 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 primary: 'bg-primary-700 text-white hover:bg-primary-600 shadow-sm',
-                secondary: 'bg-dark-800 text-dark-50 hover:bg-dark-700 border border-dark-700',
-                outline: 'border border-dark-700 bg-transparent text-dark-100 hover:bg-dark-800',
-                ghost: 'bg-transparent text-dark-100 hover:bg-dark-800',
+                secondary: 'bg-slate-800 text-slate-50 hover:bg-slate-700 border border-slate-700',
+                outline: 'border border-slate-700 bg-transparent text-slate-100 hover:bg-slate-800',
+                ghost: 'bg-transparent text-slate-100 hover:bg-slate-800',
                 danger: 'bg-error text-white hover:bg-red-600 shadow-sm',
                 success: 'bg-success text-white hover:bg-emerald-600 shadow-sm',
             },

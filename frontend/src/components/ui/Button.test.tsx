@@ -39,7 +39,7 @@ describe('Button Component', () => {
 
         rerender(<Button variant="outline">Outline</Button>);
         button = screen.getByRole('button');
-        expect(button).toHaveClass('border-dark-700');
+        expect(button).toHaveClass('border-slate-700');
     });
 
     it('applies correct size classes', () => {

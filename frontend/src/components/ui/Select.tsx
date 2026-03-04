@@ -30,7 +30,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
                 {label && (
                     <label
                         htmlFor={selectId}
-                        className="text-sm font-medium text-dark-100"
+                        className="text-sm font-medium text-slate-100"
                     >
                         {label}
                     </label>
@@ -40,7 +40,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
                         id={selectId}
                         ref={ref}
                         className={cn(
-                            'flex h-11 w-full rounded-lg border border-dark-700 bg-dark-800 px-4 py-2 text-sm text-dark-50 ring-offset-dark-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-150 appearance-none',
+                            'flex h-11 w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-sm text-slate-50 ring-offset-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-150 appearance-none',
                             error && 'border-error focus-visible:ring-error',
                             className
                         )}
@@ -58,7 +58,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
                             </option>
                         ))}
                     </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-dark-400">
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
                         <svg
                             className="h-4 w-4"
                             xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +74,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
                     <p
                         className={cn(
                             'text-xs mt-0.5',
-                            error ? 'text-error' : 'text-dark-400'
+                            error ? 'text-error' : 'text-slate-400'
                         )}
                     >
                         {error || helperText}

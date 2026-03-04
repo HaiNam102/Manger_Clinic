@@ -22,7 +22,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                 {label && (
                     <label
                         htmlFor={textareaId}
-                        className="text-sm font-medium text-dark-100"
+                        className="text-sm font-medium text-slate-100"
                     >
                         {label}
                     </label>
@@ -32,7 +32,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                         id={textareaId}
                         ref={ref}
                         className={cn(
-                            'flex min-h-[100px] w-full rounded-lg border border-dark-700 bg-dark-800 px-4 py-2 text-sm text-dark-50 ring-offset-dark-950 placeholder:text-dark-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-150',
+                            'flex min-h-[100px] w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-sm text-slate-50 ring-offset-slate-950 placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-150',
                             error && 'border-error focus-visible:ring-error',
                             className
                         )}
@@ -43,7 +43,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                     <p
                         className={cn(
                             'text-xs mt-0.5',
-                            error ? 'text-error' : 'text-dark-400'
+                            error ? 'text-error' : 'text-slate-400'
                         )}
                     >
                         {error || helperText}

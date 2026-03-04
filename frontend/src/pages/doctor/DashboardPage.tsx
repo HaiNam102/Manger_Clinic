@@ -102,10 +102,10 @@ const DoctorDashboardPage = () => {
             {/* Welcome Section */}
             <section className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-dark-50 tracking-tight">
+                    <h1 className="text-3xl font-bold text-slate-50 tracking-tight">
                         Xin chào, <span className="text-primary-500">{user?.fullName || 'Doctor'}</span>
                     </h1>
-                    <p className="text-dark-400 mt-2 text-lg">
+                    <p className="text-slate-400 mt-2 text-lg">
                         {dateStr}
                     </p>
                 </div>
@@ -182,7 +182,7 @@ const DoctorDashboardPage = () => {
                             todayApts.map((apt) => (
                                 <div
                                     key={apt.id}
-                                    className="flex items-center gap-4 p-4 bg-dark-800/40 rounded-xl border border-dark-700/50 hover:border-primary-700/30 transition-all duration-200"
+                                    className="flex items-center gap-4 p-4 bg-slate-800/40 rounded-xl border border-slate-700/50 hover:border-primary-700/30 transition-all duration-200"
                                 >
                                     {/* Time */}
                                     <div className="flex-shrink-0 text-center min-w-[64px]">
@@ -192,19 +192,19 @@ const DoctorDashboardPage = () => {
                                     </div>
 
                                     {/* Divider */}
-                                    <div className="w-px h-12 bg-dark-700" />
+                                    <div className="w-px h-12 bg-slate-700" />
 
                                     {/* Patient Info */}
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 mb-1">
-                                            <h4 className="font-semibold text-dark-50 truncate">
+                                            <h4 className="font-semibold text-slate-50 truncate">
                                                 {apt.patientName}
                                             </h4>
                                             <Badge variant={statusVariant[apt.status]} size="sm">
                                                 {statusLabel[apt.status]}
                                             </Badge>
                                         </div>
-                                        <p className="text-sm text-dark-400 truncate">
+                                        <p className="text-sm text-slate-400 truncate">
                                             {apt.symptoms || 'Chưa có triệu chứng'}
                                         </p>
                                     </div>
@@ -235,11 +235,11 @@ const DoctorDashboardPage = () => {
                             ))
                         ) : (
                             <div className="py-8 text-center">
-                                <Calendar size={48} className="mx-auto text-dark-600 mb-3" />
-                                <p className="text-dark-400 text-lg">Không có lịch hẹn hôm nay</p>
-                                <p className="text-dark-500 text-sm mt-1">Hãy thư giãn hoặc kiểm tra lịch tuần</p>
+                                <Calendar size={48} className="mx-auto text-slate-600 mb-3" />
+                                <p className="text-slate-400 text-lg">Không có lịch hẹn hôm nay</p>
+                                <p className="text-slate-500 text-sm mt-1">Hãy thư giãn hoặc kiểm tra lịch tuần</p>
                                 <Link to="/doctor/calendar">
-                                    <Button variant="outline" size="sm" className="mt-4 border-dark-600 text-dark-300">
+                                    <Button variant="outline" size="sm" className="mt-4 border-slate-600 text-slate-300">
                                         <Calendar size={14} className="mr-2" /> Xem lịch tháng
                                     </Button>
                                 </Link>
@@ -258,10 +258,10 @@ const DoctorDashboardPage = () => {
                                     <AlertCircle className="text-warning" size={24} />
                                 </div>
                                 <div className="flex-1">
-                                    <p className="font-semibold text-dark-50">
+                                    <p className="font-semibold text-slate-50">
                                         {stats.pendingAppointments} lịch chờ xác nhận
                                     </p>
-                                    <p className="text-sm text-dark-400 mt-0.5">
+                                    <p className="text-sm text-slate-400 mt-0.5">
                                         Cần xác nhận để bệnh nhân biết lịch khám
                                     </p>
                                 </div>
@@ -275,10 +275,10 @@ const DoctorDashboardPage = () => {
                             <CardHeader title="Tháng này" icon={<TrendingUp size={18} />} />
                             <CardContent className="space-y-4">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-dark-400 text-sm">Tổng lịch hẹn</span>
-                                    <span className="text-dark-50 font-bold text-lg">{stats.monthAppointments}</span>
+                                    <span className="text-slate-400 text-sm">Tổng lịch hẹn</span>
+                                    <span className="text-slate-50 font-bold text-lg">{stats.monthAppointments}</span>
                                 </div>
-                                <div className="w-full bg-dark-800 rounded-full h-2">
+                                <div className="w-full bg-slate-800 rounded-full h-2">
                                     <div
                                         className="bg-primary-500 h-2 rounded-full transition-all duration-500"
                                         style={{ width: `${Math.min((stats.completedAppointments / Math.max(stats.monthAppointments, 1)) * 100, 100)}%` }}
@@ -288,7 +288,7 @@ const DoctorDashboardPage = () => {
                                     <span className="text-emerald-400 flex items-center gap-1">
                                         <CheckCircle2 size={14} /> {stats.completedAppointments} hoàn thành
                                     </span>
-                                    <span className="text-dark-500">
+                                    <span className="text-slate-500">
                                         {stats.monthAppointments - stats.completedAppointments} còn lại
                                     </span>
                                 </div>
@@ -317,8 +317,8 @@ const DoctorDashboardPage = () => {
                         ))}
                         {recentReviews.length === 0 && (
                             <div className="col-span-3 py-8 text-center">
-                                <Star size={48} className="mx-auto text-dark-600 mb-3" />
-                                <p className="text-dark-400">Chưa có đánh giá nào</p>
+                                <Star size={48} className="mx-auto text-slate-600 mb-3" />
+                                <p className="text-slate-400">Chưa có đánh giá nào</p>
                             </div>
                         )}
                     </div>
@@ -344,13 +344,13 @@ interface StatCardProps {
 const StatCard = ({ icon, label, value, sublabel, bgColor, borderColor }: StatCardProps) => (
     <div className={`${bgColor} border ${borderColor} rounded-xl p-5 transition-all duration-300 hover:scale-[1.02]`}>
         <div className="flex items-center gap-3 mb-3">
-            <div className="h-10 w-10 rounded-lg bg-dark-900/50 flex items-center justify-center">
+            <div className="h-10 w-10 rounded-lg bg-slate-900/50 flex items-center justify-center">
                 {icon}
             </div>
-            <span className="text-sm font-medium text-dark-300">{label}</span>
+            <span className="text-sm font-medium text-slate-300">{label}</span>
         </div>
-        <p className="text-3xl font-bold text-dark-50">{value}</p>
-        <p className="text-xs text-dark-500 mt-1">{sublabel}</p>
+        <p className="text-3xl font-bold text-slate-50">{value}</p>
+        <p className="text-xs text-slate-500 mt-1">{sublabel}</p>
     </div>
 );
 
@@ -363,15 +363,15 @@ const ReviewCard = ({ review }: { review: ReviewResponse }) => {
     });
 
     return (
-        <div className="bg-dark-800/40 rounded-xl p-4 border border-dark-700/50 hover:border-primary-700/30 transition-all duration-200">
+        <div className="bg-slate-800/40 rounded-xl p-4 border border-slate-700/50 hover:border-primary-700/30 transition-all duration-200">
             <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                     <div className="h-8 w-8 rounded-full bg-primary-900/40 flex items-center justify-center text-primary-400 text-xs font-bold">
                         {review.patientName.charAt(0)}
                     </div>
                     <div>
-                        <p className="text-sm font-semibold text-dark-50">{review.patientName}</p>
-                        <p className="text-xs text-dark-500">{dateStr}</p>
+                        <p className="text-sm font-semibold text-slate-50">{review.patientName}</p>
+                        <p className="text-xs text-slate-500">{dateStr}</p>
                     </div>
                 </div>
             </div>
@@ -381,11 +381,11 @@ const ReviewCard = ({ review }: { review: ReviewResponse }) => {
                     <Star
                         key={i}
                         size={14}
-                        className={filled ? 'text-amber-400 fill-amber-400' : 'text-dark-600'}
+                        className={filled ? 'text-amber-400 fill-amber-400' : 'text-slate-600'}
                     />
                 ))}
             </div>
-            <p className="text-sm text-dark-300 line-clamp-2">{review.comment || 'Không có nhận xét'}</p>
+            <p className="text-sm text-slate-300 line-clamp-2">{review.comment || 'Không có nhận xét'}</p>
         </div>
     );
 };

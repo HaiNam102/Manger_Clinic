@@ -61,7 +61,7 @@ const LoginPage = () => {
                 />
                 <div className="space-y-1">
                     <div className="flex items-center justify-between">
-                        <label className="text-sm font-medium text-dark-100">Password</label>
+                        <label className="text-sm font-medium text-slate-100">Password</label>
                         <Link to="/forgot-password" className="text-sm font-medium text-primary-500 hover:text-primary-400">
                             Forgot?
                         </Link>
@@ -85,7 +85,7 @@ const LoginPage = () => {
                     Sign In
                 </Button>
 
-                <p className="text-center text-sm text-dark-400 mt-6">
+                <p className="text-center text-sm text-slate-400 mt-6">
                     Don't have an account?{' '}
                     <Link to="/register" className="font-semibold text-primary-500 hover:text-primary-400">
                         Sign up now

@@ -119,21 +119,21 @@ export const AppointmentDetailModal = ({ isOpen, onClose, appointment, onAction 
             {/* Modal */}
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                 <div
-                    className="bg-dark-900 border border-dark-700 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in"
+                    className="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in"
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* Header */}
-                    <div className="flex items-center justify-between p-6 border-b border-dark-700">
+                    <div className="flex items-center justify-between p-6 border-b border-slate-700">
                         <div className="flex items-center gap-3">
                             <div className="h-10 w-10 rounded-xl bg-primary-900/40 flex items-center justify-center">
                                 <Stethoscope className="text-primary-400" size={20} />
                             </div>
                             <div>
-                                <h2 className="text-lg font-bold text-dark-50">Chi tiết lịch hẹn</h2>
-                                <p className="text-xs text-dark-400">#{String(apt.id).slice(0, 8)}</p>
+                                <h2 className="text-lg font-bold text-slate-50">Chi tiết lịch hẹn</h2>
+                                <p className="text-xs text-slate-400">#{String(apt.id).slice(0, 8)}</p>
                             </div>
                         </div>
-                        <button onClick={onClose} className="p-2 rounded-lg hover:bg-dark-800 text-dark-400 transition-colors">
+                        <button onClick={onClose} className="p-2 rounded-lg hover:bg-slate-800 text-slate-400 transition-colors">
                             <X size={20} />
                         </button>
                     </div>
@@ -142,15 +142,15 @@ export const AppointmentDetailModal = ({ isOpen, onClose, appointment, onAction 
                     <div className="p-6 space-y-6">
                         {/* Status Badge */}
                         <div className="flex items-center justify-between">
-                            <span className="text-sm text-dark-400">Trạng thái</span>
+                            <span className="text-sm text-slate-400">Trạng thái</span>
                             <Badge variant={statusVariant[apt.status]} size="md">
                                 {statusLabel[apt.status]}
                             </Badge>
                         </div>
 
                         {/* Patient Info */}
-                        <div className="bg-dark-800/50 rounded-xl p-4 border border-dark-700/50">
-                            <h3 className="text-xs font-semibold text-dark-400 uppercase tracking-wider mb-3">
+                        <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
+                            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
                                 Thông tin bệnh nhân
                             </h3>
                             <div className="space-y-3">
@@ -159,26 +159,26 @@ export const AppointmentDetailModal = ({ isOpen, onClose, appointment, onAction 
                                         <User className="text-primary-400" size={18} />
                                     </div>
                                     <div>
-                                        <p className="font-semibold text-dark-50">{apt.patientName}</p>
-                                        <p className="text-xs text-dark-400">Bệnh nhân</p>
+                                        <p className="font-semibold text-slate-50">{apt.patientName}</p>
+                                        <p className="text-xs text-slate-400">Bệnh nhân</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         {/* Schedule Info */}
-                        <div className="bg-dark-800/50 rounded-xl p-4 border border-dark-700/50">
-                            <h3 className="text-xs font-semibold text-dark-400 uppercase tracking-wider mb-3">
+                        <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
+                            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
                                 Lịch khám
                             </h3>
                             <div className="space-y-2">
                                 <div className="flex items-center gap-2 text-sm">
                                     <Calendar size={14} className="text-primary-400" />
-                                    <span className="text-dark-200">{dateStr}</span>
+                                    <span className="text-slate-200">{dateStr}</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-sm">
                                     <Clock size={14} className="text-primary-400" />
-                                    <span className="text-dark-200">
+                                    <span className="text-slate-200">
                                         {apt.appointmentTime}
                                     </span>
                                 </div>
@@ -186,23 +186,23 @@ export const AppointmentDetailModal = ({ isOpen, onClose, appointment, onAction 
                         </div>
 
                         {/* Symptoms */}
-                        <div className="bg-dark-800/50 rounded-xl p-4 border border-dark-700/50">
-                            <h3 className="text-xs font-semibold text-dark-400 uppercase tracking-wider mb-2">
+                        <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
+                            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
                                 Triệu chứng
                             </h3>
                             <div className="flex items-start gap-2">
-                                <FileText size={14} className="text-dark-500 mt-0.5" />
-                                <p className="text-sm text-dark-200">{apt.symptoms || 'Chưa có thông tin triệu chứng'}</p>
+                                <FileText size={14} className="text-slate-500 mt-0.5" />
+                                <p className="text-sm text-slate-200">{apt.symptoms || 'Chưa có thông tin triệu chứng'}</p>
                             </div>
                         </div>
 
                         {/* Notes */}
                         {apt.notes && (
-                            <div className="bg-dark-800/50 rounded-xl p-4 border border-dark-700/50">
-                                <h3 className="text-xs font-semibold text-dark-400 uppercase tracking-wider mb-2">
+                            <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
+                                <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
                                     Ghi chú
                                 </h3>
-                                <p className="text-sm text-dark-200">{apt.notes}</p>
+                                <p className="text-sm text-slate-200">{apt.notes}</p>
                             </div>
                         )}
 
@@ -217,7 +217,7 @@ export const AppointmentDetailModal = ({ isOpen, onClose, appointment, onAction 
                                     placeholder="Lý do hủy (bắt buộc)..."
                                     value={cancelReason}
                                     onChange={(e) => setCancelReason(e.target.value)}
-                                    className="w-full bg-dark-800 border border-dark-600 rounded-lg p-3 text-sm text-dark-200 placeholder-dark-500 resize-none focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                                    className="w-full bg-slate-800 border border-slate-600 rounded-lg p-3 text-sm text-slate-200 placeholder-slate-500 resize-none focus:outline-none focus:ring-2 focus:ring-red-500/30"
                                     rows={3}
                                 />
                                 <div className="flex gap-2 justify-end">
@@ -239,7 +239,7 @@ export const AppointmentDetailModal = ({ isOpen, onClose, appointment, onAction 
 
                     {/* Actions */}
                     {!showCancelForm && (
-                        <div className="flex flex-col gap-2 p-6 border-t border-dark-700">
+                        <div className="flex flex-col gap-2 p-6 border-t border-slate-700">
                             {apt.status === 'PENDING' && (
                                 <div className="flex items-center gap-2">
                                     <Button
@@ -267,7 +267,7 @@ export const AppointmentDetailModal = ({ isOpen, onClose, appointment, onAction 
                                     </Button>
                                     <Button
                                         variant="outline"
-                                        className="border-dark-600 text-dark-300"
+                                        className="border-slate-600 text-slate-300"
                                         onClick={() => setShowCancelForm(true)}
                                     >
                                         <XCircle size={16} className="mr-2" /> Hủy
@@ -283,7 +283,7 @@ export const AppointmentDetailModal = ({ isOpen, onClose, appointment, onAction 
                                 </Button>
                             )}
                             {(apt.status === 'CANCELLED' || apt.status === 'NO_SHOW') && (
-                                <p className="text-sm text-dark-500 text-center w-full">
+                                <p className="text-sm text-slate-500 text-center w-full">
                                     Lịch hẹn đã bị hủy
                                 </p>
                             )}

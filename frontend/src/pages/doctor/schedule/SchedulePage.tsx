@@ -264,16 +264,16 @@ const SchedulePage = () => {
     return (
         <div className="space-y-6 animate-fade-in">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-8 border-b border-dark-700/50 bg-dark-900/20">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-8 border-b border-slate-700/50 bg-slate-900/20">
                 <div className="flex items-center gap-4">
                     <div className="h-14 w-14 rounded-2xl bg-primary-600/10 border border-primary-500/20 flex items-center justify-center shadow-inner">
                         <Clock size={28} className="text-primary-400" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold bg-gradient-to-r from-dark-50 to-dark-300 bg-clip-text text-transparent">
+                        <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-50 to-slate-300 bg-clip-text text-transparent">
                             Quản lý lịch làm việc
                         </h1>
-                        <p className="text-sm text-dark-400 font-medium">
+                        <p className="text-sm text-slate-400 font-medium">
                             Thiết lập thời gian khám bệnh và ngày nghỉ của bạn
                         </p>
                     </div>
@@ -283,7 +283,7 @@ const SchedulePage = () => {
                     {hasChanges && (
                         <div className="hidden md:flex flex-col items-end mr-2 animate-fade-in">
                             <span className="text-[10px] font-bold text-amber-500 uppercase tracking-widest">Thay đổi chưa lưu</span>
-                            <span className="text-xs text-dark-500">Hãy nhấn lưu để cập nhật</span>
+                            <span className="text-xs text-slate-500">Hãy nhấn lưu để cập nhật</span>
                         </div>
                     )}
                     <Button
@@ -306,14 +306,14 @@ const SchedulePage = () => {
             )}
 
             {/* Tab Navigation */}
-            <div className="flex items-center gap-1 bg-dark-900 rounded-xl p-1 border border-dark-700 w-fit">
+            <div className="flex items-center gap-1 bg-slate-900 rounded-xl p-1 border border-slate-700 w-fit">
                 {tabs.map(tab => (
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === tab.id
                             ? 'bg-primary-600 text-white shadow-lg'
-                            : 'text-dark-400 hover:text-dark-200 hover:bg-dark-800'
+                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
                             }`}
                     >
                         {tab.icon}
@@ -364,7 +364,7 @@ const SchedulePage = () => {
                 title="Sao chép lịch làm việc"
             >
                 <div className="space-y-6 pt-2">
-                    <p className="text-sm text-dark-400">
+                    <p className="text-sm text-slate-400">
                         Sao chép các khung giờ từ {DAYS_VI[selectedDay]} sang các ngày khác.
                     </p>
                     <div className="bg-primary-900/20 border border-primary-800/30 rounded-xl p-4 flex items-start gap-3">
@@ -387,10 +387,10 @@ const SchedulePage = () => {
                                 className={cn(
                                     "flex items-center justify-between px-4 py-3 rounded-xl border transition-all text-sm font-medium",
                                     day === selectedDay
-                                        ? "bg-dark-800/30 border-dark-700 text-dark-500 cursor-not-allowed"
+                                        ? "bg-slate-800/30 border-slate-700 text-slate-500 cursor-not-allowed"
                                         : copyTargetDays.includes(day)
                                             ? "bg-primary-600 border-primary-500 text-white shadow-lg shadow-primary-900/20"
-                                            : "bg-dark-900/40 border-dark-700 text-dark-300 hover:border-dark-600 hover:bg-dark-800"
+                                            : "bg-slate-900/40 border-slate-700 text-slate-300 hover:border-slate-600 hover:bg-slate-800"
                                 )}
                             >
                                 {name}
@@ -443,7 +443,7 @@ const WeeklyScheduleTab = ({ schedule, selectedDay, onSelectDay, onToggleDay, on
                 onClick={() => onSelectDay(day.dayOfWeek)}
                 className={cn(
                     "group relative overflow-hidden rounded-2xl border transition-all duration-300 cursor-pointer",
-                    "bg-dark-900/40 backdrop-blur-md border-dark-700/50 hover:bg-dark-800/60 hover:border-dark-600",
+                    "bg-slate-900/40 backdrop-blur-md border-slate-700/50 hover:bg-slate-800/60 hover:border-slate-600",
                     selectedDay === day.dayOfWeek && "ring-2 ring-primary-500/50 border-primary-500/30 bg-primary-950/20",
                     !day.isAvailable && "opacity-75 grayscale-[0.5]"
                 )}
@@ -451,26 +451,26 @@ const WeeklyScheduleTab = ({ schedule, selectedDay, onSelectDay, onToggleDay, on
                 {/* Header Decoration */}
                 <div className={cn(
                     "h-1.5 w-full",
-                    day.isAvailable ? "bg-primary-500/50" : "bg-dark-700"
+                    day.isAvailable ? "bg-primary-500/50" : "bg-slate-700"
                 )} />
 
                 <div className="p-4 pt-5">
                     <div className="flex items-center justify-between mb-1">
-                        <span className="text-[10px] font-bold text-dark-500 uppercase tracking-[0.2em]">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
                             {DAYS_SHORT[day.dayOfWeek]}
                         </span>
                         {day.isAvailable && (
                             <div className="flex items-center gap-1">
                                 <button
                                     onClick={(e) => { e.stopPropagation(); onSelectDay(day.dayOfWeek); onOpenCopy(); }}
-                                    className="p-1.5 rounded-lg text-dark-400 hover:text-primary-400 hover:bg-primary-900/20 transition-all opacity-0 group-hover:opacity-100"
+                                    className="p-1.5 rounded-lg text-slate-400 hover:text-primary-400 hover:bg-primary-900/20 transition-all opacity-0 group-hover:opacity-100"
                                     title="Sao chép lịch này"
                                 >
                                     <Copy size={14} />
                                 </button>
                                 <button
                                     onClick={(e) => { e.stopPropagation(); onResetDay(day.dayOfWeek); }}
-                                    className="p-1.5 rounded-lg text-dark-400 hover:text-amber-400 hover:bg-amber-900/20 transition-all opacity-0 group-hover:opacity-100"
+                                    className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-900/20 transition-all opacity-0 group-hover:opacity-100"
                                     title="Đặt lại mặc định"
                                 >
                                     <RefreshCcw size={14} />
@@ -479,7 +479,7 @@ const WeeklyScheduleTab = ({ schedule, selectedDay, onSelectDay, onToggleDay, on
                         )}
                     </div>
 
-                    <h3 className="text-lg font-bold text-dark-50">{DAYS_VI[day.dayOfWeek]}</h3>
+                    <h3 className="text-lg font-bold text-slate-50">{DAYS_VI[day.dayOfWeek]}</h3>
 
                     <div className="mt-4 space-y-3">
                         <button
@@ -488,7 +488,7 @@ const WeeklyScheduleTab = ({ schedule, selectedDay, onSelectDay, onToggleDay, on
                                 "w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-semibold transition-all",
                                 day.isAvailable
                                     ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20"
-                                    : "bg-dark-800 text-dark-400 border border-dark-700 hover:bg-dark-700"
+                                    : "bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700"
                             )}
                         >
                             <span className="flex items-center gap-2">
@@ -539,7 +539,7 @@ const TimeSlotsTab = ({ schedule, selectedDay, selectedSchedule, onSelectDay, on
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             {/* Sidebar Navigation */}
             <div className="lg:col-span-3 space-y-3">
-                <Card className="bg-dark-900/40 border-dark-700/50">
+                <Card className="bg-slate-900/40 border-slate-700/50">
                     <CardHeader title="Chọn ngày" icon={<Calendar size={18} />} className="pb-2" />
                     <CardContent className="space-y-1">
                         {schedule.map(day => (
@@ -551,26 +551,26 @@ const TimeSlotsTab = ({ schedule, selectedDay, selectedSchedule, onSelectDay, on
                                     selectedDay === day.dayOfWeek
                                         ? "bg-primary-600 border-primary-500 text-white shadow-lg shadow-primary-900/20"
                                         : day.isAvailable
-                                            ? "bg-dark-800/40 border-dark-700 text-dark-200 hover:border-dark-600 hover:bg-dark-800"
-                                            : "bg-dark-900 border-transparent text-dark-600 opacity-60"
+                                            ? "bg-slate-800/40 border-slate-700 text-slate-200 hover:border-slate-600 hover:bg-slate-800"
+                                            : "bg-slate-900 border-transparent text-slate-600 opacity-60"
                                 )}
                             >
                                 <div className="flex items-center gap-3">
                                     <div className={cn(
                                         "h-2 w-2 rounded-full",
-                                        day.isAvailable ? "bg-emerald-500" : "bg-dark-600"
+                                        day.isAvailable ? "bg-emerald-500" : "bg-slate-600"
                                     )} />
                                     <span className="font-semibold">{DAYS_VI[day.dayOfWeek]}</span>
                                 </div>
                                 {day.isAvailable ? (
                                     <span className={cn(
                                         "text-xs font-bold px-2 py-0.5 rounded-lg",
-                                        selectedDay === day.dayOfWeek ? "bg-white/20" : "bg-dark-700 text-dark-400"
+                                        selectedDay === day.dayOfWeek ? "bg-white/20" : "bg-slate-700 text-slate-400"
                                     )}>
                                         {day.timeSlots.length}
                                     </span>
                                 ) : (
-                                    <CalendarOff size={14} className="text-dark-700" />
+                                    <CalendarOff size={14} className="text-slate-700" />
                                 )}
                             </button>
                         ))}
@@ -592,7 +592,7 @@ const TimeSlotsTab = ({ schedule, selectedDay, selectedSchedule, onSelectDay, on
 
             {/* Main Content Area */}
             <div className="lg:col-span-9">
-                <Card className="bg-dark-900/40 border-dark-700/50 backdrop-blur-md">
+                <Card className="bg-slate-900/40 border-slate-700/50 backdrop-blur-md">
                     <CardHeader
                         title={`Lịch khám ${DAYS_VI[selectedDay]}`}
                         description={selectedSchedule?.isAvailable ? "Dưới đây là các khung giờ bệnh nhân có thể đăng ký" : "Ngày này hiện đang nghỉ"}
@@ -601,7 +601,7 @@ const TimeSlotsTab = ({ schedule, selectedDay, selectedSchedule, onSelectDay, on
                             <div className="flex gap-2">
                                 {selectedSchedule?.isAvailable && (
                                     <>
-                                        <Button variant="ghost" size="sm" onClick={() => onResetDay(selectedDay)} className="text-dark-400 hover:text-amber-400">
+                                        <Button variant="ghost" size="sm" onClick={() => onResetDay(selectedDay)} className="text-slate-400 hover:text-amber-400">
                                             <RefreshCcw size={16} className="mr-2" /> Đặt lại
                                         </Button>
                                         <Button variant="primary" size="sm" onClick={() => onAddSlot(selectedDay)} className="shadow-lg shadow-primary-900/20">
@@ -623,17 +623,17 @@ const TimeSlotsTab = ({ schedule, selectedDay, selectedSchedule, onSelectDay, on
                                                 className={cn(
                                                     "relative p-4 rounded-2xl border transition-all duration-300",
                                                     slot.isAvailable
-                                                        ? "bg-dark-800/60 border-dark-700/50 hover:border-primary-500/30 group/slot"
-                                                        : "bg-dark-900/50 border-dark-800 opacity-60"
+                                                        ? "bg-slate-800/60 border-slate-700/50 hover:border-primary-500/30 group/slot"
+                                                        : "bg-slate-900/50 border-slate-800 opacity-60"
                                                 )}
                                             >
                                                 <div className="flex items-center justify-between mb-4">
-                                                    <span className="text-xs font-bold text-dark-500 uppercase tracking-widest">
+                                                    <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">
                                                         Khung giờ #{idx + 1}
                                                     </span>
                                                     <button
                                                         onClick={() => onRemoveSlot(selectedDay, idx)}
-                                                        className="p-1.5 rounded-lg text-dark-500 hover:text-red-400 hover:bg-red-900/20 transition-all opacity-0 group-hover/slot:opacity-100"
+                                                        className="p-1.5 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-900/20 transition-all opacity-0 group-hover/slot:opacity-100"
                                                     >
                                                         <Trash2 size={14} />
                                                     </button>
@@ -641,35 +641,35 @@ const TimeSlotsTab = ({ schedule, selectedDay, selectedSchedule, onSelectDay, on
 
                                                 <div className="grid grid-cols-2 gap-4">
                                                     <div className="space-y-1.5">
-                                                        <label className="text-[10px] font-bold text-dark-400 uppercase ml-1">Bắt đầu</label>
+                                                        <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Bắt đầu</label>
                                                         <div className="relative">
-                                                            <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-500" />
+                                                            <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                                                             <input
                                                                 type="time"
                                                                 value={slot.startTime}
                                                                 onChange={(e) => onUpdateSlot(selectedDay, idx, { startTime: e.target.value })}
-                                                                className="w-full bg-dark-900 border border-dark-700 rounded-xl pl-9 pr-3 py-2 text-sm text-dark-50 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all font-medium"
+                                                                className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all font-medium"
                                                             />
                                                         </div>
                                                     </div>
                                                     <div className="space-y-1.5">
-                                                        <label className="text-[10px] font-bold text-dark-400 uppercase ml-1">Kết thúc</label>
+                                                        <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Kết thúc</label>
                                                         <div className="relative">
-                                                            <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-500" />
+                                                            <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                                                             <input
                                                                 type="time"
                                                                 value={slot.endTime}
                                                                 onChange={(e) => onUpdateSlot(selectedDay, idx, { endTime: e.target.value })}
-                                                                className="w-full bg-dark-900 border border-dark-700 rounded-xl pl-9 pr-3 py-2 text-sm text-dark-50 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all font-medium"
+                                                                className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all font-medium"
                                                             />
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <div className="mt-4 pt-4 border-t border-dark-700/50 flex items-center justify-between">
+                                                <div className="mt-4 pt-4 border-t border-slate-700/50 flex items-center justify-between">
                                                     <div className="flex items-center gap-3">
                                                         <div className="flex flex-col">
-                                                            <span className="text-[10px] font-bold text-dark-500 uppercase">Tối đa BN</span>
+                                                            <span className="text-[10px] font-bold text-slate-500 uppercase">Tối đa BN</span>
                                                             <input
                                                                 type="number"
                                                                 min={1}
@@ -687,7 +687,7 @@ const TimeSlotsTab = ({ schedule, selectedDay, selectedSchedule, onSelectDay, on
                                                             "flex items-center gap-2 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all",
                                                             slot.isAvailable
                                                                 ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                                                                : "bg-dark-700 text-dark-400 border border-dark-600"
+                                                                : "bg-slate-700 text-slate-400 border border-slate-600"
                                                         )}
                                                     >
                                                         {slot.isAvailable ? 'Sẵn sàng' : 'Không nhận'}
@@ -698,12 +698,12 @@ const TimeSlotsTab = ({ schedule, selectedDay, selectedSchedule, onSelectDay, on
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="flex flex-col items-center justify-center py-12 bg-dark-900/30 rounded-3xl border border-dashed border-dark-700">
-                                        <div className="h-16 w-16 rounded-full bg-dark-800 flex items-center justify-center mb-4">
-                                            <Clock size={32} className="text-dark-600" />
+                                    <div className="flex flex-col items-center justify-center py-12 bg-slate-900/30 rounded-3xl border border-dashed border-slate-700">
+                                        <div className="h-16 w-16 rounded-full bg-slate-800 flex items-center justify-center mb-4">
+                                            <Clock size={32} className="text-slate-600" />
                                         </div>
-                                        <h4 className="text-dark-100 font-bold mb-1">Chưa có khung giờ khám</h4>
-                                        <p className="text-dark-500 text-sm mb-6">Hãy thêm khung giờ để bệnh nhân có thể đặt lịch.</p>
+                                        <h4 className="text-slate-100 font-bold mb-1">Chưa có khung giờ khám</h4>
+                                        <p className="text-slate-500 text-sm mb-6">Hãy thêm khung giờ để bệnh nhân có thể đặt lịch.</p>
                                         <Button onClick={() => onAddSlot(selectedDay)} className="gap-2">
                                             <Plus size={18} /> Thêm khung giờ đầu tiên
                                         </Button>
@@ -712,11 +712,11 @@ const TimeSlotsTab = ({ schedule, selectedDay, selectedSchedule, onSelectDay, on
                             </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center py-20">
-                                <div className="h-20 w-20 rounded-full bg-dark-800/50 flex items-center justify-center mb-6">
-                                    <CalendarOff size={40} className="text-dark-600" />
+                                <div className="h-20 w-20 rounded-full bg-slate-800/50 flex items-center justify-center mb-6">
+                                    <CalendarOff size={40} className="text-slate-600" />
                                 </div>
-                                <h4 className="text-xl font-bold text-dark-200 mb-2">Ngày nghỉ làm việc</h4>
-                                <p className="text-dark-500 text-center max-w-xs">
+                                <h4 className="text-xl font-bold text-slate-200 mb-2">Ngày nghỉ làm việc</h4>
+                                <p className="text-slate-500 text-center max-w-xs">
                                     Bạn đã cài đặt nghỉ vào ngày này. Hãy bật "Làm việc" ở tab Lịch tuần để mở lại khung giờ khám.
                                 </p>
                             </div>
@@ -760,7 +760,7 @@ const LeaveDaysTab = ({ leaveDays, onAddLeave, onRemoveLeave }: LeaveDaysTabProp
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Form Section */}
             <div className="lg:col-span-4 space-y-6">
-                <Card className="bg-dark-900/40 border-dark-700/50 backdrop-blur-md overflow-hidden relative">
+                <Card className="bg-slate-900/40 border-slate-700/50 backdrop-blur-md overflow-hidden relative">
                     <div className="absolute top-0 right-0 p-4 opacity-10">
                         <Plus size={80} className="text-primary-500" />
                     </div>
@@ -771,7 +771,7 @@ const LeaveDaysTab = ({ leaveDays, onAddLeave, onRemoveLeave }: LeaveDaysTabProp
                     />
                     <CardContent className="space-y-6 pt-2">
                         <div className="space-y-2">
-                            <label className="text-[11px] font-bold text-dark-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+                            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
                                 <Calendar size={14} className="text-primary-500/50" /> Chọn ngày nghỉ
                             </label>
                             <input
@@ -779,19 +779,19 @@ const LeaveDaysTab = ({ leaveDays, onAddLeave, onRemoveLeave }: LeaveDaysTabProp
                                 min={today}
                                 value={newDate}
                                 onChange={(e) => setNewDate(e.target.value)}
-                                className="w-full bg-dark-950 border border-dark-700 rounded-2xl px-4 py-3 text-sm text-dark-50 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all font-medium"
+                                className="w-full bg-slate-950 border border-slate-700 rounded-2xl px-4 py-3 text-sm text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all font-medium"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[11px] font-bold text-dark-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+                            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
                                 <Info size={14} className="text-primary-500/50" /> Lý do nghỉ
                             </label>
                             <textarea
                                 value={newReason}
                                 onChange={(e) => setNewReason(e.target.value)}
                                 placeholder="VD: Nghỉ phép, đi học, hội thảo..."
-                                className="w-full bg-dark-950 border border-dark-700 rounded-2xl px-4 py-3 text-sm text-dark-50 placeholder-dark-600 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all resize-none h-32"
+                                className="w-full bg-slate-950 border border-slate-700 rounded-2xl px-4 py-3 text-sm text-slate-50 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all resize-none h-32"
                             />
                         </div>
 
@@ -826,7 +826,7 @@ const LeaveDaysTab = ({ leaveDays, onAddLeave, onRemoveLeave }: LeaveDaysTabProp
                 <div className="space-y-4">
                     <div className="flex items-center justify-between px-2">
                         <div className="flex items-center gap-3">
-                            <h3 className="text-lg font-bold text-dark-50">Ngày nghỉ sắp tới</h3>
+                            <h3 className="text-lg font-bold text-slate-50">Ngày nghỉ sắp tới</h3>
                             <Badge variant="primary" size="sm" className="bg-primary-500/10 text-primary-400 border-none px-2.5">
                                 {upcoming.length} ngày
                             </Badge>
@@ -845,7 +845,7 @@ const LeaveDaysTab = ({ leaveDays, onAddLeave, onRemoveLeave }: LeaveDaysTabProp
                                         "group relative flex flex-col p-5 rounded-3xl border transition-all duration-300",
                                         isToday
                                             ? "bg-primary-950/20 border-primary-500/30 ring-1 ring-primary-500/20 shadow-lg shadow-primary-900/10"
-                                            : "bg-dark-900/40 border-dark-700/50 backdrop-blur-md hover:bg-dark-800/60 hover:border-dark-600"
+                                            : "bg-slate-900/40 border-slate-700/50 backdrop-blur-md hover:bg-slate-800/60 hover:border-slate-600"
                                     )}
                                 >
                                     <div className="flex items-start justify-between mb-4">
@@ -859,11 +859,11 @@ const LeaveDaysTab = ({ leaveDays, onAddLeave, onRemoveLeave }: LeaveDaysTabProp
                                             {isToday ? (
                                                 <Badge className="bg-emerald-500 text-white border-none animate-pulse">Hôm nay</Badge>
                                             ) : (
-                                                <Badge variant="info" className="bg-dark-700/30 text-dark-400 italic font-medium px-2 py-0.5 rounded-lg">Sắp tới</Badge>
+                                                <Badge variant="info" className="bg-slate-700/30 text-slate-400 italic font-medium px-2 py-0.5 rounded-lg">Sắp tới</Badge>
                                             )}
                                             <button
                                                 onClick={() => onRemoveLeave(leave.date)}
-                                                className="p-2 rounded-xl text-dark-500 hover:text-red-400 hover:bg-red-900/20 transition-all opacity-0 group-hover:opacity-100"
+                                                className="p-2 rounded-xl text-slate-500 hover:text-red-400 hover:bg-red-900/20 transition-all opacity-0 group-hover:opacity-100"
                                                 title="Hủy ngày nghỉ"
                                             >
                                                 <X size={18} />
@@ -872,16 +872,16 @@ const LeaveDaysTab = ({ leaveDays, onAddLeave, onRemoveLeave }: LeaveDaysTabProp
                                     </div>
 
                                     <div>
-                                        <p className="text-lg font-bold text-dark-50 mb-1">
+                                        <p className="text-lg font-bold text-slate-50 mb-1">
                                             {dateObj.toLocaleDateString('vi-VN', { weekday: 'long' })}
                                         </p>
-                                        <p className="text-2xl font-black text-dark-100 tracking-tight">
+                                        <p className="text-2xl font-black text-slate-100 tracking-tight">
                                             {dateObj.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                                         </p>
                                         {leave.reason && (
-                                            <div className="mt-4 pt-4 border-t border-dark-700/50 flex items-start gap-2">
-                                                <Info size={14} className="text-dark-500 shrink-0 mt-0.5" />
-                                                <p className="text-xs text-dark-400 font-medium italic line-clamp-2">
+                                            <div className="mt-4 pt-4 border-t border-slate-700/50 flex items-start gap-2">
+                                                <Info size={14} className="text-slate-500 shrink-0 mt-0.5" />
+                                                <p className="text-xs text-slate-400 font-medium italic line-clamp-2">
                                                     {leave.reason}
                                                 </p>
                                             </div>
@@ -897,12 +897,12 @@ const LeaveDaysTab = ({ leaveDays, onAddLeave, onRemoveLeave }: LeaveDaysTabProp
                         })}
 
                         {upcoming.length === 0 && (
-                            <div className="col-span-1 md:col-span-2 flex flex-col items-center justify-center py-16 bg-dark-900/20 rounded-3xl border border-dashed border-dark-800">
-                                <div className="h-14 w-14 rounded-full bg-dark-800 flex items-center justify-center mb-4">
-                                    <CalendarOff size={24} className="text-dark-600" />
+                            <div className="col-span-1 md:col-span-2 flex flex-col items-center justify-center py-16 bg-slate-900/20 rounded-3xl border border-dashed border-slate-800">
+                                <div className="h-14 w-14 rounded-full bg-slate-800 flex items-center justify-center mb-4">
+                                    <CalendarOff size={24} className="text-slate-600" />
                                 </div>
-                                <h4 className="text-dark-200 font-bold mb-1">Không có ngày nghỉ sắp tới</h4>
-                                <p className="text-dark-500 text-sm">Lịch làm việc của bạn đang hoạt động bình thường.</p>
+                                <h4 className="text-slate-200 font-bold mb-1">Không có ngày nghỉ sắp tới</h4>
+                                <p className="text-slate-500 text-sm">Lịch làm việc của bạn đang hoạt động bình thường.</p>
                             </div>
                         )}
                     </div>
@@ -910,30 +910,30 @@ const LeaveDaysTab = ({ leaveDays, onAddLeave, onRemoveLeave }: LeaveDaysTabProp
 
                 {/* Past Leaves */}
                 {past.length > 0 && (
-                    <div className="space-y-4 pt-4 border-t border-dark-800/50">
+                    <div className="space-y-4 pt-4 border-t border-slate-800/50">
                         <div className="flex items-center gap-3 px-2">
-                            <h3 className="text-sm font-bold text-dark-400 uppercase tracking-widest">Lịch sử ngày nghỉ</h3>
-                            <span className="h-px flex-1 bg-dark-800/50" />
+                            <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Lịch sử ngày nghỉ</h3>
+                            <span className="h-px flex-1 bg-slate-800/50" />
                         </div>
 
                         <div className="space-y-2">
                             {past.map((leave: LeaveDay) => (
                                 <div
                                     key={leave.date}
-                                    className="flex items-center justify-between p-4 rounded-2xl bg-dark-900/20 border border-dark-800/50 opacity-60 hover:opacity-80 transition-opacity"
+                                    className="flex items-center justify-between p-4 rounded-2xl bg-slate-900/20 border border-slate-800/50 opacity-60 hover:opacity-80 transition-opacity"
                                 >
                                     <div className="flex items-center gap-4">
-                                        <div className="h-8 w-8 rounded-lg bg-dark-800 flex items-center justify-center">
-                                            <CalendarOff size={16} className="text-dark-500" />
+                                        <div className="h-8 w-8 rounded-lg bg-slate-800 flex items-center justify-center">
+                                            <CalendarOff size={16} className="text-slate-500" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold text-dark-200">
+                                            <p className="text-sm font-bold text-slate-200">
                                                 {new Date(leave.date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                                             </p>
-                                            <p className="text-[11px] text-dark-500 italic mt-0.5">{leave.reason || 'Không rõ lý do'}</p>
+                                            <p className="text-[11px] text-slate-500 italic mt-0.5">{leave.reason || 'Không rõ lý do'}</p>
                                         </div>
                                     </div>
-                                    <Badge variant="info" className="text-[10px] bg-dark-800 text-dark-600 uppercase border-none px-2 py-1 rounded-md">Đã qua</Badge>
+                                    <Badge variant="info" className="text-[10px] bg-slate-800 text-slate-600 uppercase border-none px-2 py-1 rounded-md">Đã qua</Badge>
                                 </div>
                             ))}
                         </div>

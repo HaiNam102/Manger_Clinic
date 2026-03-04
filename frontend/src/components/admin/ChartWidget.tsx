@@ -42,8 +42,8 @@ const ChartWidget = ({
     const CustomTooltip = ({ active, payload, label }: any) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-dark-800 border border-dark-600 p-3 rounded-lg shadow-xl">
-                    <p className="text-dark-200 text-xs font-semibold mb-1">{label}</p>
+                <div className="bg-slate-800 border border-slate-600 p-3 rounded-lg shadow-xl">
+                    <p className="text-slate-200 text-xs font-semibold mb-1">{label}</p>
                     <p className="text-primary-400 text-sm font-bold">
                         {payload[0].value} {payload[0].name}
                     </p>
@@ -111,7 +111,7 @@ const ChartWidget = ({
                         <Legend
                             verticalAlign="bottom"
                             align="center"
-                            className="text-xs text-dark-300"
+                            className="text-xs text-slate-300"
                         />
                     </PieChart>
                 );

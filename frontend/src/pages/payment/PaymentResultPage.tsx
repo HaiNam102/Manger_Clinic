@@ -80,26 +80,26 @@ const PaymentResultPage = () => {
                                 </div>
                             </div>
                             <div>
-                                <h1 className="text-3xl font-black text-dark-50">{message}</h1>
-                                <p className="text-dark-400 mt-2">Cảm ơn bạn đã tin tưởng dịch vụ của ClinicPro.</p>
+                                <h1 className="text-3xl font-black text-slate-50">{message}</h1>
+                                <p className="text-slate-400 mt-2">Cảm ơn bạn đã tin tưởng dịch vụ của ClinicPro.</p>
                             </div>
 
-                            <div className="bg-dark-800/40 rounded-2xl p-6 text-left border border-dark-700/50 space-y-4">
-                                <div className="flex justify-between items-center pb-3 border-b border-dark-700/30">
-                                    <span className="text-dark-400 text-sm">Mã giao dịch VNPay</span>
-                                    <span className="text-dark-100 font-mono text-sm">{paymentInfo?.transactionNo}</span>
+                            <div className="bg-slate-800/40 rounded-2xl p-6 text-left border border-slate-700/50 space-y-4">
+                                <div className="flex justify-between items-center pb-3 border-b border-slate-700/30">
+                                    <span className="text-slate-400 text-sm">Mã giao dịch VNPay</span>
+                                    <span className="text-slate-100 font-mono text-sm">{paymentInfo?.transactionNo}</span>
                                 </div>
-                                <div className="flex justify-between items-center pb-3 border-b border-dark-700/30">
-                                    <span className="text-dark-400 text-sm">Số tiền</span>
+                                <div className="flex justify-between items-center pb-3 border-b border-slate-700/30">
+                                    <span className="text-slate-400 text-sm">Số tiền</span>
                                     <span className="text-primary-400 font-bold">{paymentInfo?.amount?.toLocaleString('vi-VN')} đ</span>
                                 </div>
-                                <div className="flex justify-between items-center pb-3 border-b border-dark-700/30">
-                                    <span className="text-dark-400 text-sm">Ngân hàng</span>
-                                    <span className="text-dark-100 font-medium">{paymentInfo?.bankCode}</span>
+                                <div className="flex justify-between items-center pb-3 border-b border-slate-700/30">
+                                    <span className="text-slate-400 text-sm">Ngân hàng</span>
+                                    <span className="text-slate-100 font-medium">{paymentInfo?.bankCode}</span>
                                 </div>
                                 <div className="flex justify-between items-center">
-                                    <span className="text-dark-400 text-sm">Thời gian</span>
-                                    <span className="text-dark-100 text-sm">
+                                    <span className="text-slate-400 text-sm">Thời gian</span>
+                                    <span className="text-slate-100 text-sm">
                                         {paymentInfo?.payDate ?
                                             `${paymentInfo.payDate.substring(6, 8)}/${paymentInfo.payDate.substring(4, 6)}/${paymentInfo.payDate.substring(0, 4)} ${paymentInfo.payDate.substring(8, 10)}:${paymentInfo.payDate.substring(10, 12)}`
                                             : ''}
@@ -128,11 +128,11 @@ const PaymentResultPage = () => {
                                 </div>
                             </div>
                             <div>
-                                <h1 className="text-3xl font-black text-dark-50">{status === 'failed' ? 'Thanh toán thất bại' : 'Lỗi hệ thống'}</h1>
-                                <p className="text-dark-400 mt-2">{message}</p>
+                                <h1 className="text-3xl font-black text-slate-50">{status === 'failed' ? 'Thanh toán thất bại' : 'Lỗi hệ thống'}</h1>
+                                <p className="text-slate-400 mt-2">{message}</p>
                             </div>
 
-                            <div className="bg-dark-800/40 rounded-2xl p-6 text-dark-300 text-sm border border-dark-700/50">
+                            <div className="bg-slate-800/40 rounded-2xl p-6 text-slate-300 text-sm border border-slate-700/50">
                                 <p>Nếu bạn đã bị trừ tiền nhưng không thấy xác nhận lịch hẹn, vui lòng liên hệ bộ phận hỗ trợ của ClinicPro để được xử lý sớm nhất.</p>
                                 <p className="mt-4 font-bold text-primary-400">Hotline: 1900 123 456</p>
                             </div>
@@ -149,7 +149,7 @@ const PaymentResultPage = () => {
                 </CardContent>
             </Card>
 
-            <div className="mt-8 flex items-center justify-center gap-2 text-dark-500 text-xs">
+            <div className="mt-8 flex items-center justify-center gap-2 text-slate-500 text-xs">
                 <ShieldCheck size={14} />
                 <span>Giao dịch của bạn được bảo mật tuyệt đối bởi VNPay & ClinicPro</span>
             </div>

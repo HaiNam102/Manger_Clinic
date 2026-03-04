@@ -71,35 +71,35 @@ const CancelModal = ({ appointment, onClose, onConfirm }: CancelModalProps) => {
             />
             {/* Modal */}
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                <div className="bg-dark-900 border border-dark-700 rounded-2xl shadow-2xl w-full max-w-md">
-                    <div className="flex items-center justify-between p-6 border-b border-dark-700">
+                <div className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-md">
+                    <div className="flex items-center justify-between p-6 border-b border-slate-700">
                         <div>
-                            <h3 className="text-lg font-bold text-dark-50">Hủy lịch hẹn</h3>
-                            <p className="text-sm text-dark-400 mt-0.5">
+                            <h3 className="text-lg font-bold text-slate-50">Hủy lịch hẹn</h3>
+                            <p className="text-sm text-slate-400 mt-0.5">
                                 BS. {appointment.doctorName} — {appointment.appointmentDate}
                             </p>
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-2 rounded-lg hover:bg-dark-800 text-dark-400 hover:text-dark-50 transition-colors"
+                            className="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-50 transition-colors"
                         >
                             <X size={20} />
                         </button>
                     </div>
                     <div className="p-6 space-y-4">
-                        <p className="text-dark-300 text-sm">
+                        <p className="text-slate-300 text-sm">
                             Bạn có chắc muốn hủy lịch hẹn này? Hành động này không thể hoàn tác.
                         </p>
                         <div>
-                            <label className="block text-sm font-medium text-dark-300 mb-2">
-                                Lý do hủy <span className="text-dark-500">(không bắt buộc)</span>
+                            <label className="block text-sm font-medium text-slate-300 mb-2">
+                                Lý do hủy <span className="text-slate-500">(không bắt buộc)</span>
                             </label>
                             <textarea
                                 value={reason}
                                 onChange={(e) => setReason(e.target.value)}
                                 placeholder="Ví dụ: Bận công việc đột xuất..."
                                 rows={3}
-                                className="w-full bg-dark-800 border border-dark-700 rounded-xl px-4 py-3 text-dark-50 placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 resize-none text-sm"
+                                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-slate-50 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 resize-none text-sm"
                             />
                         </div>
                     </div>
@@ -151,13 +151,13 @@ const AppointmentCard = ({ apt, onCancel, onReview }: AppointmentCardProps) => {
     return (
         <div
             className={`group flex flex-col sm:flex-row items-stretch sm:items-center gap-4 p-5 rounded-2xl border transition-all duration-200 cursor-pointer hover:shadow-lg ${isPast
-                ? 'bg-dark-900/30 border-dark-800/50 hover:border-dark-700'
-                : 'bg-dark-800/40 border-dark-700/50 hover:border-primary-700/40 hover:bg-dark-800/60'
+                ? 'bg-slate-900/30 border-slate-800/50 hover:border-slate-700'
+                : 'bg-slate-800/40 border-slate-700/50 hover:border-primary-700/40 hover:bg-slate-800/60'
                 }`}
             onClick={() => navigate(`/appointments/${apt.id}`)}
         >
             {/* Date block */}
-            <div className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-xl border ${isPast ? 'bg-dark-800/50 border-dark-700/50 text-dark-500' : 'bg-primary-900/30 border-primary-800/50 text-primary-400'
+            <div className={`flex-shrink-0 flex flex-col items-center justify-center w-20 h-20 rounded-xl border ${isPast ? 'bg-slate-800/50 border-slate-700/50 text-slate-500' : 'bg-primary-900/30 border-primary-800/50 text-primary-400'
                 }`}>
                 <p className="text-2xl font-bold leading-none">
                     {dateObj.getDate().toString().padStart(2, '0')}
@@ -171,7 +171,7 @@ const AppointmentCard = ({ apt, onCancel, onReview }: AppointmentCardProps) => {
             {/* Info */}
             <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
-                    <h4 className="font-semibold text-dark-50 truncate">
+                    <h4 className="font-semibold text-slate-50 truncate">
                         BS. {apt.doctorName}
                     </h4>
                     <Badge variant={cfg.variant} size="sm">
@@ -183,19 +183,19 @@ const AppointmentCard = ({ apt, onCancel, onReview }: AppointmentCardProps) => {
                 {apt.specialtyName && (
                     <p className="text-sm text-primary-400/80 font-medium mb-1.5">{apt.specialtyName}</p>
                 )}
-                <div className="flex flex-wrap items-center gap-4 text-sm text-dark-400">
+                <div className="flex flex-wrap items-center gap-4 text-sm text-slate-400">
                     <span className="flex items-center gap-1.5">
-                        <Calendar size={13} className="text-dark-500" />
+                        <Calendar size={13} className="text-slate-500" />
                         {dateStr}
                     </span>
                     <span className="flex items-center gap-1.5">
-                        <Clock size={13} className="text-dark-500" />
+                        <Clock size={13} className="text-slate-500" />
                         {apt.appointmentTime}
                     </span>
                 </div>
                 {apt.symptoms && (
-                    <p className="text-xs text-dark-500 mt-2 line-clamp-1">
-                        <span className="text-dark-600">Triệu chứng:</span> {apt.symptoms}
+                    <p className="text-xs text-slate-500 mt-2 line-clamp-1">
+                        <span className="text-slate-600">Triệu chứng:</span> {apt.symptoms}
                     </p>
                 )}
             </div>
@@ -225,7 +225,7 @@ const AppointmentCard = ({ apt, onCancel, onReview }: AppointmentCardProps) => {
                 <Button
                     size="sm"
                     variant="ghost"
-                    className="text-dark-400 hover:text-dark-50 group-hover:text-primary-400"
+                    className="text-slate-400 hover:text-slate-50 group-hover:text-primary-400"
                     onClick={() => navigate(`/appointments/${apt.id}`)}
                 >
                     <ChevronRight size={18} />
@@ -307,11 +307,11 @@ const MyAppointmentsPage = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-dark-50 flex items-center gap-2">
+                    <h1 className="text-2xl font-bold text-slate-50 flex items-center gap-2">
                         <Stethoscope className="text-primary-400" size={24} />
                         Lịch hẹn của tôi
                     </h1>
-                    <p className="text-dark-400 mt-1 text-sm">
+                    <p className="text-slate-400 mt-1 text-sm">
                         {upcomingCount > 0
                             ? `Bạn có ${upcomingCount} lịch hẹn sắp tới`
                             : 'Quản lý tất cả lịch hẹn khám bệnh'}
@@ -324,31 +324,47 @@ const MyAppointmentsPage = () => {
                 </Link>
             </div>
 
+            {/* Quick Stats */}
+            <div className="grid grid-cols-3 gap-3">
+                <div className="glass-stat rounded-xl p-4 text-center transition-all duration-200 hover:scale-[1.02]">
+                    <p className="text-2xl font-black text-primary-400">{upcomingCount}</p>
+                    <p className="text-[11px] text-slate-400 font-medium mt-0.5">Sắp tới</p>
+                </div>
+                <div className="glass-stat rounded-xl p-4 text-center transition-all duration-200 hover:scale-[1.02]" style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(16,185,129,0.03) 100%)', borderColor: 'rgba(16,185,129,0.15)' }}>
+                    <p className="text-2xl font-black text-emerald-400">{appointments.filter(a => a.status === 'COMPLETED').length}</p>
+                    <p className="text-[11px] text-slate-400 font-medium mt-0.5">Hoàn thành</p>
+                </div>
+                <div className="glass-stat rounded-xl p-4 text-center transition-all duration-200 hover:scale-[1.02]" style={{ background: 'linear-gradient(135deg, rgba(239,68,68,0.08) 0%, rgba(239,68,68,0.03) 100%)', borderColor: 'rgba(239,68,68,0.15)' }}>
+                    <p className="text-2xl font-black text-red-400">{appointments.filter(a => a.status === 'CANCELLED').length}</p>
+                    <p className="text-[11px] text-slate-400 font-medium mt-0.5">Đã hủy</p>
+                </div>
+            </div>
+
             {/* Filters */}
             <Card>
                 <CardContent className="p-4 space-y-3">
                     {/* Search */}
                     <div className="relative">
-                        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-500" />
+                        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                         <input
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Tìm kiếm theo bác sĩ, chuyên khoa, ngày..."
-                            className="w-full bg-dark-800 border border-dark-700 rounded-xl pl-9 pr-4 py-2.5 text-sm text-dark-50 placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500/50"
+                            className="w-full bg-slate-800 border border-slate-700 rounded-xl pl-9 pr-4 py-2.5 text-sm text-slate-50 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500/50"
                         />
                     </div>
 
                     {/* Status filter tabs */}
                     <div className="flex items-center gap-2 flex-wrap">
-                        <Filter size={14} className="text-dark-500 flex-shrink-0" />
+                        <Filter size={14} className="text-slate-500 flex-shrink-0" />
                         {filterOptions.map((opt) => (
                             <button
                                 key={opt.value}
                                 onClick={() => setStatusFilter(opt.value)}
                                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 ${statusFilter === opt.value
                                     ? 'bg-primary-600 text-white shadow-sm shadow-primary-900/50'
-                                    : 'bg-dark-800 text-dark-400 hover:bg-dark-700 hover:text-dark-200'
+                                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200'
                                     }`}
                             >
                                 {opt.label}
@@ -376,15 +392,15 @@ const MyAppointmentsPage = () => {
                     ))
                 ) : (
                     <div className="py-16 text-center">
-                        <div className="w-20 h-20 bg-dark-900/50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                            <Calendar size={36} className="text-dark-600" />
+                        <div className="w-20 h-20 bg-slate-900/50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <Calendar size={36} className="text-slate-600" />
                         </div>
-                        <p className="text-dark-400 text-lg font-medium">
+                        <p className="text-slate-400 text-lg font-medium">
                             {searchQuery || statusFilter !== 'ALL'
                                 ? 'Không tìm thấy lịch hẹn phù hợp'
                                 : 'Bạn chưa có lịch hẹn nào'}
                         </p>
-                        <p className="text-dark-500 text-sm mt-1">
+                        <p className="text-slate-500 text-sm mt-1">
                             {searchQuery || statusFilter !== 'ALL'
                                 ? 'Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm'
                                 : 'Hãy đặt lịch khám ngay hôm nay!'}

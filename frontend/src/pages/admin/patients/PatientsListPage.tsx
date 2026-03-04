@@ -96,8 +96,8 @@ const PatientsListPage = () => {
                         {p.fullName?.charAt(0) || 'P'}
                     </div>
                     <div>
-                        <p className="font-semibold text-dark-50">{p.fullName}</p>
-                        <p className="text-xs text-dark-400">ID: {p.id.substring(0, 8)}...</p>
+                        <p className="font-semibold text-slate-50">{p.fullName}</p>
+                        <p className="text-xs text-slate-400">ID: {p.id.substring(0, 8)}...</p>
                     </div>
                 </div>
             )
@@ -106,10 +106,10 @@ const PatientsListPage = () => {
             header: 'Thông tin liên lạc',
             accessor: (p: PatientResponse) => (
                 <div className="space-y-1 text-xs">
-                    <div className="flex items-center gap-2 text-dark-200">
+                    <div className="flex items-center gap-2 text-slate-200">
                         <Mail size={12} /> {p.email}
                     </div>
-                    <div className="flex items-center gap-2 text-dark-400">
+                    <div className="flex items-center gap-2 text-slate-400">
                         <Phone size={12} /> {p.phoneNumber || 'N/A'}
                     </div>
                 </div>
@@ -122,7 +122,7 @@ const PatientsListPage = () => {
                     <Badge variant={p.gender === 'MALE' ? 'primary' : 'error'} size="sm">
                         {p.gender === 'MALE' ? 'Nam' : 'Nữ'}
                     </Badge>
-                    <span className="text-xs text-dark-400">{getAge(p.dateOfBirth)}</span>
+                    <span className="text-xs text-slate-400">{getAge(p.dateOfBirth)}</span>
                 </div>
             )
         },
@@ -180,11 +180,11 @@ const PatientsListPage = () => {
         <div className="space-y-6 animate-fade-in p-2">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-dark-50 flex items-center gap-2">
+                    <h1 className="text-2xl font-bold text-slate-50 flex items-center gap-2">
                         <Users className="text-primary-500" size={24} />
                         Quản lý bệnh nhân
                     </h1>
-                    <p className="text-dark-400 text-sm mt-1">
+                    <p className="text-slate-400 text-sm mt-1">
                         Xem hồ sơ bệnh nhân, lịch sử khám và thông tin liên lạc
                     </p>
                 </div>
@@ -198,7 +198,7 @@ const PatientsListPage = () => {
             <Card>
                 <CardContent className="p-4 flex flex-col md:flex-row gap-4">
                     <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-500" size={18} />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                         <Input
                             placeholder="Tìm bệnh nhân theo tên, email hoặc SĐT..."
                             className="pl-10"
@@ -207,9 +207,9 @@ const PatientsListPage = () => {
                         />
                     </div>
                     <div className="flex items-center gap-2 min-w-[200px]">
-                        <Filter className="text-dark-500" size={18} />
+                        <Filter className="text-slate-500" size={18} />
                         <select
-                            className="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-dark-200 text-sm outline-none"
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-sm outline-none"
                             value={genderFilter}
                             onChange={(e) => setGenderFilter(e.target.value)}
                         >
@@ -285,8 +285,8 @@ const PatientsListPage = () => {
             <div className="flex items-center gap-2 p-4 bg-error/5 border border-error/20 rounded-xl mt-4 max-w-2xl">
                 <ShieldAlert className="text-error" size={20} />
                 <div>
-                    <p className="text-sm font-semibold text-dark-50">Lưu ý bảo mật</p>
-                    <p className="text-xs text-dark-400">
+                    <p className="text-sm font-semibold text-slate-50">Lưu ý bảo mật</p>
+                    <p className="text-xs text-slate-400">
                         Tài khoản bị khóa sẽ bị thu hồi toàn bộ quyền truy cập vào hệ thống cho đến khi được quản trị viên mở lại.
                     </p>
                 </div>

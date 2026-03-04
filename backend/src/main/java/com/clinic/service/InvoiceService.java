@@ -90,7 +90,7 @@ public class InvoiceService {
 
         Payment payment = invoice.getPayment();
         if (payment.getStatus() == PaymentStatus.COMPLETED) {
-            throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION, "Invoice already paid");
+            throw new RuntimeException("Invoice already paid");
         }
 
         PaymentMethod method = PaymentMethod.CASH;

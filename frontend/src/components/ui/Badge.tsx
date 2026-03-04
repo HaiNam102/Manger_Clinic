@@ -12,7 +12,7 @@ const badgeVariants = cva(
     {
         variants: {
             variant: {
-                default: 'bg-dark-800 text-dark-50 border border-dark-700',
+                default: 'bg-slate-800 text-slate-50 border border-slate-700',
                 primary: 'bg-primary-900/30 text-primary-400 border border-primary-700/30',
                 success: 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20',
                 error: 'bg-error/10 text-error border border-error/20',

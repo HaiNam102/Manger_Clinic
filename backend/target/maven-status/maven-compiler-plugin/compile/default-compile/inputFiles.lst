@@ -38,6 +38,7 @@ D:\ManagerClinic\backend\src\main\java\com\clinic\controller\AdminController.jav
 D:\ManagerClinic\backend\src\main\java\com\clinic\repository\PatientRepository.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\entity\Doctor.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\repository\InvoiceRepository.java
+D:\ManagerClinic\backend\src\main\java\com\clinic\service\AuditLogService.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\service\AuthService.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\repository\PaymentRepository.java
 D:\ManagerClinic\backend\src\main\java\com\clinic\controller\MedicineController.java

@@ -103,13 +103,13 @@ const ConfirmBookingPage = () => {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
                 <Loader2 size={48} className="animate-spin text-primary-500" />
-                <p className="text-dark-400 font-medium animate-pulse">Đang chuẩn bị hồ sơ đặt lịch...</p>
+                <p className="text-slate-400 font-medium animate-pulse">Đang chuẩn bị hồ sơ đặt lịch...</p>
             </div>
         );
     }
 
     if (!bookingData || !doctor) {
-        return <div className="text-center py-20 text-dark-400">Trạng thái đặt lịch không hợp lệ hoặc thông tin bác sĩ không có sẵn.</div>;
+        return <div className="text-center py-20 text-slate-400">Trạng thái đặt lịch không hợp lệ hoặc thông tin bác sĩ không có sẵn.</div>;
     }
 
     const formattedFee = doctor?.consultationFee
@@ -127,28 +127,28 @@ const ConfirmBookingPage = () => {
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="p-0 h-auto text-dark-500 hover:text-primary-400 group flex items-center bg-transparent"
+                            className="p-0 h-auto text-slate-500 hover:text-primary-400 group flex items-center bg-transparent"
                             onClick={() => navigate(-1)}
                         >
                             <ArrowLeft size={16} className="mr-2 transition-transform group-hover:-translate-x-1" />
                             Quay lại chọn thời gian
                         </Button>
-                        <h1 className="text-4xl font-extrabold text-dark-50 tracking-tight">Xác nhận lịch hẹn</h1>
-                        <p className="text-dark-400 text-lg">
+                        <h1 className="text-4xl font-extrabold text-slate-50 tracking-tight">Xác nhận lịch hẹn</h1>
+                        <p className="text-slate-400 text-lg">
                             Vui lòng kiểm tra lại thông tin và xác nhận để hoàn tất đặt lịch.
                         </p>
                     </section>
 
-                    <Card className="border-dark-800 bg-dark-900/40 backdrop-blur-sm overflow-hidden">
+                    <Card className="border-slate-800 bg-slate-900/40 backdrop-blur-sm overflow-hidden">
                         <CardHeader
                             title="Thông tin cuộc hẹn"
                             icon={<Info size={20} className="text-primary-400" />}
-                            className="bg-dark-900 border-b border-dark-700/50"
+                            className="bg-slate-900 border-b border-slate-700/50"
                         />
                         <CardContent className="p-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                 {/* Doctor Info */}
-                                <div className="flex gap-4 p-4 bg-dark-800/40 rounded-2xl border border-dark-700/30">
+                                <div className="flex gap-4 p-4 bg-slate-800/40 rounded-2xl border border-slate-700/30">
                                     <Avatar
                                         src={doctor?.avatar}
                                         fallback={doctor?.fullName[0] || 'D'}
@@ -157,23 +157,23 @@ const ConfirmBookingPage = () => {
                                     />
                                     <div className="space-y-1 pt-1">
                                         <p className="text-[10px] font-bold text-primary-500 uppercase tracking-widest">Bác sĩ phụ trách</p>
-                                        <h3 className="text-lg font-bold text-dark-50">{doctor?.fullName}</h3>
-                                        <p className="text-dark-400 text-sm">{doctor?.specialtyName}</p>
+                                        <h3 className="text-lg font-bold text-slate-50">{doctor?.fullName}</h3>
+                                        <p className="text-slate-400 text-sm">{doctor?.specialtyName}</p>
                                     </div>
                                 </div>
 
                                 {/* Time Info */}
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div className="p-4 bg-dark-800/40 rounded-2xl border border-dark-700/30">
+                                    <div className="p-4 bg-slate-800/40 rounded-2xl border border-slate-700/30">
                                         <p className="text-[10px] font-bold text-primary-500 uppercase tracking-widest mb-2">Ngày khám</p>
-                                        <div className="flex items-center gap-2 text-dark-50">
+                                        <div className="flex items-center gap-2 text-slate-50">
                                             <Calendar size={18} className="text-primary-400" />
                                             <span className="font-bold">{new Date(bookingData.date).toLocaleDateString('vi-VN')}</span>
                                         </div>
                                     </div>
-                                    <div className="p-4 bg-dark-800/40 rounded-2xl border border-dark-700/30">
+                                    <div className="p-4 bg-slate-800/40 rounded-2xl border border-slate-700/30">
                                         <p className="text-[10px] font-bold text-primary-500 uppercase tracking-widest mb-2">Thời gian</p>
-                                        <div className="flex items-center gap-2 text-dark-50">
+                                        <div className="flex items-center gap-2 text-slate-50">
                                             <Clock size={18} className="text-primary-400" />
                                             <span className="font-bold">{bookingData.time}</span>
                                         </div>
@@ -183,31 +183,31 @@ const ConfirmBookingPage = () => {
 
                             <div className="mt-10 space-y-8">
                                 <div className="space-y-3">
-                                    <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-dark-400 ml-1">
+                                    <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-400 ml-1">
                                         <CheckCircle2 size={14} className="text-primary-500" />
                                         Triệu chứng / Lý do khám
                                     </label>
                                     <textarea
-                                        className="w-full bg-dark-800/50 border-2 border-dark-700 rounded-2xl px-5 py-4 text-dark-100 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all min-h-[120px] resize-none"
+                                        className="w-full bg-slate-800/50 border-2 border-slate-700 rounded-2xl px-5 py-4 text-slate-100 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all min-h-[120px] resize-none"
                                         placeholder="Mô tả ngắn gọn các triệu chứng bạn đang gặp phải..."
                                         value={symptoms}
                                         onChange={(e) => setSymptoms(e.target.value)}
                                         maxLength={500}
                                     />
                                     <div className="flex justify-end pr-2">
-                                        <span className={`text-[10px] font-medium ${symptoms.length > 450 ? 'text-amber-500' : 'text-dark-500'}`}>
+                                        <span className={`text-[10px] font-medium ${symptoms.length > 450 ? 'text-amber-500' : 'text-slate-500'}`}>
                                             {symptoms.length}/500 ký tự
                                         </span>
                                     </div>
                                 </div>
 
                                 <div className="space-y-3">
-                                    <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-dark-400 ml-1">
+                                    <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-400 ml-1">
                                         <StickyNote size={14} className="text-primary-500" />
                                         Ghi chú thêm (Không bắt buộc)
                                     </label>
                                     <textarea
-                                        className="w-full bg-dark-800/50 border-2 border-dark-700 rounded-2xl px-5 py-3 text-dark-100 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all min-h-[80px] resize-none"
+                                        className="w-full bg-slate-800/50 border-2 border-slate-700 rounded-2xl px-5 py-3 text-slate-100 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all min-h-[80px] resize-none"
                                         placeholder="Ví dụ: Dị ứng thuốc, tiền sử bệnh lý..."
                                         value={notes}
                                         onChange={(e) => setNotes(e.target.value)}
@@ -221,28 +221,28 @@ const ConfirmBookingPage = () => {
 
                 {/* Checkout Column */}
                 <div className="lg:col-span-4 lg:sticky lg:top-8 self-start">
-                    <Card className="border-dark-800 bg-dark-900 border-2 border-primary-500/20 shadow-2xl shadow-primary-900/10 overflow-hidden">
+                    <Card className="border-slate-800 bg-slate-900 border-2 border-primary-500/20 shadow-2xl shadow-primary-900/10 overflow-hidden">
                         <div className="p-8 space-y-8">
-                            <h3 className="text-xl font-bold text-dark-50 flex items-center gap-2">
+                            <h3 className="text-xl font-bold text-slate-50 flex items-center gap-2">
                                 <ShieldCheck size={24} className="text-primary-500" />
                                 Chi tiết thanh toán
                             </h3>
 
-                            <div className="space-y-4 pt-4 border-t border-dark-800/50">
-                                <div className="flex justify-between text-dark-400">
+                            <div className="space-y-4 pt-4 border-t border-slate-800/50">
+                                <div className="flex justify-between text-slate-400">
                                     <span>Phí khám bệnh</span>
-                                    <span className="text-dark-100 font-medium">{formattedFee}</span>
+                                    <span className="text-slate-100 font-medium">{formattedFee}</span>
                                 </div>
-                                <div className="flex justify-between text-dark-400">
+                                <div className="flex justify-between text-slate-400">
                                     <span>Phí dịch vụ</span>
-                                    <span className="text-dark-100 font-medium text-green-500">Miễn phí</span>
+                                    <span className="text-slate-100 font-medium text-green-500">Miễn phí</span>
                                 </div>
 
-                                <div className="pt-6 border-t border-dark-800 flex justify-between items-end">
-                                    <span className="text-dark-100 font-bold">Tổng thanh toán</span>
+                                <div className="pt-6 border-t border-slate-800 flex justify-between items-end">
+                                    <span className="text-slate-100 font-bold">Tổng thanh toán</span>
                                     <div className="text-right">
                                         <p className="text-3xl font-black text-primary-400 tracking-tighter">{formattedFee}</p>
-                                        <p className="text-[10px] text-dark-500 italic mt-1">(Trả trực tiếp tại cơ sở)</p>
+                                        <p className="text-[10px] text-slate-500 italic mt-1">(Trả trực tiếp tại cơ sở)</p>
                                     </div>
                                 </div>
                             </div>
@@ -250,7 +250,7 @@ const ConfirmBookingPage = () => {
                             <div className="bg-primary-500/5 p-4 rounded-2xl border border-primary-500/10 space-y-3">
                                 <div className="flex items-start gap-3">
                                     <AlertCircle size={18} className="text-primary-400 shrink-0 mt-0.5" />
-                                    <p className="text-[11px] text-dark-400 leading-relaxed font-medium">
+                                    <p className="text-[11px] text-slate-400 leading-relaxed font-medium">
                                         Bằng cách nhấn xác nhận, bạn đồng ý với <strong>Điều khoản dịch vụ</strong> và <strong>Chính sách bảo mật</strong> của ClinicPro.
                                     </p>
                                 </div>
@@ -270,7 +270,7 @@ const ConfirmBookingPage = () => {
                                 <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                             </Button>
 
-                            <p className="text-center text-[10px] text-dark-500 font-medium">
+                            <p className="text-center text-[10px] text-slate-500 font-medium">
                                 Đảm bảo thông tin chính xác để bác sĩ phục vụ tốt nhất
                             </p>
                         </div>

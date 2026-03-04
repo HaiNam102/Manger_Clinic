@@ -85,7 +85,7 @@ const CheckoutPage = () => {
         <div className="max-w-4xl mx-auto px-4 py-8 animate-fade-in">
             <div className="flex items-center gap-2 mb-6">
                 <Link to={`/appointments/${appointmentId}`}>
-                    <Button variant="ghost" size="sm" className="text-dark-400 hover:text-dark-50 -ml-2">
+                    <Button variant="ghost" size="sm" className="text-slate-400 hover:text-slate-50 -ml-2">
                         <ChevronLeft size={18} className="mr-1" /> Quay lại chi tiết
                     </Button>
                 </Link>
@@ -102,41 +102,41 @@ const CheckoutPage = () => {
                         />
                         <CardContent className="p-6">
                             <div className="space-y-6">
-                                <div className="flex items-start gap-4 p-4 bg-dark-800/40 rounded-2xl border border-dark-700/50">
+                                <div className="flex items-start gap-4 p-4 bg-slate-800/40 rounded-2xl border border-slate-700/50">
                                     <div className="w-12 h-12 bg-primary-900/30 rounded-xl flex items-center justify-center text-primary-400">
                                         <Stethoscope size={24} />
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-dark-50 text-lg">Dịch vụ khám bệnh</h3>
-                                        <p className="text-dark-400 text-sm">{appointment.specialtyName}</p>
+                                        <h3 className="font-bold text-slate-50 text-lg">Dịch vụ khám bệnh</h3>
+                                        <p className="text-slate-400 text-sm">{appointment.specialtyName}</p>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="flex items-center gap-3 text-dark-300">
-                                        <User size={18} className="text-dark-500" />
+                                    <div className="flex items-center gap-3 text-slate-300">
+                                        <User size={18} className="text-slate-500" />
                                         <span className="text-sm">Bác sĩ: <strong>{appointment.doctorName}</strong></span>
                                     </div>
-                                    <div className="flex items-center gap-3 text-dark-300">
-                                        <Calendar size={18} className="text-dark-500" />
+                                    <div className="flex items-center gap-3 text-slate-300">
+                                        <Calendar size={18} className="text-slate-500" />
                                         <span className="text-sm">Ngày: <strong>{new Date(appointment.appointmentDate).toLocaleDateString('vi-VN')}</strong></span>
                                     </div>
-                                    <div className="flex items-center gap-3 text-dark-300">
-                                        <Clock size={18} className="text-dark-500" />
+                                    <div className="flex items-center gap-3 text-slate-300">
+                                        <Clock size={18} className="text-slate-500" />
                                         <span className="text-sm">Giờ: <strong>{appointment.appointmentTime}</strong></span>
                                     </div>
                                 </div>
 
-                                <div className="pt-6 border-t border-dark-700/50">
-                                    <h4 className="text-sm font-semibold text-dark-400 uppercase tracking-wider mb-4">Phương thức thanh toán</h4>
+                                <div className="pt-6 border-t border-slate-700/50">
+                                    <h4 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Phương thức thanh toán</h4>
                                     <div className="flex items-center justify-between p-4 bg-primary-900/10 border border-primary-500/30 rounded-2xl">
                                         <div className="flex items-center gap-4">
                                             <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center p-2">
                                                 <img src="https://sandbox.vnpayment.vn/paymentv2/Images/brands/logo-vnpay.png" alt="VNPay" className="max-h-full object-contain" />
                                             </div>
                                             <div>
-                                                <p className="font-bold text-dark-50">Cổng thanh toán VNPay</p>
-                                                <p className="text-xs text-dark-400">Thẻ ATM / QR Code / Visa / Master</p>
+                                                <p className="font-bold text-slate-50">Cổng thanh toán VNPay</p>
+                                                <p className="text-xs text-slate-400">Thẻ ATM / QR Code / Visa / Master</p>
                                             </div>
                                         </div>
                                         <div className="w-6 h-6 rounded-full bg-primary-500 flex items-center justify-center">
@@ -160,16 +160,16 @@ const CheckoutPage = () => {
                         <CardHeader title="Tóm tắt đơn hàng" />
                         <CardContent className="p-6">
                             <div className="space-y-4">
-                                <div className="flex justify-between items-center text-dark-300">
+                                <div className="flex justify-between items-center text-slate-300">
                                     <span className="text-sm">Giá dịch vụ</span>
-                                    <span className="font-medium text-dark-100">{appointment.consultationFee?.toLocaleString('vi-VN')} đ</span>
+                                    <span className="font-medium text-slate-100">{appointment.consultationFee?.toLocaleString('vi-VN')} đ</span>
                                 </div>
-                                <div className="flex justify-between items-center text-dark-300 pb-4 border-b border-dark-700/50">
+                                <div className="flex justify-between items-center text-slate-300 pb-4 border-b border-slate-700/50">
                                     <span className="text-sm">Phí giao dịch</span>
-                                    <span className="font-medium text-dark-100">Miễn phí</span>
+                                    <span className="font-medium text-slate-100">Miễn phí</span>
                                 </div>
                                 <div className="flex justify-between items-center pt-2">
-                                    <span className="font-bold text-dark-50">Tổng thanh toán</span>
+                                    <span className="font-bold text-slate-50">Tổng thanh toán</span>
                                     <span className="text-xl font-black text-primary-400">
                                         {appointment.consultationFee?.toLocaleString('vi-VN')} đ
                                     </span>
@@ -194,7 +194,7 @@ const CheckoutPage = () => {
                                     </Button>
                                 </div>
 
-                                <p className="text-[10px] text-dark-500 text-center mt-4">
+                                <p className="text-[10px] text-slate-500 text-center mt-4">
                                     Bằng cách nhấn thanh toán, bạn đồng ý với các Điều khoản & Chính sách của ClinicPro.
                                 </p>
                             </div>

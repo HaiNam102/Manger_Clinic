@@ -28,7 +28,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
             <div
                 ref={ref}
                 className={cn(
-                    'relative flex shrink-0 overflow-hidden rounded-full bg-dark-800 border-2 border-dark-700',
+                    'relative flex shrink-0 overflow-hidden rounded-full bg-slate-800 border-2 border-slate-700',
                     sizeClasses[size],
                     className
                 )}
@@ -46,7 +46,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
                 ) : null}
 
                 {/* Fallback initials if image fails or no src */}
-                <div className="flex h-full w-full items-center justify-center font-semibold uppercase text-dark-300 bg-dark-800">
+                <div className="flex h-full w-full items-center justify-center font-semibold uppercase text-slate-300 bg-slate-800">
                     {fallback?.substring(0, 2) || (alt?.substring(0, 1) || '?')}
                 </div>
             </div>

@@ -61,9 +61,9 @@ const SpecialtyModal = ({ isOpen, onClose, onSuccess, specialty }: SpecialtyModa
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-950/80 backdrop-blur-sm animate-fade-in text-dark-50">
-            <div className="bg-dark-900 border border-dark-700 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl animate-scale-in">
-                <div className="flex items-center justify-between p-4 border-b border-dark-700 bg-dark-800/50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in text-slate-50">
+            <div className="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl animate-scale-in">
+                <div className="flex items-center justify-between p-4 border-b border-slate-700 bg-slate-800/50">
                     <h2 className="text-xl font-bold flex items-center gap-2">
                         {specialty ? 'Chỉnh sửa chuyên khoa' : 'Thêm chuyên khoa mới'}
                     </h2>
@@ -74,7 +74,7 @@ const SpecialtyModal = ({ isOpen, onClose, onSuccess, specialty }: SpecialtyModa
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-4">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-dark-300">Tên chuyên khoa</label>
+                        <label className="text-sm font-medium text-slate-300">Tên chuyên khoa</label>
                         <Input
                             placeholder="VD: Nội tổng quát, Răng Hàm Mặt..."
                             value={name}
@@ -84,9 +84,9 @@ const SpecialtyModal = ({ isOpen, onClose, onSuccess, specialty }: SpecialtyModa
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-dark-300">Mô tả</label>
+                        <label className="text-sm font-medium text-slate-300">Mô tả</label>
                         <textarea
-                            className="w-full bg-dark-800 border border-dark-700 rounded-xl px-4 py-2 text-dark-100 min-h-[120px] focus:ring-2 focus:ring-primary-500/50 outline-none transition-all placeholder:text-dark-500"
+                            className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-slate-100 min-h-[120px] focus:ring-2 focus:ring-primary-500/50 outline-none transition-all placeholder:text-slate-500"
                             placeholder="Mô tả chi tiết về chuyên khoa này..."
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}

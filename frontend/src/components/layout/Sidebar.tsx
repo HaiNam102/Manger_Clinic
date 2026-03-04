@@ -76,20 +76,20 @@ export const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
 
             <aside
                 className={cn(
-                    'fixed inset-y-0 left-0 z-50 w-64 bg-dark-900 border-r border-dark-700 transition-transform duration-300 ease-in-out lg:static lg:translate-x-0',
+                    'fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 border-r border-slate-700 transition-transform duration-300 ease-in-out lg:static lg:translate-x-0',
                     isOpen ? 'translate-x-0' : '-translate-x-full'
                 )}
             >
                 <div className="flex flex-col h-full">
                     {/* Logo / Brand */}
-                    <div className="flex h-16 items-center justify-between px-6 border-b border-dark-700">
+                    <div className="flex h-16 items-center justify-between px-6 border-b border-slate-700">
                         <div className="flex items-center gap-3">
                             <div className="h-8 w-8 rounded-lg bg-primary-600 flex items-center justify-center">
                                 <span className="text-white font-bold text-sm">CP</span>
                             </div>
-                            <span className="text-lg font-bold text-dark-50">ClinicPro</span>
+                            <span className="text-lg font-bold text-slate-50">ClinicPro</span>
                         </div>
-                        <button onClick={onClose} className="p-2 text-dark-400 hover:bg-dark-800 rounded-lg lg:hidden">
+                        <button onClick={onClose} className="p-2 text-slate-400 hover:bg-slate-800 rounded-lg lg:hidden">
                             <X size={24} />
                         </button>
                     </div>
@@ -104,7 +104,7 @@ export const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
                                         'group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors',
                                         isActive
                                             ? 'bg-primary-900/40 text-primary-400 border border-primary-700/30'
-                                            : 'text-dark-300 hover:text-dark-50 hover:bg-dark-800'
+                                            : 'text-slate-300 hover:text-slate-50 hover:bg-slate-800'
                                     )
                                 }
                                 onClick={() => {
@@ -118,15 +118,15 @@ export const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
                     </nav>
 
                     {/* User info */}
-                    <div className="p-4 border-t border-dark-700">
-                        <div className="bg-dark-800/50 rounded-xl p-4 border border-dark-700">
-                            <p className="text-xs text-dark-400 mb-1">
+                    <div className="p-4 border-t border-slate-700">
+                        <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <p className="text-xs text-slate-400 mb-1">
                                 {portalTitle}
                             </p>
-                            <p className="text-sm font-semibold text-dark-50 truncate">
+                            <p className="text-sm font-semibold text-slate-50 truncate">
                                 {user?.fullName || 'User'}
                             </p>
-                            <p className="text-xs text-dark-500 truncate mt-0.5">
+                            <p className="text-xs text-slate-500 truncate mt-0.5">
                                 {user?.email || ''}
                             </p>
                         </div>

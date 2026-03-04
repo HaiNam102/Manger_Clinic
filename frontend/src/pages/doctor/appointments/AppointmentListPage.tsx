@@ -120,8 +120,8 @@ const AppointmentListPage = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-dark-50">Quản lý lịch hẹn</h1>
-                    <p className="text-dark-400 mt-1">Xem và quản lý tất cả lịch hẹn của bạn</p>
+                    <h1 className="text-2xl font-bold text-slate-50">Quản lý lịch hẹn</h1>
+                    <p className="text-slate-400 mt-1">Xem và quản lý tất cả lịch hẹn của bạn</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <Link to="/doctor/appointments">
@@ -143,7 +143,7 @@ const AppointmentListPage = () => {
                     <div className="flex flex-col sm:flex-row gap-4">
                         {/* Search */}
                         <div className="relative flex-1">
-                            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-400" />
+                            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                             <Input
                                 placeholder="Tìm bệnh nhân, triệu chứng..."
                                 value={searchQuery}
@@ -153,14 +153,14 @@ const AppointmentListPage = () => {
                         </div>
                         {/* Status Filter */}
                         <div className="flex items-center gap-2 overflow-x-auto pb-1">
-                            <Filter size={16} className="text-dark-400 flex-shrink-0" />
+                            <Filter size={16} className="text-slate-400 flex-shrink-0" />
                             {statusFilters.map(sf => (
                                 <button
                                     key={sf.value}
                                     onClick={() => setStatusFilter(sf.value)}
                                     className={`px-3 py-1.5 text-xs font-medium rounded-full whitespace-nowrap transition-all ${statusFilter === sf.value
                                         ? 'bg-primary-600 text-white'
-                                        : 'bg-dark-800 text-dark-300 hover:bg-dark-700'
+                                        : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
                                         }`}
                                 >
                                     {sf.label}
@@ -172,8 +172,8 @@ const AppointmentListPage = () => {
             </Card>
 
             {/* Results Count */}
-            <p className="text-sm text-dark-400">
-                Hiển thị <span className="font-semibold text-dark-200">{filtered.length}</span> lịch hẹn
+            <p className="text-sm text-slate-400">
+                Hiển thị <span className="font-semibold text-slate-200">{filtered.length}</span> lịch hẹn
             </p>
 
             {/* Grouped Appointment List */}
@@ -189,16 +189,16 @@ const AppointmentListPage = () => {
                         <div key={date}>
                             {/* Date Header */}
                             <div className="flex items-center gap-3 mb-3">
-                                <div className={`h-8 w-8 rounded-lg flex items-center justify-center ${isToday ? 'bg-primary-600 text-white' : 'bg-dark-800 text-dark-400'
+                                <div className={`h-8 w-8 rounded-lg flex items-center justify-center ${isToday ? 'bg-primary-600 text-white' : 'bg-slate-800 text-slate-400'
                                     }`}>
                                     <Calendar size={16} />
                                 </div>
-                                <h3 className={`text-sm font-semibold uppercase tracking-wider ${isToday ? 'text-primary-400' : 'text-dark-400'
+                                <h3 className={`text-sm font-semibold uppercase tracking-wider ${isToday ? 'text-primary-400' : 'text-slate-400'
                                     }`}>
                                     {label}
                                 </h3>
-                                <div className="flex-1 border-t border-dark-800" />
-                                <span className="text-xs text-dark-500">{apts.length} lịch hẹn</span>
+                                <div className="flex-1 border-t border-slate-800" />
+                                <span className="text-xs text-slate-500">{apts.length} lịch hẹn</span>
                             </div>
 
                             {/* Appointment Cards */}
@@ -206,7 +206,7 @@ const AppointmentListPage = () => {
                                 {apts.sort((a, b) => (a.appointmentTime || '').localeCompare(b.appointmentTime || '')).map(apt => (
                                     <div
                                         key={apt.id}
-                                        className="flex items-center gap-4 p-4 bg-dark-900 rounded-xl border border-dark-700/50 hover:border-primary-700/30 transition-all duration-200 cursor-pointer group"
+                                        className="flex items-center gap-4 p-4 bg-slate-900 rounded-xl border border-slate-700/50 hover:border-primary-700/30 transition-all duration-200 cursor-pointer group"
                                         onClick={() => { setSelectedAppointment(apt); setIsDetailOpen(true); }}
                                     >
                                         {/* Time */}
@@ -214,17 +214,17 @@ const AppointmentListPage = () => {
                                             <p className="text-base font-bold text-primary-400">{apt.appointmentTime}</p>
                                         </div>
 
-                                        <div className="w-px h-10 bg-dark-700 group-hover:bg-primary-700/30 transition-colors" />
+                                        <div className="w-px h-10 bg-slate-700 group-hover:bg-primary-700/30 transition-colors" />
 
                                         {/* Patient */}
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 mb-0.5">
-                                                <h4 className="font-semibold text-dark-50 truncate text-sm">{apt.patientName}</h4>
+                                                <h4 className="font-semibold text-slate-50 truncate text-sm">{apt.patientName}</h4>
                                                 <Badge variant={statusVariant[apt.status]} size="sm">
                                                     {statusLabel[apt.status]}
                                                 </Badge>
                                             </div>
-                                            <p className="text-xs text-dark-400 truncate">{apt.symptoms || 'Chưa có triệu chứng'}</p>
+                                            <p className="text-xs text-slate-400 truncate">{apt.symptoms || 'Chưa có triệu chứng'}</p>
                                         </div>
 
                                         {/* Quick Actions */}
@@ -249,7 +249,7 @@ const AppointmentListPage = () => {
                                             )}
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); setSelectedAppointment(apt); setIsDetailOpen(true); }}
-                                                className="p-1.5 rounded-lg bg-dark-700 text-dark-300 hover:bg-dark-600 transition-colors"
+                                                className="p-1.5 rounded-lg bg-slate-700 text-slate-300 hover:bg-slate-600 transition-colors"
                                                 title="Chi tiết"
                                             >
                                                 <Eye size={16} />
@@ -264,9 +264,9 @@ const AppointmentListPage = () => {
 
                 {groupedByDate.length === 0 && (
                     <div className="text-center py-16">
-                        <Calendar size={56} className="mx-auto text-dark-600 mb-4" />
-                        <h3 className="text-lg font-semibold text-dark-300 mb-2">Không tìm thấy lịch hẹn</h3>
-                        <p className="text-dark-500">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
+                        <Calendar size={56} className="mx-auto text-slate-600 mb-4" />
+                        <h3 className="text-lg font-semibold text-slate-300 mb-2">Không tìm thấy lịch hẹn</h3>
+                        <p className="text-slate-500">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
                     </div>
                 )}
             </div>

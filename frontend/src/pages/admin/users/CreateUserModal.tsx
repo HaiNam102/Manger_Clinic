@@ -93,12 +93,12 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }: CreateUserModalProps) =
                 <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-primary-900/5 rounded-xl border border-primary-800/20 mb-2">
                     <h4 className="md:col-span-2 text-xs font-bold text-primary-400 uppercase tracking-wider">Thông tin bác sĩ</h4>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-dark-200">Chuyên khoa *</label>
+                        <label className="text-sm font-medium text-slate-200">Chuyên khoa *</label>
                         <select
                             name="specialtyId"
                             value={formData.specialtyId || ''}
                             onChange={handleChange}
-                            className="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-dark-200 focus:ring-1 focus:ring-primary-500 outline-none"
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-1 focus:ring-primary-500 outline-none"
                             required
                         >
                             <option value="">Chọn chuyên khoa</option>
@@ -108,7 +108,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }: CreateUserModalProps) =
                         </select>
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-dark-200">Số giấy phép</label>
+                        <label className="text-sm font-medium text-slate-200">Số giấy phép</label>
                         <Input
                             name="licenseNumber"
                             value={formData.licenseNumber || ''}
@@ -117,7 +117,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }: CreateUserModalProps) =
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-dark-200">Số năm kinh nghiệm</label>
+                        <label className="text-sm font-medium text-slate-200">Số năm kinh nghiệm</label>
                         <Input
                             name="experienceYears"
                             type="number"
@@ -128,7 +128,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }: CreateUserModalProps) =
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-dark-200">Phí khám (VNĐ)</label>
+                        <label className="text-sm font-medium text-slate-200">Phí khám (VNĐ)</label>
                         <Input
                             name="consultationFee"
                             type="number"
@@ -147,7 +147,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }: CreateUserModalProps) =
                 <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-primary-900/5 rounded-xl border border-primary-800/20 mb-2">
                     <h4 className="md:col-span-2 text-xs font-bold text-primary-400 uppercase tracking-wider">Thông tin bệnh nhân</h4>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-dark-200">Ngày sinh</label>
+                        <label className="text-sm font-medium text-slate-200">Ngày sinh</label>
                         <Input
                             name="dateOfBirth"
                             type="date"
@@ -156,12 +156,12 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }: CreateUserModalProps) =
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-dark-200">Giới tính</label>
+                        <label className="text-sm font-medium text-slate-200">Giới tính</label>
                         <select
                             name="gender"
                             value={formData.gender || 'MALE'}
                             onChange={handleChange}
-                            className="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-dark-200 focus:ring-1 focus:ring-primary-500 outline-none"
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-1 focus:ring-primary-500 outline-none"
                         >
                             <option value="MALE">Nam</option>
                             <option value="FEMALE">Nữ</option>
@@ -169,7 +169,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }: CreateUserModalProps) =
                         </select>
                     </div>
                     <div className="space-y-2 md:col-span-2">
-                        <label className="text-sm font-medium text-dark-200">Địa chỉ</label>
+                        <label className="text-sm font-medium text-slate-200">Địa chỉ</label>
                         <Input
                             name="address"
                             value={formData.address || ''}
@@ -204,7 +204,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }: CreateUserModalProps) =
             <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-dark-200">Họ và tên *</label>
+                        <label className="text-sm font-medium text-slate-200">Họ và tên *</label>
                         <Input
                             name="fullName"
                             value={formData.fullName}
@@ -214,7 +214,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }: CreateUserModalProps) =
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-dark-200">Email *</label>
+                        <label className="text-sm font-medium text-slate-200">Email *</label>
                         <Input
                             name="email"
                             type="email"
@@ -225,7 +225,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }: CreateUserModalProps) =
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-dark-200">Số điện thoại</label>
+                        <label className="text-sm font-medium text-slate-200">Số điện thoại</label>
                         <Input
                             name="phone"
                             value={formData.phone || ''}
@@ -234,12 +234,12 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }: CreateUserModalProps) =
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-dark-200">Vai trò *</label>
+                        <label className="text-sm font-medium text-slate-200">Vai trò *</label>
                         <select
                             name="role"
                             value={formData.role}
                             onChange={handleChange}
-                            className="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-dark-200 focus:ring-1 focus:ring-primary-500 outline-none"
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-1 focus:ring-primary-500 outline-none"
                             required
                         >
                             <option value="PATIENT">Bệnh nhân</option>
@@ -252,7 +252,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }: CreateUserModalProps) =
                     {renderRoleSpecificFields()}
 
                     <div className="space-y-2 md:col-span-2">
-                        <label className="text-sm font-medium text-dark-200">Mật khẩu *</label>
+                        <label className="text-sm font-medium text-slate-200">Mật khẩu *</label>
                         <Input
                             name="password"
                             type="password"
@@ -267,7 +267,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }: CreateUserModalProps) =
 
                 <div className="bg-primary-900/10 border border-primary-700/30 rounded-xl p-4 flex items-start gap-3 mt-2">
                     <AlertCircle className="text-primary-400 shrink-0" size={18} />
-                    <p className="text-xs text-dark-300">
+                    <p className="text-xs text-slate-300">
                         Thông tin chi tiết của bác sĩ hoặc bệnh nhân sẽ được lưu trữ đồng thời vào hồ sơ tương ứng.
                     </p>
                 </div>

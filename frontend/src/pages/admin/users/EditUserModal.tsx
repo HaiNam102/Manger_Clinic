@@ -79,20 +79,20 @@ const EditUserModal = ({ isOpen, onClose, onSuccess, user }: EditUserModalProps)
             <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-dark-200">Email (Không thể đổi)</label>
+                        <label className="text-sm font-medium text-slate-200">Email (Không thể đổi)</label>
                         <Input
                             value={formData.email}
                             disabled
-                            className="bg-dark-800 text-dark-500 border-dark-700 cursor-not-allowed"
+                            className="bg-slate-800 text-slate-500 border-slate-700 cursor-not-allowed"
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-dark-200">Vai trò</label>
+                        <label className="text-sm font-medium text-slate-200">Vai trò</label>
                         <select
                             name="role"
                             value={formData.role}
                             onChange={handleChange}
-                            className="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-dark-200 focus:ring-1 focus:ring-primary-500 outline-none"
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-1 focus:ring-primary-500 outline-none"
                             required
                         >
                             <option value="PATIENT">Bệnh nhân</option>
@@ -102,7 +102,7 @@ const EditUserModal = ({ isOpen, onClose, onSuccess, user }: EditUserModalProps)
                         </select>
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-dark-200">Họ và tên</label>
+                        <label className="text-sm font-medium text-slate-200">Họ và tên</label>
                         <Input
                             name="fullName"
                             value={formData.fullName}
@@ -111,7 +111,7 @@ const EditUserModal = ({ isOpen, onClose, onSuccess, user }: EditUserModalProps)
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-dark-200">Số điện thoại</label>
+                        <label className="text-sm font-medium text-slate-200">Số điện thoại</label>
                         <Input
                             name="phone"
                             value={formData.phone}
@@ -120,10 +120,10 @@ const EditUserModal = ({ isOpen, onClose, onSuccess, user }: EditUserModalProps)
                     </div>
                 </div>
 
-                <div className="flex items-center justify-between p-4 bg-dark-800 border border-dark-700 rounded-xl">
+                <div className="flex items-center justify-between p-4 bg-slate-800 border border-slate-700 rounded-xl">
                     <div>
-                        <p className="text-sm font-medium text-dark-50">Trạng thái tài khoản</p>
-                        <p className="text-xs text-dark-400">Khóa hoặc mở khóa quyền truy cập của người dùng</p>
+                        <p className="text-sm font-medium text-slate-50">Trạng thái tài khoản</p>
+                        <p className="text-xs text-slate-400">Khóa hoặc mở khóa quyền truy cập của người dùng</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                         <input
@@ -133,8 +133,8 @@ const EditUserModal = ({ isOpen, onClose, onSuccess, user }: EditUserModalProps)
                             checked={formData.isActive}
                             onChange={handleChange}
                         />
-                        <div className="w-11 h-6 bg-dark-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
-                        <span className="ml-3 text-sm font-medium text-dark-200">
+                        <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                        <span className="ml-3 text-sm font-medium text-slate-200">
                             {formData.isActive ? 'Đang hoạt động' : 'Đã khóa'}
                         </span>
                     </label>
@@ -143,8 +143,8 @@ const EditUserModal = ({ isOpen, onClose, onSuccess, user }: EditUserModalProps)
                 <div className="flex items-center gap-2 p-4 bg-error/5 border border-error/20 rounded-xl mt-4">
                     <ShieldAlert className="text-error" size={20} />
                     <div>
-                        <p className="text-sm font-semibold text-dark-50">Lưu ý bảo mật</p>
-                        <p className="text-xs text-dark-400">
+                        <p className="text-sm font-semibold text-slate-50">Lưu ý bảo mật</p>
+                        <p className="text-xs text-slate-400">
                             Việc thay đổi vai trò người dùng có thể ảnh hưởng đến quyền truy cập và dữ liệu liên quan.
                         </p>
                     </div>

@@ -10,6 +10,7 @@ import com.clinic.entity.enums.RoleName;
 import com.clinic.exception.AppException;
 import com.clinic.exception.ErrorCode;
 import com.clinic.repository.*;
+import com.clinic.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,9 +36,10 @@ public class AdminService {
     private final AppointmentRepository appointmentRepository;
     private final SpecialtyRepository specialtyRepository;
     private final RoleRepository roleRepository;
-    private final AuditLogRepository auditLogRepository;
     private final PaymentRepository paymentRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuditLogService auditLogService;
+    private final AuditLogRepository auditLogRepository;
 
     // ════════════════════════════════════════
     // Dashboard Stats
@@ -135,6 +137,10 @@ public class AdminService {
                 return "Lịch hẹn đã bị hủy";
             case "CREATE_USER":
                 return "Người dùng mới được tạo: " + entity;
+            case "UPDATE_USER":
+                return "Cập nhật thông tin người dùng: " + entity;
+            case "TOGGLE_USER_STATUS":
+                return "Thay đổi trạng thái hoạt động: " + entity;
             case "UPDATE_PROFILE":
                 return "Cập nhật thông tin cá nhân";
             default:
@@ -191,14 +197,12 @@ public class AdminService {
                 .isActive(request.getIsActive() != null ? request.getIsActive() : true)
                 .build();
 
-        user = userRepository.save(user);
-        log.info("DEBUG: User saved successfully. ID: {}, Email: {}, IsActive (entity): {}", user.getId(),
-                user.getEmail(), user.getIsActive());
+        User savedUser = userRepository.save(user);
 
         // Auto-create patient/doctor profile
         if (roleName == RoleName.PATIENT) {
             Patient patient = Patient.builder()
-                    .user(user)
+                    .user(savedUser)
                     .dateOfBirth(request.getDateOfBirth())
                     .gender(request.getGender() != null ? com.clinic.entity.enums.Gender.valueOf(request.getGender())
                             : null)
@@ -213,7 +217,7 @@ public class AdminService {
             }
 
             Doctor doctor = Doctor.builder()
-                    .user(user)
+                    .user(savedUser)
                     .specialty(specialty)
                     .licenseNumber(request.getLicenseNumber())
                     .experienceYears(request.getExperienceYears())
@@ -223,7 +227,13 @@ public class AdminService {
             doctorRepository.save(doctor);
         }
 
-        return mapToUserResponse(user);
+        CustomUserDetails userDetails = (CustomUserDetails) org.springframework.security.core.context.SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        auditLogService.log(userDetails.getId(), "CREATE_USER", "USER", savedUser.getId().toString());
+
+        return mapToUserResponse(savedUser);
     }
 
     @Transactional
@@ -246,7 +256,15 @@ public class AdminService {
             user.setRole(role);
         }
 
-        return mapToUserResponse(userRepository.save(user));
+        User savedUser = userRepository.save(user);
+
+        CustomUserDetails userDetails = (CustomUserDetails) org.springframework.security.core.context.SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        auditLogService.log(userDetails.getId(), "UPDATE_USER", "USER", savedUser.getId().toString());
+
+        return mapToUserResponse(savedUser);
     }
 
     @Transactional
@@ -254,7 +272,15 @@ public class AdminService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         user.setIsActive(!user.getIsActive());
-        return mapToUserResponse(userRepository.save(user));
+        User savedUser = userRepository.save(user);
+
+        CustomUserDetails userDetails = (CustomUserDetails) org.springframework.security.core.context.SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        auditLogService.log(userDetails.getId(), "TOGGLE_USER_STATUS", "USER", savedUser.getId().toString());
+
+        return mapToUserResponse(savedUser);
     }
 
     @Transactional
