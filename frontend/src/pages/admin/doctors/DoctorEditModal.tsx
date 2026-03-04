@@ -135,7 +135,7 @@ const DoctorEditModal = ({ isOpen, onClose, onSuccess, doctor, specialties }: Do
                         </h3>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-dark-200">Họ và tên</label>
+                            <label className="text-sm font-medium text-slate-200">Họ và tên</label>
                             <Input
                                 name="fullName"
                                 value={formData.fullName}
@@ -146,7 +146,7 @@ const DoctorEditModal = ({ isOpen, onClose, onSuccess, doctor, specialties }: Do
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-dark-200">Số điện thoại</label>
+                            <label className="text-sm font-medium text-slate-200">Số điện thoại</label>
                             <Input
                                 name="phoneNumber"
                                 value={formData.phoneNumber}
@@ -157,7 +157,7 @@ const DoctorEditModal = ({ isOpen, onClose, onSuccess, doctor, specialties }: Do
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-dark-200">Kinh nghiệm (năm)</label>
+                                <label className="text-sm font-medium text-slate-200">Kinh nghiệm (năm)</label>
                                 <Input
                                     type="number"
                                     name="experienceYears"
@@ -167,7 +167,7 @@ const DoctorEditModal = ({ isOpen, onClose, onSuccess, doctor, specialties }: Do
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-dark-200">Phí khám (VND)</label>
+                                <label className="text-sm font-medium text-slate-200">Phí khám (VND)</label>
                                 <Input
                                     type="number"
                                     name="consultationFee"
@@ -180,12 +180,12 @@ const DoctorEditModal = ({ isOpen, onClose, onSuccess, doctor, specialties }: Do
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-dark-200">Chuyên khoa</label>
+                            <label className="text-sm font-medium text-slate-200">Chuyên khoa</label>
                             <select
                                 name="specialtyId"
                                 value={formData.specialtyId}
                                 onChange={handleChange}
-                                className="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-dark-200 focus:ring-1 focus:ring-primary-500 outline-none"
+                                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-1 focus:ring-primary-500 outline-none"
                                 required
                             >
                                 <option value="">Chọn chuyên khoa</option>
@@ -196,7 +196,7 @@ const DoctorEditModal = ({ isOpen, onClose, onSuccess, doctor, specialties }: Do
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-dark-200">Số giấy phép</label>
+                            <label className="text-sm font-medium text-slate-200">Số giấy phép</label>
                             <Input
                                 name="licenseNumber"
                                 value={formData.licenseNumber}
@@ -205,15 +205,15 @@ const DoctorEditModal = ({ isOpen, onClose, onSuccess, doctor, specialties }: Do
                             />
                         </div>
 
-                        <div className="flex items-center gap-3 p-3 bg-dark-900/50 rounded-lg border border-dark-800">
+                        <div className="flex items-center gap-3 p-3 bg-slate-900/50 rounded-lg border border-slate-800">
                             <input
                                 type="checkbox"
                                 id="isAvailable"
                                 checked={formData.isAvailable}
                                 onChange={handleToggleAvailable}
-                                className="w-4 h-4 rounded border-dark-700 text-primary-500 focus:ring-primary-500 bg-dark-900"
+                                className="w-4 h-4 rounded border-slate-700 text-primary-500 focus:ring-primary-500 bg-slate-900"
                             />
-                            <label htmlFor="isAvailable" className="text-sm font-medium text-dark-100 cursor-pointer">
+                            <label htmlFor="isAvailable" className="text-sm font-medium text-slate-100 cursor-pointer">
                                 Sẵn sàng tiếp nhận bệnh nhân
                             </label>
                         </div>
@@ -236,9 +236,9 @@ const DoctorEditModal = ({ isOpen, onClose, onSuccess, doctor, specialties }: Do
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 {formData.education?.map((edu, idx) => (
-                                    <div key={idx} className="flex items-center gap-1 bg-dark-800 px-3 py-1.5 rounded-lg border border-dark-700 text-sm text-dark-100">
+                                    <div key={idx} className="flex items-center gap-1 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-sm text-slate-100">
                                         <span>{edu}</span>
-                                        <button type="button" onClick={() => handleRemoveEducation(idx)} className="text-dark-400 hover:text-error transition-colors">
+                                        <button type="button" onClick={() => handleRemoveEducation(idx)} className="text-slate-400 hover:text-error transition-colors">
                                             <X size={14} />
                                         </button>
                                     </div>
@@ -261,9 +261,9 @@ const DoctorEditModal = ({ isOpen, onClose, onSuccess, doctor, specialties }: Do
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 {formData.certifications?.map((cert, idx) => (
-                                    <div key={idx} className="flex items-center gap-1 bg-dark-800 px-3 py-1.5 rounded-lg border border-dark-700 text-sm text-dark-100">
+                                    <div key={idx} className="flex items-center gap-1 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-sm text-slate-100">
                                         <span>{cert}</span>
-                                        <button type="button" onClick={() => handleRemoveCertification(idx)} className="text-dark-400 hover:text-error transition-colors">
+                                        <button type="button" onClick={() => handleRemoveCertification(idx)} className="text-slate-400 hover:text-error transition-colors">
                                             <X size={14} />
                                         </button>
                                     </div>
@@ -272,13 +272,13 @@ const DoctorEditModal = ({ isOpen, onClose, onSuccess, doctor, specialties }: Do
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-dark-200">Giới thiệu bản thân</label>
+                            <label className="text-sm font-medium text-slate-200">Giới thiệu bản thân</label>
                             <textarea
                                 name="bio"
                                 value={formData.bio}
                                 onChange={handleChange}
                                 rows={4}
-                                className="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-dark-200 text-sm focus:ring-1 focus:ring-primary-500 outline-none resize-none"
+                                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-sm focus:ring-1 focus:ring-primary-500 outline-none resize-none"
                                 placeholder="Nhập giới thiệu ngắn về bác sĩ..."
                             />
                         </div>

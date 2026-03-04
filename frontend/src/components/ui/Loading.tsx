@@ -30,7 +30,7 @@ const Loading = ({
     const variantClasses = {
         primary: 'border-primary-500 border-t-transparent',
         white: 'border-white border-t-transparent',
-        dark: 'border-dark-400 border-t-transparent',
+        dark: 'border-slate-400 border-t-transparent',
     };
 
     const spinner = (
@@ -43,13 +43,13 @@ const Loading = ({
                     className
                 )}
             />
-            {text && <p className="text-sm font-medium text-dark-400 animate-pulse">{text}</p>}
+            {text && <p className="text-sm font-medium text-slate-400 animate-pulse">{text}</p>}
         </div>
     );
 
     if (fullPage) {
         return (
-            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-dark-950/80 backdrop-blur-sm animate-fade-in">
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm animate-fade-in">
                 {spinner}
             </div>
         );

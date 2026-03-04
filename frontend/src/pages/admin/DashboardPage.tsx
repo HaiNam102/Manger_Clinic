@@ -64,11 +64,11 @@ const DashboardPage = () => {
             {/* Header section */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-dark-50 flex items-center gap-3">
+                    <h1 className="text-3xl font-bold text-slate-50 flex items-center gap-3">
                         <LayoutDashboard className="text-primary-500" size={32} />
                         Hệ thống quản trị
                     </h1>
-                    <p className="text-dark-400 mt-1">
+                    <p className="text-slate-400 mt-1">
                         Tổng quan hoạt động và thống kê toàn bộ phòng khám
                     </p>
                 </div>
@@ -77,7 +77,7 @@ const DashboardPage = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => handleExport('appointments')}
-                        className="border-dark-700 hover:border-primary-500/50"
+                        className="border-slate-700 hover:border-primary-500/50"
                     >
                         <Download size={16} className="mr-2" /> Xuất lịch hẹn
                     </Button>
@@ -164,18 +164,18 @@ const DashboardPage = () => {
                 <Card>
                     <CardHeader title="Hoạt động gần đây" icon={<Activity size={18} />} />
                     <CardContent className="p-0">
-                        <div className="divide-y divide-dark-800">
+                        <div className="divide-y divide-slate-800">
                             {stats.recentActivities && stats.recentActivities.length > 0 ? (
                                 stats.recentActivities.map((activity, i) => (
-                                    <div key={i} className="px-6 py-4 flex items-center gap-4 hover:bg-dark-800/30 transition-colors">
-                                        <div className="h-8 w-8 rounded-full bg-dark-700 flex items-center justify-center flex-shrink-0">
-                                            <Activity size={14} className="text-dark-300" />
+                                    <div key={i} className="px-6 py-4 flex items-center gap-4 hover:bg-slate-800/30 transition-colors">
+                                        <div className="h-8 w-8 rounded-full bg-slate-700 flex items-center justify-center flex-shrink-0">
+                                            <Activity size={14} className="text-slate-300" />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-sm text-dark-100 font-medium truncate">
+                                            <p className="text-sm text-slate-100 font-medium truncate">
                                                 {activity.description}
                                             </p>
-                                            <p className="text-xs text-dark-500">
+                                            <p className="text-xs text-slate-500">
                                                 {new Date(activity.timestamp).toLocaleString('vi-VN')}
                                             </p>
                                         </div>
@@ -183,7 +183,7 @@ const DashboardPage = () => {
                                     </div>
                                 ))
                             ) : (
-                                <div className="p-8 text-center text-dark-500 text-sm italic">
+                                <div className="p-8 text-center text-slate-500 text-sm italic">
                                     Chưa có hoạt động nào được ghi lại
                                 </div>
                             )}
@@ -202,10 +202,10 @@ const DashboardPage = () => {
                             <div className="space-y-4">
                                 <div>
                                     <div className="flex justify-between items-center mb-2">
-                                        <span className="text-sm text-dark-300">Lịch chờ xác nhận</span>
+                                        <span className="text-sm text-slate-300">Lịch chờ xác nhận</span>
                                         <span className="text-sm font-bold text-amber-500">{stats.pendingAppointments}</span>
                                     </div>
-                                    <div className="w-full bg-dark-800 rounded-full h-2">
+                                    <div className="w-full bg-slate-800 rounded-full h-2">
                                         <div
                                             className="bg-amber-500 h-2 rounded-full transition-all duration-500"
                                             style={{
@@ -216,12 +216,12 @@ const DashboardPage = () => {
                                 </div>
                                 <div>
                                     <div className="flex justify-between items-center mb-2">
-                                        <span className="text-sm text-dark-300">Thanh toán hoàn tất</span>
+                                        <span className="text-sm text-slate-300">Thanh toán hoàn tất</span>
                                         <span className="text-sm font-bold text-emerald-500">
                                             {stats.paymentStats.successRate.toFixed(1)}%
                                         </span>
                                     </div>
-                                    <div className="w-full bg-dark-800 rounded-full h-2">
+                                    <div className="w-full bg-slate-800 rounded-full h-2">
                                         <div
                                             className="bg-emerald-500 h-2 rounded-full transition-all duration-500"
                                             style={{ width: `${stats.paymentStats.successRate}%` }}
@@ -230,15 +230,15 @@ const DashboardPage = () => {
                                 </div>
                             </div>
 
-                            <div className="bg-dark-800/50 rounded-xl p-4 border border-dark-700/50 flex flex-col justify-center gap-4">
+                            <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50 flex flex-col justify-center gap-4">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-sm text-dark-400">Xuất báo cáo hệ thống</span>
+                                    <span className="text-sm text-slate-400">Xuất báo cáo hệ thống</span>
                                     <Button variant="ghost" size="sm" onClick={() => handleExport('users')}>
                                         <Download size={14} className="mr-2" /> Users
                                     </Button>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-sm text-dark-400">Dữ liệu bệnh nhân</span>
+                                    <span className="text-sm text-slate-400">Dữ liệu bệnh nhân</span>
                                     <Button variant="ghost" size="sm" onClick={() => handleExport('patients')}>
                                         <Download size={14} className="mr-2" /> Patients
                                     </Button>

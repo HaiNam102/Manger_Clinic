@@ -30,7 +30,7 @@ export const DoctorCard = ({
     return (
         <Card
             className={cn(
-                "group transition-all duration-500 hover:border-primary-500/50 hover:shadow-2xl hover:shadow-primary-900/10 border-dark-800 bg-dark-900/40 backdrop-blur-sm overflow-hidden",
+                "group transition-all duration-500 hover:border-primary-500/50 hover:shadow-2xl hover:shadow-primary-900/10 border-slate-800 bg-slate-900/40 backdrop-blur-sm overflow-hidden",
                 className
             )}
         >
@@ -41,17 +41,17 @@ export const DoctorCard = ({
                             src={avatarSrc}
                             fallback={name.split(' ').map(n => n[0]).join('')}
                             size="lg"
-                            className="w-24 h-24 rounded-2xl border-2 border-dark-700 group-hover:border-primary-500/50 transition-colors duration-500"
+                            className="w-24 h-24 rounded-2xl border-2 border-slate-700 group-hover:border-primary-500/50 transition-colors duration-500"
                         />
-                        <div className="absolute -bottom-2 -right-2 bg-dark-900 border border-dark-700 rounded-lg px-1.5 py-0.5 flex items-center gap-1 shadow-lg">
+                        <div className="absolute -bottom-2 -right-2 bg-slate-900 border border-slate-700 rounded-lg px-1.5 py-0.5 flex items-center gap-1 shadow-lg">
                             <Star className="text-warning fill-warning" size={12} />
-                            <span className="text-[10px] font-bold text-dark-50">{rating.toFixed(1)}</span>
+                            <span className="text-[10px] font-bold text-slate-50">{rating.toFixed(1)}</span>
                         </div>
                     </div>
 
                     <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2 mb-1">
-                            <h3 className="text-xl font-bold text-dark-50 truncate group-hover:text-primary-400 transition-colors tracking-tight">
+                            <h3 className="text-xl font-bold text-slate-50 truncate group-hover:text-primary-400 transition-colors tracking-tight">
                                 {name}
                             </h3>
                         </div>
@@ -59,25 +59,25 @@ export const DoctorCard = ({
 
                         <div className="flex items-center gap-4 mb-4">
                             <div className="flex flex-col">
-                                <span className="text-[10px] font-bold text-dark-500 uppercase tracking-widest">Đánh giá</span>
+                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Đánh giá</span>
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         onViewReviews?.();
                                     }}
-                                    className="text-dark-100 text-xs font-bold hover:text-primary-400 transition-colors flex items-center gap-1"
+                                    className="text-slate-100 text-xs font-bold hover:text-primary-400 transition-colors flex items-center gap-1"
                                 >
                                     {reviewCount} lượt
                                 </button>
                             </div>
-                            <div className="w-px h-6 bg-dark-700" />
+                            <div className="w-px h-6 bg-slate-700" />
                             <div className="flex flex-col">
-                                <span className="text-[10px] font-bold text-dark-500 uppercase tracking-widest">Kinh nghiệm</span>
-                                <span className="text-dark-100 text-xs font-bold">10+ năm</span>
+                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Kinh nghiệm</span>
+                                <span className="text-slate-100 text-xs font-bold">10+ năm</span>
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-1.5 text-dark-400 text-xs mb-5 bg-dark-800/50 p-2 rounded-lg border border-dark-700/50">
+                        <div className="flex items-center gap-1.5 text-slate-400 text-xs mb-5 bg-slate-800/50 p-2 rounded-lg border border-slate-700/50">
                             <MapPin size={14} className="text-primary-500 shrink-0" />
                             <span className="truncate">{location || 'Bệnh viện Đa khoa Quốc tế'}</span>
                         </div>

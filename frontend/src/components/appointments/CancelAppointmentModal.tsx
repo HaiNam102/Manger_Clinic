@@ -71,39 +71,39 @@ export const CancelAppointmentModal = ({
                     </div>
                     <div>
                         <h4 className="text-error font-semibold">Cảnh báo hủy lịch</h4>
-                        <p className="text-sm text-dark-400 mt-1">
+                        <p className="text-sm text-slate-400 mt-1">
                             Hành động này không thể hoàn tác. Một thông báo sẽ được gửi đến cả bác sĩ và bệnh nhân.
                         </p>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 bg-dark-800/50 border border-dark-700 rounded-xl p-4">
+                <div className="grid grid-cols-2 gap-4 bg-slate-800/50 border border-slate-700 rounded-xl p-4">
                     <div className="space-y-3">
-                        <div className="flex items-center gap-2 text-sm text-dark-300">
-                            <User size={14} className="text-dark-500" />
+                        <div className="flex items-center gap-2 text-sm text-slate-300">
+                            <User size={14} className="text-slate-500" />
                             <span className="font-medium">Bệnh nhân:</span>
                         </div>
-                        <p className="font-semibold text-dark-50 pl-6">{appointment.patientName}</p>
+                        <p className="font-semibold text-slate-50 pl-6">{appointment.patientName}</p>
 
-                        <div className="flex items-center gap-2 text-sm text-dark-300">
-                            <Calendar size={14} className="text-dark-500" />
+                        <div className="flex items-center gap-2 text-sm text-slate-300">
+                            <Calendar size={14} className="text-slate-500" />
                             <span className="font-medium">Ngày khám:</span>
                         </div>
-                        <p className="font-semibold text-dark-50 pl-6">{appointment.appointmentDate}</p>
+                        <p className="font-semibold text-slate-50 pl-6">{appointment.appointmentDate}</p>
                     </div>
 
-                    <div className="space-y-3 border-l border-dark-700 pl-4">
-                        <div className="flex items-center gap-2 text-sm text-dark-300">
-                            <Stethoscope size={14} className="text-dark-500" />
+                    <div className="space-y-3 border-l border-slate-700 pl-4">
+                        <div className="flex items-center gap-2 text-sm text-slate-300">
+                            <Stethoscope size={14} className="text-slate-500" />
                             <span className="font-medium">Bác sĩ:</span>
                         </div>
-                        <p className="font-semibold text-dark-50 pl-6">{appointment.doctorName}</p>
+                        <p className="font-semibold text-slate-50 pl-6">{appointment.doctorName}</p>
 
-                        <div className="flex items-center gap-2 text-sm text-dark-300">
-                            <Clock size={14} className="text-dark-500" />
+                        <div className="flex items-center gap-2 text-sm text-slate-300">
+                            <Clock size={14} className="text-slate-500" />
                             <span className="font-medium">Giờ khám:</span>
                         </div>
-                        <p className="font-semibold text-dark-50 pl-6">{appointment.appointmentTime}</p>
+                        <p className="font-semibold text-slate-50 pl-6">{appointment.appointmentTime}</p>
                     </div>
                 </div>
 

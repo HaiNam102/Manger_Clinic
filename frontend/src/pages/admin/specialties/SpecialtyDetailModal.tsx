@@ -84,13 +84,13 @@ const SpecialtyDetailModal = ({ isOpen, onClose, specialty, onUpdate }: Specialt
             >
                 <div className="space-y-6">
                     {/* Header Info */}
-                    <div className="flex items-start gap-4 p-4 bg-dark-900/50 rounded-xl border border-dark-800">
+                    <div className="flex items-start gap-4 p-4 bg-slate-900/50 rounded-xl border border-slate-800">
                         <div className="h-16 w-16 rounded-2xl bg-primary-900/30 flex items-center justify-center text-primary-400">
                             <Stethoscope size={32} />
                         </div>
                         <div className="flex-1">
-                            <h3 className="text-xl font-bold text-dark-50">{specialty.name}</h3>
-                            <p className="text-dark-400 text-sm mt-1">
+                            <h3 className="text-xl font-bold text-slate-50">{specialty.name}</h3>
+                            <p className="text-slate-400 text-sm mt-1">
                                 {specialty.description || 'Chưa có mô tả cho chuyên khoa này.'}
                             </p>
                         </div>
@@ -99,7 +99,7 @@ const SpecialtyDetailModal = ({ isOpen, onClose, specialty, onUpdate }: Specialt
                     {/* doctors List */}
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <h4 className="text-sm font-semibold text-dark-300 uppercase tracking-wider flex items-center gap-2">
+                            <h4 className="text-sm font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
                                 <Users size={16} /> Danh sách bác sĩ ({doctors.length})
                             </h4>
                             <Button
@@ -123,15 +123,15 @@ const SpecialtyDetailModal = ({ isOpen, onClose, specialty, onUpdate }: Specialt
                                     doctors.map((doctor) => (
                                         <div
                                             key={doctor.id}
-                                            className="flex items-center justify-between p-3 bg-dark-800/40 rounded-xl border border-dark-700/50 hover:bg-dark-800/60 transition-colors"
+                                            className="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-slate-700/50 hover:bg-slate-800/60 transition-colors"
                                         >
                                             <div className="flex items-center gap-3">
                                                 <div className="h-10 w-10 rounded-full bg-primary-900/20 flex items-center justify-center font-bold text-primary-400">
                                                     {doctor.fullName.charAt(0)}
                                                 </div>
                                                 <div>
-                                                    <p className="text-sm font-medium text-dark-50">{doctor.fullName}</p>
-                                                    <div className="flex items-center gap-2 text-xs text-dark-400">
+                                                    <p className="text-sm font-medium text-slate-50">{doctor.fullName}</p>
+                                                    <div className="flex items-center gap-2 text-xs text-slate-400">
                                                         <div className="flex items-center gap-0.5">
                                                             <Star size={10} className="text-amber-400 fill-amber-400" />
                                                             <span>{doctor.avgRating?.toFixed(1) || '0.0'}</span>
@@ -161,7 +161,7 @@ const SpecialtyDetailModal = ({ isOpen, onClose, specialty, onUpdate }: Specialt
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="py-10 text-center text-dark-500 bg-dark-900/20 rounded-xl border border-dashed border-dark-800">
+                                    <div className="py-10 text-center text-slate-500 bg-slate-900/20 rounded-xl border border-dashed border-slate-800">
                                         <Info size={24} className="mx-auto mb-2 opacity-20" />
                                         <p className="text-sm">Chưa có bác sĩ nào thuộc chuyên khoa này</p>
                                     </div>
@@ -170,7 +170,7 @@ const SpecialtyDetailModal = ({ isOpen, onClose, specialty, onUpdate }: Specialt
                         )}
                     </div>
 
-                    <div className="flex justify-end pt-4 border-t border-dark-800">
+                    <div className="flex justify-end pt-4 border-t border-slate-800">
                         <Button variant="outline" onClick={onClose}>Đóng</Button>
                     </div>
                 </div>

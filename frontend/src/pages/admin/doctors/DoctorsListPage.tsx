@@ -88,8 +88,8 @@ const DoctorsListPage = () => {
                         {d.fullName?.charAt(0) || 'D'}
                     </div>
                     <div>
-                        <p className="font-semibold text-dark-50">{d.fullName}</p>
-                        <p className="text-xs text-dark-400">ID: {d.id.substring(0, 8)}...</p>
+                        <p className="font-semibold text-slate-50">{d.fullName}</p>
+                        <p className="text-xs text-slate-400">ID: {d.id.substring(0, 8)}...</p>
                     </div>
                 </div>
             )
@@ -103,7 +103,7 @@ const DoctorsListPage = () => {
         {
             header: 'Trình độ',
             accessor: (d: DoctorResponse) => (
-                <span className="text-sm text-dark-200">{d.experienceYears ? `${d.experienceYears} năm kinh nghiệm` : 'Bác sĩ'}</span>
+                <span className="text-sm text-slate-200">{d.experienceYears ? `${d.experienceYears} năm kinh nghiệm` : 'Bác sĩ'}</span>
             )
         },
         {
@@ -111,8 +111,8 @@ const DoctorsListPage = () => {
             accessor: (d: DoctorResponse) => (
                 <div className="flex items-center gap-1">
                     <Star size={14} className="text-amber-400 fill-amber-400" />
-                    <span className="text-sm font-bold text-dark-100">{d.avgRating?.toFixed(1) || '0.0'}</span>
-                    <span className="text-xs text-dark-500">({d.totalReviews || 0})</span>
+                    <span className="text-sm font-bold text-slate-100">{d.avgRating?.toFixed(1) || '0.0'}</span>
+                    <span className="text-xs text-slate-500">({d.totalReviews || 0})</span>
                 </div>
             )
         },
@@ -170,11 +170,11 @@ const DoctorsListPage = () => {
         <div className="space-y-6 animate-fade-in p-2">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-dark-50 flex items-center gap-2">
+                    <h1 className="text-2xl font-bold text-slate-50 flex items-center gap-2">
                         <Stethoscope className="text-primary-500" size={24} />
                         Quản lý bác sĩ
                     </h1>
-                    <p className="text-dark-400 text-sm mt-1">
+                    <p className="text-slate-400 text-sm mt-1">
                         Xem và quản lý đội ngũ bác sĩ, chuyên khoa và lịch trình
                     </p>
                 </div>
@@ -193,7 +193,7 @@ const DoctorsListPage = () => {
             <Card>
                 <CardContent className="p-4 flex flex-col md:flex-row gap-4">
                     <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-500" size={18} />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                         <Input
                             placeholder="Tìm bác sĩ theo tên hoặc chuyên khoa..."
                             className="pl-10"
@@ -202,9 +202,9 @@ const DoctorsListPage = () => {
                         />
                     </div>
                     <div className="flex items-center gap-2 min-w-[200px]">
-                        <Filter className="text-dark-500" size={18} />
+                        <Filter className="text-slate-500" size={18} />
                         <select
-                            className="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-dark-200 text-sm outline-none"
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-sm outline-none"
                             value={specialtyFilter}
                             onChange={(e) => setSpecialtyFilter(e.target.value)}
                         >
@@ -266,8 +266,8 @@ const DoctorsListPage = () => {
             <div className="flex items-center gap-2 p-4 bg-error/5 border border-error/20 rounded-xl mt-4 max-w-2xl">
                 <ShieldAlert className="text-error" size={20} />
                 <div>
-                    <p className="text-sm font-semibold text-dark-50">Lưu ý quản trị</p>
-                    <p className="text-xs text-dark-400">
+                    <p className="text-sm font-semibold text-slate-50">Lưu ý quản trị</p>
+                    <p className="text-xs text-slate-400">
                         Việc khóa tài khoản sẽ ngăn chặn bác sĩ đăng nhập và nhận lịch hẹn. Hãy cẩn trọng khi thực hiện thao tác này.
                     </p>
                 </div>

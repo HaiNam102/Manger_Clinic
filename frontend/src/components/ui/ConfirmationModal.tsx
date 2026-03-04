@@ -63,8 +63,8 @@ const ConfirmationModal = ({
                         <Icon size={32} />
                     </div>
 
-                    <h3 className="text-xl font-bold text-dark-50 mb-2">{title}</h3>
-                    <p className="text-dark-400 text-sm leading-relaxed">
+                    <h3 className="text-xl font-bold text-slate-50 mb-2">{title}</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed">
                         {message}
                     </p>
                 </div>
@@ -80,7 +80,7 @@ const ConfirmationModal = ({
                     </Button>
                     <Button
                         variant="ghost"
-                        className="w-full text-dark-400 hover:text-dark-100 h-11"
+                        className="w-full text-slate-400 hover:text-slate-100 h-11"
                         onClick={onClose}
                         disabled={isLoading}
                     >

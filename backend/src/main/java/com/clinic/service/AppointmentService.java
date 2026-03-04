@@ -37,6 +37,7 @@ public class AppointmentService {
         private final TimeSlotRepository timeSlotRepository;
         private final WorkingScheduleRepository workingScheduleRepository;
         private final UserRepository userRepository;
+        private final AuditLogService auditLogService;
 
         @Transactional
         public AppointmentResponse createAppointment(AppointmentRequest request) {
@@ -87,7 +88,10 @@ public class AppointmentService {
                                 .notes(request.getNotes())
                                 .build();
 
-                return mapToResponse(appointmentRepository.save(appointment));
+                Appointment savedAppointment = appointmentRepository.save(appointment);
+                auditLogService.log(userDetails.getId(), "CREATE_APPOINTMENT", "APPOINTMENT",
+                                savedAppointment.getId().toString());
+                return mapToResponse(savedAppointment);
         }
 
         @Transactional(readOnly = true)
@@ -149,7 +153,15 @@ public class AppointmentService {
                         appointment.setCompletedAt(LocalDateTime.now());
                 }
 
-                return mapToResponse(appointmentRepository.save(appointment));
+                Appointment savedAppointment = appointmentRepository.save(appointment);
+
+                CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
+                                .getAuthentication()
+                                .getPrincipal();
+                auditLogService.log(userDetails.getId(), "UPDATE_APPOINTMENT", "APPOINTMENT",
+                                savedAppointment.getId().toString());
+
+                return mapToResponse(savedAppointment);
         }
 
         @Transactional
@@ -169,7 +181,10 @@ public class AppointmentService {
                 appointment.setCancelledBy(userDetails.getId());
                 appointment.setCancelledReason(request.getReason());
 
-                return mapToResponse(appointmentRepository.save(appointment));
+                Appointment savedAppointment = appointmentRepository.save(appointment);
+                auditLogService.log(userDetails.getId(), "CANCEL_APPOINTMENT", "APPOINTMENT",
+                                savedAppointment.getId().toString());
+                return mapToResponse(savedAppointment);
         }
 
         public AppointmentResponse mapToResponse(Appointment appointment) {
@@ -199,6 +214,7 @@ public class AppointmentService {
                         if (appointment.getDoctor().getUser() != null) {
                                 builder.doctorName(appointment.getDoctor().getUser().getFullName());
                         }
+                        builder.consultationFee(appointment.getDoctor().getConsultationFee());
                 }
 
                 if (appointment.getSpecialty() != null) {

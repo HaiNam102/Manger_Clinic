@@ -23,7 +23,7 @@ export const BookingStepper = ({ currentStep, className }: BookingStepperProps) 
     return (
         <div className={cn("relative flex items-center justify-between w-full max-w-3xl mx-auto mb-12", className)}>
             {/* Background Line */}
-            <div className="absolute top-1/2 left-0 w-full h-0.5 bg-dark-800 -translate-y-1/2" />
+            <div className="absolute top-1/2 left-0 w-full h-0.5 bg-slate-800 -translate-y-1/2" />
 
             {/* Progress Line */}
             <div
@@ -44,8 +44,8 @@ export const BookingStepper = ({ currentStep, className }: BookingStepperProps) 
                                 isCompleted
                                     ? "bg-primary-500 border-primary-500 text-white shadow-lg shadow-primary-900/40"
                                     : isActive
-                                        ? "bg-dark-900 border-primary-500 text-primary-400 shadow-lg shadow-primary-900/20 scale-110"
-                                        : "bg-dark-900 border-dark-700 text-dark-400"
+                                        ? "bg-slate-900 border-primary-500 text-primary-400 shadow-lg shadow-primary-900/20 scale-110"
+                                        : "bg-slate-900 border-slate-700 text-slate-400"
                             )}
                         >
                             {isCompleted ? <CheckCircle2 size={20} /> : <Icon size={20} />}
@@ -55,7 +55,7 @@ export const BookingStepper = ({ currentStep, className }: BookingStepperProps) 
                             <span
                                 className={cn(
                                     "text-xs font-bold uppercase tracking-wider transition-colors duration-300",
-                                    isActive ? "text-primary-400" : isCompleted ? "text-dark-200" : "text-dark-500"
+                                    isActive ? "text-primary-400" : isCompleted ? "text-slate-200" : "text-slate-500"
                                 )}
                             >
                                 {step.name}

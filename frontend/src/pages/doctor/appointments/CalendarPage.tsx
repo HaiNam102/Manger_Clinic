@@ -158,8 +158,8 @@ const CalendarPage = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-dark-50">Lịch khám bệnh</h1>
-                    <p className="text-dark-400 mt-1">Tổng quan lịch hẹn theo tháng</p>
+                    <h1 className="text-2xl font-bold text-slate-50">Lịch khám bệnh</h1>
+                    <p className="text-slate-400 mt-1">Tổng quan lịch hẹn theo tháng</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <Link to="/doctor/appointments">
@@ -180,12 +180,12 @@ const CalendarPage = () => {
                 <Card className="lg:col-span-2">
                     <CardContent className="p-0">
                         {/* Month Navigator */}
-                        <div className="flex items-center justify-between p-4 border-b border-dark-700">
-                            <button onClick={goToPrev} className="p-2 rounded-lg hover:bg-dark-800 text-dark-300 transition-colors">
+                        <div className="flex items-center justify-between p-4 border-b border-slate-700">
+                            <button onClick={goToPrev} className="p-2 rounded-lg hover:bg-slate-800 text-slate-300 transition-colors">
                                 <ChevronLeft size={20} />
                             </button>
                             <div className="text-center">
-                                <h2 className="text-lg font-bold text-dark-50">
+                                <h2 className="text-lg font-bold text-slate-50">
                                     {MONTHS_VI[month]} {year}
                                 </h2>
                             </div>
@@ -193,16 +193,16 @@ const CalendarPage = () => {
                                 <Button size="sm" variant="ghost" onClick={goToToday} className="text-xs text-primary-400">
                                     Hôm nay
                                 </Button>
-                                <button onClick={goToNext} className="p-2 rounded-lg hover:bg-dark-800 text-dark-300 transition-colors">
+                                <button onClick={goToNext} className="p-2 rounded-lg hover:bg-slate-800 text-slate-300 transition-colors">
                                     <ChevronRight size={20} />
                                 </button>
                             </div>
                         </div>
 
                         {/* Day Headers */}
-                        <div className="grid grid-cols-7 border-b border-dark-700">
+                        <div className="grid grid-cols-7 border-b border-slate-700">
                             {DAYS_VI.map(day => (
-                                <div key={day} className="p-2 text-center text-xs font-semibold text-dark-400 uppercase">
+                                <div key={day} className="p-2 text-center text-xs font-semibold text-slate-400 uppercase">
                                     {day}
                                 </div>
                             ))}
@@ -218,13 +218,13 @@ const CalendarPage = () => {
                                     <button
                                         key={idx}
                                         onClick={() => setSelectedDay(day.date)}
-                                        className={`relative min-h-[80px] p-1.5 border-b border-r border-dark-800 text-left transition-all hover:bg-dark-800/50 ${!day.isCurrentMonth ? 'opacity-30' : ''
+                                        className={`relative min-h-[80px] p-1.5 border-b border-r border-slate-800 text-left transition-all hover:bg-slate-800/50 ${!day.isCurrentMonth ? 'opacity-30' : ''
                                             } ${isSelected ? 'bg-primary-900/20 ring-1 ring-primary-600/50' : ''}
                                         ${day.isToday ? 'bg-primary-900/10' : ''}`}
                                     >
                                         <span className={`text-xs font-medium ${day.isToday
                                             ? 'bg-primary-600 text-white px-1.5 py-0.5 rounded-full'
-                                            : day.isCurrentMonth ? 'text-dark-200' : 'text-dark-600'
+                                            : day.isCurrentMonth ? 'text-slate-200' : 'text-slate-600'
                                             }`}>
                                             {day.day}
                                         </span>
@@ -237,11 +237,11 @@ const CalendarPage = () => {
                                                     className={`flex items-center gap-1 px-1 py-0.5 rounded text-[10px] truncate ${statusColors[apt.status]}/20 border border-transparent`}
                                                 >
                                                     <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${statusColors[apt.status]}`} />
-                                                    <span className="text-dark-200 truncate">{apt.appointmentTime}</span>
+                                                    <span className="text-slate-200 truncate">{apt.appointmentTime}</span>
                                                 </div>
                                             ))}
                                             {dayApts.length > 3 && (
-                                                <p className="text-[10px] text-dark-500 px-1">+{dayApts.length - 3} nữa</p>
+                                                <p className="text-[10px] text-slate-500 px-1">+{dayApts.length - 3} nữa</p>
                                             )}
                                         </div>
                                     </button>
@@ -250,11 +250,11 @@ const CalendarPage = () => {
                         </div>
 
                         {/* Legend */}
-                        <div className="flex items-center gap-4 p-3 border-t border-dark-700">
+                        <div className="flex items-center gap-4 p-3 border-t border-slate-700">
                             {Object.entries(statusColors).slice(0, 4).map(([status, color]) => (
                                 <div key={status} className="flex items-center gap-1.5">
                                     <div className={`w-2.5 h-2.5 rounded-full ${color}`} />
-                                    <span className="text-[11px] text-dark-400">{statusLabel[status as AppointmentStatus]}</span>
+                                    <span className="text-[11px] text-slate-400">{statusLabel[status as AppointmentStatus]}</span>
                                 </div>
                             ))}
                         </div>
@@ -264,8 +264,8 @@ const CalendarPage = () => {
                 {/* Day Detail Panel */}
                 <Card>
                     <CardContent className="p-0">
-                        <div className="p-4 border-b border-dark-700">
-                            <h3 className="font-semibold text-dark-50">
+                        <div className="p-4 border-b border-slate-700">
+                            <h3 className="font-semibold text-slate-50">
                                 {selectedDay
                                     ? new Date(selectedDay + 'T00:00:00').toLocaleDateString('vi-VN', {
                                         weekday: 'long',
@@ -276,7 +276,7 @@ const CalendarPage = () => {
                                 }
                             </h3>
                             {selectedDay && (
-                                <p className="text-xs text-dark-400 mt-1">
+                                <p className="text-xs text-slate-400 mt-1">
                                     {selectedDayAppointments.length} lịch hẹn
                                 </p>
                             )}
@@ -290,7 +290,7 @@ const CalendarPage = () => {
                                         <button
                                             key={apt.id}
                                             onClick={() => { setSelectedAppointment(apt); setIsDetailOpen(true); }}
-                                            className="w-full text-left p-3 rounded-xl bg-dark-800/50 border border-dark-700/50 hover:border-primary-700/30 transition-all"
+                                            className="w-full text-left p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-primary-700/30 transition-all"
                                         >
                                             <div className="flex items-center gap-2 mb-1">
                                                 <Clock size={12} className="text-primary-400" />
@@ -300,16 +300,16 @@ const CalendarPage = () => {
                                                 <div className={`w-2 h-2 rounded-full ml-auto ${statusColors[apt.status]}`} />
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <User size={12} className="text-dark-500" />
-                                                <span className="text-sm text-dark-200 truncate">{apt.patientName}</span>
+                                                <User size={12} className="text-slate-500" />
+                                                <span className="text-sm text-slate-200 truncate">{apt.patientName}</span>
                                             </div>
-                                            <p className="text-xs text-dark-500 mt-1 truncate">{apt.symptoms}</p>
+                                            <p className="text-xs text-slate-500 mt-1 truncate">{apt.symptoms}</p>
                                         </button>
                                     ))
                             ) : (
                                 <div className="py-12 text-center">
-                                    <CalendarDays size={40} className="mx-auto text-dark-600 mb-3" />
-                                    <p className="text-sm text-dark-400">
+                                    <CalendarDays size={40} className="mx-auto text-slate-600 mb-3" />
+                                    <p className="text-sm text-slate-400">
                                         {selectedDay ? 'Không có lịch hẹn' : 'Chọn ngày trên lịch'}
                                     </p>
                                 </div>

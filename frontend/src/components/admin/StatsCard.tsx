@@ -28,10 +28,10 @@ const StatsCard = ({
         <div className={`${bgColor} border ${borderColor} rounded-xl p-5 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary-900/10`}>
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-dark-900/50 flex items-center justify-center">
+                    <div className="h-10 w-10 rounded-lg bg-slate-900/50 flex items-center justify-center">
                         <div className={iconColor}>{icon}</div>
                     </div>
-                    <span className="text-sm font-medium text-dark-300">{label}</span>
+                    <span className="text-sm font-medium text-slate-300">{label}</span>
                 </div>
                 {trend && (
                     <div className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${trend.isUp ? 'bg-emerald-500/10 text-emerald-400' : 'bg-error/10 text-error'}`}>
@@ -39,9 +39,9 @@ const StatsCard = ({
                     </div>
                 )}
             </div>
-            <p className="text-3xl font-bold text-dark-50">{value}</p>
+            <p className="text-3xl font-bold text-slate-50">{value}</p>
             {sublabel && (
-                <p className="text-xs text-dark-500 mt-1">{sublabel}</p>
+                <p className="text-xs text-slate-500 mt-1">{sublabel}</p>
             )}
         </div>
     );

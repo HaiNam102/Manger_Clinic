@@ -45,6 +45,7 @@ public class AuthService {
         private final PasswordResetTokenRepository passwordResetTokenRepository;
         private final PatientRepository patientRepository;
         private final DoctorRepository doctorRepository;
+        private final AuditLogService auditLogService;
 
         @Value("${app.jwt.refresh-expiration}")
         private long refreshExpiration;
@@ -80,6 +81,7 @@ public class AuthService {
                         doctorRepository.save(Doctor.builder().user(user).build());
                 }
 
+                auditLogService.log(user.getId(), "REGISTER", "USER", user.getId().toString());
                 log.info("User registered successfully: {}", user.getEmail());
         }
 
@@ -108,6 +110,8 @@ public class AuthService {
 
                 user.setLastLoginAt(LocalDateTime.now());
                 userRepository.save(user);
+
+                auditLogService.log(user.getId(), "LOGIN", "USER", user.getId().toString());
 
                 saveRefreshToken(user, refreshToken);
 
@@ -144,13 +148,18 @@ public class AuthService {
                                 .filter(RefreshToken::isValid)
                                 .map(refreshToken -> {
                                         User user = refreshToken.getUser();
-                                        // In a real app, you might want a simpler way to generate token without full
-                                        // Authentication object if just refreshing
-                                        // But here we'll use a mocked authentication for simplicity or refactor
-                                        // tokenProvider
+
+                                        // Explicitly load the user with role to avoid lazy loading issues
+                                        User freshUser = userRepository.findById(user.getId())
+                                                        .orElseThrow(() -> new AppException(
+                                                                        ErrorCode.USER_NOT_EXISTED));
+
+                                        CustomUserDetails userDetails = CustomUserDetails.build(freshUser);
+                                        log.info("[Auth-Refresh] Refreshing token for user: {}, authorities: {}",
+                                                        freshUser.getEmail(), userDetails.getAuthorities());
+
                                         return tokenProvider.generateToken(new UsernamePasswordAuthenticationToken(
-                                                        CustomUserDetails.build(user), null,
-                                                        CustomUserDetails.build(user).getAuthorities()));
+                                                        userDetails, null, userDetails.getAuthorities()));
                                 })
                                 .orElseThrow(() -> new RuntimeException("Invalid or expired refresh token"));
         }

@@ -70,11 +70,11 @@ const AssignDoctorModal = ({ isOpen, onClose, specialtyId, onSuccess }: AssignDo
             <div className="space-y-4">
                 {/* Search */}
                 <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-400" size={18} />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <input
                         type="text"
                         placeholder="Tìm kiếm bác sĩ theo tên hoặc email..."
-                        className="w-full bg-dark-800 border border-dark-700 rounded-xl pl-10 pr-4 py-2 text-dark-100 outline-none focus:ring-2 focus:ring-primary-500/50 transition-all"
+                        className="w-full bg-slate-800 border border-slate-700 rounded-xl pl-10 pr-4 py-2 text-slate-100 outline-none focus:ring-2 focus:ring-primary-500/50 transition-all"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
@@ -90,15 +90,15 @@ const AssignDoctorModal = ({ isOpen, onClose, specialtyId, onSuccess }: AssignDo
                         filteredDoctors.map((doctor) => (
                             <div
                                 key={doctor.id}
-                                className="flex items-center justify-between p-3 bg-dark-800/40 rounded-xl border border-dark-700/50 hover:bg-dark-800/60 transition-colors"
+                                className="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-slate-700/50 hover:bg-slate-800/60 transition-colors"
                             >
                                 <div className="flex items-center gap-3">
                                     <div className="h-10 w-10 rounded-full bg-primary-900/20 flex items-center justify-center font-bold text-primary-400">
                                         {doctor.fullName.charAt(0)}
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-dark-50">{doctor.fullName}</p>
-                                        <p className="text-xs text-dark-400">{doctor.email || 'Email không khả dụng'}</p>
+                                        <p className="text-sm font-medium text-slate-50">{doctor.fullName}</p>
+                                        <p className="text-xs text-slate-400">{doctor.email || 'Email không khả dụng'}</p>
                                     </div>
                                 </div>
                                 <Button
@@ -120,14 +120,14 @@ const AssignDoctorModal = ({ isOpen, onClose, specialtyId, onSuccess }: AssignDo
                             </div>
                         ))
                     ) : (
-                        <div className="py-10 text-center text-dark-500 bg-dark-900/20 rounded-xl border border-dashed border-dark-800">
+                        <div className="py-10 text-center text-slate-500 bg-slate-900/20 rounded-xl border border-dashed border-slate-800">
                             <Info size={24} className="mx-auto mb-2 opacity-20" />
                             <p className="text-sm">Không tìm thấy bác sĩ nào khả dụng</p>
                         </div>
                     )}
                 </div>
 
-                <div className="flex justify-end pt-4 border-t border-dark-800">
+                <div className="flex justify-end pt-4 border-t border-slate-800">
                     <Button variant="outline" onClick={onClose}>Đóng</Button>
                 </div>
             </div>

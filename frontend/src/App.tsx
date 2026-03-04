@@ -5,13 +5,13 @@ import { AppRouter } from './router/AppRouter';
 function App() {
     return (
         <AuthProvider>
-            <div className="min-h-screen bg-dark-950">
+            <div className="min-h-screen bg-slate-950">
                 {/* Toast notifications */}
                 <Toaster
                     position="top-right"
                     toastOptions={{
                         duration: 4000,
-                        className: 'bg-dark-800 text-dark-50 border border-dark-700',
+                        className: 'bg-slate-800 text-slate-50 border border-slate-700',
                         success: {
                             iconTheme: {
                                 primary: '#10B981',

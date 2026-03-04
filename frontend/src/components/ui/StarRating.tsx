@@ -33,7 +33,7 @@ export const StarRating = ({
                         className={cn(
                             "transition-all duration-200",
                             interactive ? "hover:scale-120 active:scale-95 cursor-pointer" : "cursor-default",
-                            isActive ? "text-warning" : "text-dark-700 hover:text-dark-500"
+                            isActive ? "text-warning" : "text-slate-700 hover:text-slate-500"
                         )}
                     >
                         <Star

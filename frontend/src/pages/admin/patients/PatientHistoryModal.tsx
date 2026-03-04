@@ -39,7 +39,7 @@ const PatientHistoryModal = ({ isOpen, onClose, patient, onViewDetail }: Patient
             header: 'Ngày khám',
             accessor: (item) => (
                 <div className="flex items-center gap-2">
-                    <Calendar size={14} className="text-dark-500" />
+                    <Calendar size={14} className="text-slate-500" />
                     <span>{new Date(item.createdAt).toLocaleDateString('vi-VN')}</span>
                 </div>
             )
@@ -48,7 +48,7 @@ const PatientHistoryModal = ({ isOpen, onClose, patient, onViewDetail }: Patient
             header: 'Bác sĩ',
             accessor: (item) => (
                 <div className="flex items-center gap-2">
-                    <User size={14} className="text-dark-500" />
+                    <User size={14} className="text-slate-500" />
                     <span>{item.doctorName}</span>
                 </div>
             )
@@ -86,10 +86,10 @@ const PatientHistoryModal = ({ isOpen, onClose, patient, onViewDetail }: Patient
                 {isLoading ? (
                     <div className="flex flex-col items-center justify-center py-20 gap-3">
                         <Loader2 size={40} className="animate-spin text-primary-500" />
-                        <p className="text-dark-400">Đang tải lịch sử bệnh án...</p>
+                        <p className="text-slate-400">Đang tải lịch sử bệnh án...</p>
                     </div>
                 ) : records.length > 0 ? (
-                    <div className="overflow-hidden rounded-xl border border-dark-800">
+                    <div className="overflow-hidden rounded-xl border border-slate-800">
                         <Table
                             columns={columns}
                             data={records}
@@ -97,8 +97,8 @@ const PatientHistoryModal = ({ isOpen, onClose, patient, onViewDetail }: Patient
                         />
                     </div>
                 ) : (
-                    <div className="text-center py-16 bg-dark-900/30 rounded-2xl border border-dashed border-dark-800">
-                        <p className="text-dark-400">Bệnh nhân này chưa có lịch sử khám bệnh.</p>
+                    <div className="text-center py-16 bg-slate-900/30 rounded-2xl border border-dashed border-slate-800">
+                        <p className="text-slate-400">Bệnh nhân này chưa có lịch sử khám bệnh.</p>
                     </div>
                 )}
 

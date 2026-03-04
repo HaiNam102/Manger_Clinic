@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
     User, Phone, Shield, Save, Loader2,
-    MapPin, CreditCard, Activity, AlertCircle
+    MapPin, CreditCard, CheckCircle2
 } from 'lucide-react';
 import { Card, CardContent } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
@@ -14,31 +14,51 @@ import { Avatar } from '@components/ui/Avatar';
 import { getMyProfile, updateMyProfile, getAllSpecialties } from '@services/patientService';
 import type { Gender, SpecialtyResponse } from '@/types';
 
+// ─── Completion Progress Component ──────────────────────
+const ProfileCompletion = ({ percentage }: { percentage: number }) => {
+    const getColor = () => {
+        if (percentage >= 80) return { bar: 'bg-emerald-500', text: 'text-emerald-400', label: 'Hoàn thiện tốt!' };
+        if (percentage >= 50) return { bar: 'bg-amber-500', text: 'text-amber-400', label: 'Cần bổ sung thêm' };
+        return { bar: 'bg-red-500', text: 'text-red-400', label: 'Hãy hoàn thiện hồ sơ' };
+    };
+    const { bar, text, label } = getColor();
+
+    return (
+        <div className="space-y-3">
+            <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-slate-300">Hoàn thiện hồ sơ</span>
+                <span className={`text-sm font-bold ${text}`}>{percentage}%</span>
+            </div>
+            <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div
+                    className={`h-full ${bar} rounded-full transition-all duration-1000 ease-out`}
+                    style={{ width: `${percentage}%` }}
+                />
+            </div>
+            <p className={`text-xs ${text} font-medium`}>{label}</p>
+        </div>
+    );
+};
+
 const ProfilePage = () => {
     const { user } = useAuth();
     const { showToast } = useToast();
 
     const [formData, setFormData] = useState({
-        // User fields
         fullName: user?.fullName || '',
         email: user?.email || '',
         phone: '',
-
-        // Common fields
         dateOfBirth: '',
         gender: '' as Gender | '',
         address: '',
         city: '',
-
-        // Patient specific
         bloodType: '',
         allergies: '',
         chronicDiseases: '',
         emergencyContactName: '',
         emergencyContactPhone: '',
         insuranceNumber: '',
-
-        // Doctor specific
+        // Doctor specific (kept for compatibility)
         bio: '',
         experienceYears: 0,
         licenseNumber: '',
@@ -53,7 +73,26 @@ const ProfilePage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
 
-    // Load profile and specialties from API
+    // Calculate completion percentage
+    const calculateCompletion = () => {
+        const isDoctor = user?.role === 'DOCTOR';
+        const patientFields = [
+            formData.fullName, formData.phone, formData.dateOfBirth,
+            formData.gender, formData.address, formData.city,
+            formData.bloodType, formData.insuranceNumber,
+            formData.emergencyContactName, formData.emergencyContactPhone,
+        ];
+        const doctorFields = [
+            formData.fullName, formData.phone, formData.dateOfBirth,
+            formData.gender, formData.address, formData.city,
+            formData.specialtyId, formData.licenseNumber,
+            formData.bio, formData.education,
+        ];
+        const fields = isDoctor ? doctorFields : patientFields;
+        const filled = fields.filter(f => f && String(f).trim() !== '' && String(f) !== '0').length;
+        return Math.round((filled / fields.length) * 100);
+    };
+
     useEffect(() => {
         const load = async () => {
             try {
@@ -69,22 +108,16 @@ const ProfilePage = () => {
                     fullName: profile.fullName || '',
                     email: profile.email || '',
                     phone: profile.phone || '',
-
-                    // Common
                     dateOfBirth: profile.dateOfBirth || '',
                     gender: (profile.gender as Gender) || '',
                     address: profile.address || '',
                     city: profile.city || '',
-
-                    // Patient fields
                     bloodType: profile.bloodType || '',
                     allergies: profile.allergies?.join(', ') || '',
                     chronicDiseases: profile.chronicDiseases?.join(', ') || '',
                     emergencyContactName: profile.emergencyContactName || '',
                     emergencyContactPhone: profile.emergencyContactPhone || '',
                     insuranceNumber: profile.insuranceNumber || '',
-
-                    // Doctor fields
                     bio: profile.bio || '',
                     experienceYears: profile.experienceYears || 0,
                     licenseNumber: profile.licenseNumber || '',
@@ -115,8 +148,6 @@ const ProfilePage = () => {
                 gender: formData.gender || undefined,
                 address: formData.address || undefined,
                 city: formData.city || undefined,
-
-                // Doctor fields
                 bio: formData.bio,
                 experienceYears: formData.experienceYears,
                 licenseNumber: formData.licenseNumber,
@@ -124,8 +155,6 @@ const ProfilePage = () => {
                 education: formData.education ? formData.education.split(',').map(s => s.trim()).filter(Boolean) : [],
                 certifications: formData.certifications ? formData.certifications.split(',').map(s => s.trim()).filter(Boolean) : [],
                 specialtyId: formData.specialtyId || undefined,
-
-                // Patient fields
                 bloodType: formData.bloodType || undefined,
                 allergies: formData.allergies ? formData.allergies.split(',').map(s => s.trim()).filter(Boolean) : [],
                 chronicDiseases: formData.chronicDiseases ? formData.chronicDiseases.split(',').map(s => s.trim()).filter(Boolean) : [],
@@ -174,13 +203,14 @@ const ProfilePage = () => {
     ];
 
     const isDoctor = user?.role === 'DOCTOR';
+    const completion = calculateCompletion();
 
     return (
         <div className="space-y-8 animate-fade-in max-w-6xl mx-auto pb-10">
             <section className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-dark-50 tracking-tight">Hồ sơ của bạn</h1>
-                    <p className="text-dark-400 mt-2 text-lg">
+                    <h1 className="text-3xl font-bold text-slate-50 tracking-tight">Hồ sơ của bạn</h1>
+                    <p className="text-slate-400 mt-2 text-lg">
                         Quản lý thông tin cá nhân và thiết lập tài khoản của bạn.
                     </p>
                 </div>
@@ -204,25 +234,25 @@ const ProfilePage = () => {
                                 <Avatar
                                     size="xxl"
                                     fallback={formData.fullName.split(' ').map(n => n[0]).join('')}
-                                    className="rounded-3xl border-4 border-dark-700/50 shadow-2xl"
+                                    className="rounded-3xl border-4 border-slate-700/50 shadow-2xl"
                                 />
-                                <button className="absolute inset-0 bg-dark-950/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl flex items-center justify-center text-white text-sm font-medium">
+                                <button className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl flex items-center justify-center text-white text-sm font-medium cursor-pointer">
                                     Thay đổi ảnh
                                 </button>
                             </div>
-                            <h2 className="mt-6 text-xl font-semibold text-dark-50">{formData.fullName}</h2>
-                            <p className="text-dark-400 text-sm mt-1 flex items-center gap-1.5 capitalize">
+                            <h2 className="mt-6 text-xl font-semibold text-slate-50">{formData.fullName}</h2>
+                            <p className="text-slate-400 text-sm mt-1 flex items-center gap-1.5 capitalize">
                                 <Shield size={14} className="text-primary-500" />
-                                {user?.role?.toLowerCase()}
+                                {user?.role === 'PATIENT' ? 'Bệnh nhân' : user?.role?.toLowerCase()}
                             </p>
-                            <div className="w-full h-px bg-dark-700/50 my-6" />
+                            <div className="w-full h-px bg-slate-700/50 my-6" />
                             <div className="w-full space-y-4">
                                 <div className="flex items-center justify-between text-sm">
-                                    <span className="text-dark-400">Email</span>
-                                    <span className="text-dark-100">{formData.email}</span>
+                                    <span className="text-slate-400">Email</span>
+                                    <span className="text-slate-100">{formData.email}</span>
                                 </div>
                                 <div className="flex items-center justify-between text-sm">
-                                    <span className="text-dark-400">Trạng thái</span>
+                                    <span className="text-slate-400">Trạng thái</span>
                                     <span className="inline-flex items-center gap-1.5 text-success px-2 py-0.5 rounded-full bg-success/10 text-xs font-medium border border-success/20">
                                         <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
                                         Hoạt động
@@ -232,14 +262,43 @@ const ProfilePage = () => {
                         </CardContent>
                     </Card>
 
+                    {/* Completion Progress Card */}
                     <Card className="bg-gradient-to-br from-primary-500/10 to-transparent border-primary-500/20">
-                        <CardContent className="p-6">
-                            <h3 className="text-lg font-medium text-dark-50 flex items-center gap-2">
-                                <Activity size={18} className="text-primary-500" /> Mẹo hoàn thiện
-                            </h3>
-                            <p className="text-dark-300 text-sm mt-2 leading-relaxed">
-                                Hãy chắc chắn rằng thông tin của bạn là chính xác nhất để bác sĩ có cái nhìn tổng quan tốt hơn về tình trạng sức khỏe của bạn.
-                            </p>
+                        <CardContent className="p-6 space-y-4">
+                            <ProfileCompletion percentage={completion} />
+                            {completion < 80 && (
+                                <div className="space-y-2 pt-2 border-t border-slate-700/30">
+                                    <p className="text-xs text-slate-400 font-medium">Gợi ý bổ sung:</p>
+                                    <div className="space-y-1.5">
+                                        {!formData.phone && (
+                                            <p className="text-xs text-slate-500 flex items-center gap-1.5">
+                                                <div className="w-1 h-1 rounded-full bg-amber-500" /> Số điện thoại
+                                            </p>
+                                        )}
+                                        {!formData.dateOfBirth && (
+                                            <p className="text-xs text-slate-500 flex items-center gap-1.5">
+                                                <div className="w-1 h-1 rounded-full bg-amber-500" /> Ngày sinh
+                                            </p>
+                                        )}
+                                        {!formData.emergencyContactName && !isDoctor && (
+                                            <p className="text-xs text-slate-500 flex items-center gap-1.5">
+                                                <div className="w-1 h-1 rounded-full bg-amber-500" /> Liên hệ khẩn cấp
+                                            </p>
+                                        )}
+                                        {!formData.insuranceNumber && !isDoctor && (
+                                            <p className="text-xs text-slate-500 flex items-center gap-1.5">
+                                                <div className="w-1 h-1 rounded-full bg-amber-500" /> Số thẻ bảo hiểm
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                            {completion >= 80 && (
+                                <p className="text-slate-300 text-sm leading-relaxed flex items-start gap-2">
+                                    <CheckCircle2 size={16} className="text-emerald-400 mt-0.5 flex-shrink-0" />
+                                    Hồ sơ của bạn đã khá đầy đủ. Bác sĩ sẽ có cái nhìn tổng quan tốt hơn về tình trạng sức khỏe của bạn.
+                                </p>
+                            )}
                         </CardContent>
                     </Card>
                 </div>
@@ -248,11 +307,11 @@ const ProfilePage = () => {
                 <div className="lg:col-span-2 space-y-8">
                     {/* Basic Information Section */}
                     <div className="space-y-4">
-                        <div className="flex items-center gap-2 px-2">
-                            <div className="p-2 rounded-lg bg-primary-500/10 text-primary-500">
-                                <User size={20} />
+                        <div className="flex items-center gap-3 px-2">
+                            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-500/10 text-primary-500 text-sm font-bold">
+                                1
                             </div>
-                            <h3 className="text-xl font-semibold text-dark-50">Thông tin cá nhân</h3>
+                            <h3 className="text-xl font-semibold text-slate-50">Thông tin cá nhân</h3>
                         </div>
                         <Card>
                             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
@@ -306,13 +365,18 @@ const ProfilePage = () => {
 
                     {/* Professional/Medical Section */}
                     <div className="space-y-4">
-                        <div className="flex items-center gap-2 px-2">
-                            <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-500">
-                                {isDoctor ? <Shield size={20} /> : <Activity size={20} />}
+                        <div className="flex items-center gap-3 px-2">
+                            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-500 text-sm font-bold">
+                                2
                             </div>
-                            <h3 className="text-xl font-semibold text-dark-50">
+                            <h3 className="text-xl font-semibold text-slate-50">
                                 {isDoctor ? 'Thông tin nghề nghiệp' : 'Thông tin y tế'}
                             </h3>
+                            {!isDoctor && (
+                                <span className="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded-full">
+                                    Giúp bác sĩ phục vụ bạn tốt hơn
+                                </span>
+                            )}
                         </div>
                         <Card>
                             <CardContent className="space-y-6 pt-6">
@@ -396,7 +460,6 @@ const ProfilePage = () => {
                                                 value={formData.allergies}
                                                 onChange={e => setFormData({ ...formData, allergies: e.target.value })}
                                                 placeholder="VD: Hải sản, Phấn hoa..."
-                                                error={formData.allergies ? undefined : undefined}
                                                 helperText="Cách nhau bằng dấu phẩy"
                                                 fullWidth
                                             />
@@ -409,10 +472,14 @@ const ProfilePage = () => {
                                                 fullWidth
                                             />
                                         </div>
-                                        <div className="pt-4 border-t border-dark-700/50">
-                                            <h4 className="text-sm font-medium text-dark-100 flex items-center gap-2 mb-4">
-                                                <AlertCircle size={16} className="text-danger" /> Liên hệ khẩn cấp
-                                            </h4>
+                                        <div className="pt-4 border-t border-slate-700/50">
+                                            <div className="flex items-center gap-3 mb-4 px-2">
+                                                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-500/10 text-red-500 text-sm font-bold">
+                                                    3
+                                                </div>
+                                                <h4 className="text-lg font-semibold text-slate-100">Liên hệ khẩn cấp</h4>
+                                                <span className="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded-full">Quan trọng</span>
+                                            </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <Input
                                                     label="Tên người liên hệ"
@@ -437,16 +504,16 @@ const ProfilePage = () => {
                     </div>
 
                     {/* Danger Zone Section */}
-                    <div className="pt-6 border-t border-dark-700/50">
+                    <div className="pt-6 border-t border-slate-700/50">
                         <Card className="border-danger/20 bg-danger/5">
                             <CardContent className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-6">
                                 <div>
                                     <h4 className="text-lg font-semibold text-danger">Vô hiệu hóa tài khoản</h4>
-                                    <p className="text-dark-400 text-sm mt-1 max-w-sm">
+                                    <p className="text-slate-400 text-sm mt-1 max-w-sm">
                                         Một khi bạn vô hiệu hóa tài khoản, bạn sẽ không thể truy cập lại dữ liệu của mình.
                                     </p>
                                 </div>
-                                <Button variant="ghost" className="text-danger hover:bg-danger/10 border border-danger/20">
+                                <Button variant="ghost" className="text-danger hover:bg-danger/10 border border-danger/20 cursor-pointer">
                                     Vô hiệu hóa ngay
                                 </Button>
                             </CardContent>

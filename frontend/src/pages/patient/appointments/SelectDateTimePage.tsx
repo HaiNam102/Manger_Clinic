@@ -91,7 +91,7 @@ const SelectDateTimePage = () => {
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="p-0 h-auto text-dark-500 hover:text-primary-400 group flex items-center bg-transparent"
+                    className="p-0 h-auto text-slate-500 hover:text-primary-400 group flex items-center bg-transparent"
                     onClick={() => navigate(`/booking/doctor/${specialtyId}`)}
                 >
                     <ArrowLeft size={16} className="mr-2 transition-transform group-hover:-translate-x-1" />
@@ -99,8 +99,8 @@ const SelectDateTimePage = () => {
                 </Button>
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div className="space-y-2">
-                        <h1 className="text-4xl font-extrabold text-dark-50 tracking-tight">Lịch khám bác sĩ</h1>
-                        <p className="text-dark-400 text-lg">
+                        <h1 className="text-4xl font-extrabold text-slate-50 tracking-tight">Lịch khám bác sĩ</h1>
+                        <p className="text-slate-400 text-lg">
                             Chọn thời gian thuận tiện nhất cho buổi khám của bạn.
                         </p>
                     </div>
@@ -110,28 +110,28 @@ const SelectDateTimePage = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
                 {/* Date Selection Panel */}
                 <div className="lg:col-span-4 space-y-6">
-                    <Card className="border-dark-800 bg-dark-900/40 backdrop-blur-sm overflow-hidden sticky top-8">
+                    <Card className="border-slate-800 bg-slate-900/40 backdrop-blur-sm overflow-hidden sticky top-8">
                         <CardHeader
                             title="Ngày khám bệnh"
                             icon={<CalendarIcon size={20} className="text-primary-400" />}
-                            className="bg-dark-900 border-b border-dark-700/50"
+                            className="bg-slate-900 border-b border-slate-700/50"
                         />
                         <CardContent className="p-6">
                             <input
                                 type="date"
-                                className="w-full bg-dark-800 border-2 border-dark-700 rounded-2xl px-5 py-4 text-dark-50 font-bold focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all cursor-pointer"
+                                className="w-full bg-slate-800 border-2 border-slate-700 rounded-2xl px-5 py-4 text-slate-50 font-bold focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all cursor-pointer"
                                 value={selectedDate}
                                 min={new Date().toISOString().split('T')[0]}
                                 onChange={(e) => setSelectedDate(e.target.value)}
                             />
                             <div className="mt-8 space-y-4">
-                                <h4 className="text-xs font-bold uppercase tracking-widest text-dark-500">Thông tin lịch khám</h4>
+                                <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500">Thông tin lịch khám</h4>
                                 <div className="space-y-3">
-                                    <div className="flex items-center gap-3 text-sm text-dark-200 bg-success/5 p-3 rounded-xl border border-success/10">
+                                    <div className="flex items-center gap-3 text-sm text-slate-200 bg-success/5 p-3 rounded-xl border border-success/10">
                                         <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
                                         <span>Đầy đủ khung giờ trống</span>
                                     </div>
-                                    <div className="flex items-center gap-3 text-sm text-dark-200 bg-primary-500/5 p-3 rounded-xl border border-primary-500/10">
+                                    <div className="flex items-center gap-3 text-sm text-slate-200 bg-primary-500/5 p-3 rounded-xl border border-primary-500/10">
                                         <div className="h-2 w-2 rounded-full bg-primary-500" />
                                         <span>Khám trực tiếp tại phòng khám</span>
                                     </div>
@@ -143,22 +143,22 @@ const SelectDateTimePage = () => {
 
                 {/* Time Slot Selection Panel */}
                 <div className="lg:col-span-8 space-y-6">
-                    <Card className="border-dark-800 bg-dark-900/40 backdrop-blur-sm overflow-hidden">
+                    <Card className="border-slate-800 bg-slate-900/40 backdrop-blur-sm overflow-hidden">
                         <CardHeader
                             title="Các khung giờ còn trống"
                             icon={<Clock size={20} className="text-primary-400" />}
-                            className="bg-dark-900 border-b border-dark-700/50"
+                            className="bg-slate-900 border-b border-slate-700/50"
                         />
                         <CardContent className="p-8">
                             {isLoading ? (
                                 <SlotSkeleton />
                             ) : slots.length === 0 ? (
-                                <div className="text-center py-20 bg-dark-800/20 rounded-3xl border border-dashed border-dark-800">
-                                    <div className="h-20 w-20 bg-dark-800 rounded-full flex items-center justify-center mx-auto mb-6 text-dark-500">
+                                <div className="text-center py-20 bg-slate-800/20 rounded-3xl border border-dashed border-slate-800">
+                                    <div className="h-20 w-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-500">
                                         <CalendarIcon size={32} />
                                     </div>
-                                    <h3 className="text-xl font-bold text-dark-200">Không có lịch trống</h3>
-                                    <p className="text-dark-500 mt-2 max-w-xs mx-auto">
+                                    <h3 className="text-xl font-bold text-slate-200">Không có lịch trống</h3>
+                                    <p className="text-slate-500 mt-2 max-w-xs mx-auto">
                                         Bác sĩ hiện đã kín lịch trong ngày này. Vui lòng chọn một ngày khác.
                                     </p>
                                 </div>
@@ -166,7 +166,7 @@ const SelectDateTimePage = () => {
                                 <div className="space-y-12">
                                     {morningSlots.length > 0 && (
                                         <section>
-                                            <div className="flex items-center gap-2 mb-6 text-dark-300 font-bold uppercase tracking-widest text-xs">
+                                            <div className="flex items-center gap-2 mb-6 text-slate-300 font-bold uppercase tracking-widest text-xs">
                                                 <div className="h-1 w-8 bg-primary-500 rounded-full" />
                                                 <span>Buổi sáng</span>
                                             </div>
@@ -180,7 +180,7 @@ const SelectDateTimePage = () => {
                                     )}
                                     {afternoonSlots.length > 0 && (
                                         <section>
-                                            <div className="flex items-center gap-2 mb-6 text-dark-300 font-bold uppercase tracking-widest text-xs">
+                                            <div className="flex items-center gap-2 mb-6 text-slate-300 font-bold uppercase tracking-widest text-xs">
                                                 <div className="h-1 w-8 bg-primary-500 rounded-full" />
                                                 <span>Buổi chiều</span>
                                             </div>
@@ -195,7 +195,7 @@ const SelectDateTimePage = () => {
                                 </div>
                             )}
 
-                            <div className="mt-12 pt-8 border-t border-dark-700/50 flex flex-col sm:flex-row items-center justify-between gap-6">
+                            <div className="mt-12 pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row items-center justify-between gap-6">
                                 <div className="text-sm">
                                     {selectedSlot ? (
                                         <div className="flex items-center gap-2 text-primary-400 font-bold">
@@ -203,7 +203,7 @@ const SelectDateTimePage = () => {
                                             Đã chọn: {selectedSlot} • {new Date(selectedDate).toLocaleDateString('vi-VN')}
                                         </div>
                                     ) : (
-                                        <span className="text-dark-500 italic">Vui lòng chọn khung giờ phù hợp</span>
+                                        <span className="text-slate-500 italic">Vui lòng chọn khung giờ phù hợp</span>
                                     )}
                                 </div>
                                 <Button

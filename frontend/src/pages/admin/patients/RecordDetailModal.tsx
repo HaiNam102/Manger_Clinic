@@ -32,14 +32,14 @@ const RecordDetailModal = ({ isOpen, onClose, record }: RecordDetailModalProps) 
         >
             <div className="space-y-6">
                 {/* Info Header */}
-                <div className="grid grid-cols-2 gap-4 p-4 bg-dark-900/50 rounded-xl border border-dark-800">
+                <div className="grid grid-cols-2 gap-4 p-4 bg-slate-900/50 rounded-xl border border-slate-800">
                     <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-lg bg-primary-900/30 flex items-center justify-center text-primary-400">
                             <Calendar size={20} />
                         </div>
                         <div>
-                            <p className="text-xs text-dark-500">Ngày khám</p>
-                            <p className="text-dark-100 font-medium">{new Date(record.createdAt).toLocaleDateString('vi-VN')}</p>
+                            <p className="text-xs text-slate-500">Ngày khám</p>
+                            <p className="text-slate-100 font-medium">{new Date(record.createdAt).toLocaleDateString('vi-VN')}</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
@@ -47,8 +47,8 @@ const RecordDetailModal = ({ isOpen, onClose, record }: RecordDetailModalProps) 
                             <User size={20} />
                         </div>
                         <div>
-                            <p className="text-xs text-dark-500">Bác sĩ phụ trách</p>
-                            <p className="text-dark-100 font-medium">{record.doctorName}</p>
+                            <p className="text-xs text-slate-500">Bác sĩ phụ trách</p>
+                            <p className="text-slate-100 font-medium">{record.doctorName}</p>
                         </div>
                     </div>
                 </div>
@@ -56,19 +56,19 @@ const RecordDetailModal = ({ isOpen, onClose, record }: RecordDetailModalProps) 
                 {/* Symptoms & Diagnosis */}
                 <div className="space-y-4">
                     <div>
-                        <h4 className="text-sm font-semibold text-dark-300 uppercase tracking-wider mb-2 flex items-center gap-2">
+                        <h4 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-2">
                             <Activity size={16} className="text-warning-500" /> Triệu chứng
                         </h4>
-                        <div className="p-3 bg-dark-900/30 rounded-lg border border-dark-800 text-dark-200">
+                        <div className="p-3 bg-slate-900/30 rounded-lg border border-slate-800 text-slate-200">
                             {record.symptoms || 'Không có mô tả'}
                         </div>
                     </div>
 
                     <div>
-                        <h4 className="text-sm font-semibold text-dark-300 uppercase tracking-wider mb-2 flex items-center gap-2">
+                        <h4 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-2">
                             <Clipboard size={16} className="text-primary-500" /> Chẩn đoán
                         </h4>
-                        <div className="p-3 bg-primary-900/10 rounded-lg border border-primary-900/20 text-dark-50 font-medium italic">
+                        <div className="p-3 bg-primary-900/10 rounded-lg border border-primary-900/20 text-slate-50 font-medium italic">
                             {record.diagnosis}
                         </div>
                     </div>
@@ -76,25 +76,25 @@ const RecordDetailModal = ({ isOpen, onClose, record }: RecordDetailModalProps) 
 
                 {/* Vital Signs */}
                 <div>
-                    <h4 className="text-sm font-semibold text-dark-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <h4 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
                         <Thermometer size={16} className="text-error-500" /> Chỉ số sinh tồn
                     </h4>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div className="p-3 bg-dark-900/30 rounded-lg border border-dark-800 text-center">
-                            <p className="text-[10px] text-dark-500 uppercase">Cân nặng</p>
-                            <p className="text-dark-100 font-bold">{vitalSigns.weight || '--'} <span className="text-[10px] font-normal text-dark-400">kg</span></p>
+                        <div className="p-3 bg-slate-900/30 rounded-lg border border-slate-800 text-center">
+                            <p className="text-[10px] text-slate-500 uppercase">Cân nặng</p>
+                            <p className="text-slate-100 font-bold">{vitalSigns.weight || '--'} <span className="text-[10px] font-normal text-slate-400">kg</span></p>
                         </div>
-                        <div className="p-3 bg-dark-900/30 rounded-lg border border-dark-800 text-center">
-                            <p className="text-[10px] text-dark-500 uppercase">Chiều cao</p>
-                            <p className="text-dark-100 font-bold">{vitalSigns.height || '--'} <span className="text-[10px] font-normal text-dark-400">cm</span></p>
+                        <div className="p-3 bg-slate-900/30 rounded-lg border border-slate-800 text-center">
+                            <p className="text-[10px] text-slate-500 uppercase">Chiều cao</p>
+                            <p className="text-slate-100 font-bold">{vitalSigns.height || '--'} <span className="text-[10px] font-normal text-slate-400">cm</span></p>
                         </div>
-                        <div className="p-3 bg-dark-900/30 rounded-lg border border-dark-800 text-center">
-                            <p className="text-[10px] text-dark-500 uppercase">Nhiệt độ</p>
-                            <p className="text-dark-100 font-bold">{vitalSigns.temp || '--'} <span className="text-[10px] font-normal text-dark-400">°C</span></p>
+                        <div className="p-3 bg-slate-900/30 rounded-lg border border-slate-800 text-center">
+                            <p className="text-[10px] text-slate-500 uppercase">Nhiệt độ</p>
+                            <p className="text-slate-100 font-bold">{vitalSigns.temp || '--'} <span className="text-[10px] font-normal text-slate-400">°C</span></p>
                         </div>
-                        <div className="p-3 bg-dark-900/30 rounded-lg border border-dark-800 text-center">
-                            <p className="text-[10px] text-dark-500 uppercase">Huyết áp</p>
-                            <p className="text-dark-100 font-bold">{vitalSigns.bp || '--'}</p>
+                        <div className="p-3 bg-slate-900/30 rounded-lg border border-slate-800 text-center">
+                            <p className="text-[10px] text-slate-500 uppercase">Huyết áp</p>
+                            <p className="text-slate-100 font-bold">{vitalSigns.bp || '--'}</p>
                         </div>
                     </div>
                 </div>
@@ -102,40 +102,40 @@ const RecordDetailModal = ({ isOpen, onClose, record }: RecordDetailModalProps) 
                 {/* Treatment & Prescriptions */}
                 <div className="space-y-4">
                     <div>
-                        <h4 className="text-sm font-semibold text-dark-300 uppercase tracking-wider mb-2 flex items-center gap-2">
+                        <h4 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-2">
                             <FileText size={16} className="text-emerald-500" /> Điều trị
                         </h4>
-                        <div className="p-3 bg-dark-900/30 rounded-lg border border-dark-800 text-dark-200 whitespace-pre-wrap">
+                        <div className="p-3 bg-slate-900/30 rounded-lg border border-slate-800 text-slate-200 whitespace-pre-wrap">
                             {record.treatment || 'Không có mô tả'}
                         </div>
                     </div>
 
                     <div>
-                        <h4 className="text-sm font-semibold text-dark-300 uppercase tracking-wider mb-2 flex items-center gap-2">
+                        <h4 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-2">
                             <Pill size={16} className="text-purple-500" /> Đơn thuốc
                         </h4>
                         {record.prescription?.details && record.prescription.details.length > 0 ? (
                             <div className="space-y-2">
                                 {record.prescription.details.map((p, idx) => (
-                                    <div key={idx} className="flex items-center justify-between p-2 bg-dark-800/40 rounded border border-dark-700">
+                                    <div key={idx} className="flex items-center justify-between p-2 bg-slate-800/40 rounded border border-slate-700">
                                         <div>
-                                            <span className="text-dark-100 font-medium">{p.medicineName}</span>
-                                            <span className="mx-2 text-dark-500">•</span>
-                                            <span className="text-dark-400 text-sm">{p.dosage} - {p.frequency}</span>
+                                            <span className="text-slate-100 font-medium">{p.medicineName}</span>
+                                            <span className="mx-2 text-slate-500">•</span>
+                                            <span className="text-slate-400 text-sm">{p.dosage} - {p.frequency}</span>
                                         </div>
                                         <Badge size="sm">{p.duration}</Badge>
                                     </div>
                                 ))}
                             </div>
                         ) : (
-                            <div className="p-3 bg-dark-900/30 rounded-lg border border-dark-800 text-dark-500 italic text-sm text-center">
+                            <div className="p-3 bg-slate-900/30 rounded-lg border border-slate-800 text-slate-500 italic text-sm text-center">
                                 Không có đơn thuốc được kê
                             </div>
                         )}
                     </div>
                 </div>
 
-                <div className="flex justify-end pt-4 border-t border-dark-800">
+                <div className="flex justify-end pt-4 border-t border-slate-800">
                     <Button variant="outline" onClick={onClose}>Đóng</Button>
                 </div>
             </div>

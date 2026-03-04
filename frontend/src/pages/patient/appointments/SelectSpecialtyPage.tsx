@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Stethoscope, Heart, Eye, Brain, Baby, Bone, Activity, Search, Loader2, LucideIcon, Ear, Smile, Pill } from 'lucide-react';
+import { Stethoscope, Heart, Eye, Brain, Baby, Bone, Activity, Search, LucideIcon, Ear, Smile, Pill } from 'lucide-react';
 import { SpecialtyCard } from '@components/appointments/SpecialtyCard';
 import { Input } from '@components/ui/Input';
+import { Button } from '@components/ui/Button';
 import { getAllSpecialties } from '@services/patientService';
 import type { SpecialtyResponse } from '@/types';
 
@@ -49,18 +50,18 @@ const SelectSpecialtyPage = () => {
             <BookingStepper currentStep={1} />
 
             <section className="text-center space-y-4 max-w-2xl mx-auto">
-                <h1 className="text-4xl font-extrabold text-dark-50 tracking-tight sm:text-5xl">
+                <h1 className="text-4xl font-extrabold text-slate-50 tracking-tight sm:text-5xl">
                     Đặt lịch khám chuyên khoa
                 </h1>
-                <p className="text-dark-400 text-lg">
+                <p className="text-slate-400 text-lg">
                     Hệ thống bác sĩ hàng đầu, trang thiết bị hiện đại. Hãy chọn chuyên khoa bạn cần tư vấn.
                 </p>
 
                 <div className="pt-4 max-w-md mx-auto relative group">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-dark-500 group-focus-within:text-primary-500 transition-colors" size={20} />
+                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary-500 transition-colors" size={20} />
                     <Input
                         placeholder="Tìm kiếm chuyên khoa (ví dụ: Nội khoa, Tim mạch...)"
-                        className="pl-12 py-6 bg-dark-900/50 border-dark-700/50 focus:bg-dark-800 transition-all rounded-2xl"
+                        className="pl-14 pr-6 py-6 bg-slate-900/50 border-slate-700/50 focus:bg-slate-800 transition-all rounded-full shadow-lg focus:shadow-primary-900/10"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -70,26 +71,29 @@ const SelectSpecialtyPage = () => {
             {isLoading ? (
                 <SpecialtySkeleton />
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 sm:px-0">
-                    {filteredSpecialties.map((specialty) => (
-                        <SpecialtyCard
-                            key={specialty.id}
-                            name={specialty.name}
-                            description={specialty.description || ''}
-                            icon={iconMap[specialty.icon || ''] || Stethoscope}
-                            onClick={() => handleSelect(specialty.id)}
-                            className="h-full"
-                        />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 sm:px-0 stagger-children">
+                    {filteredSpecialties.map((specialty, index) => (
+                        <div key={specialty.id} className="animate-fade-in-up" style={{ animationDelay: `${index * 50}ms` }}>
+                            <SpecialtyCard
+                                name={specialty.name}
+                                description={specialty.description || ''}
+                                icon={iconMap[specialty.icon || ''] || Stethoscope}
+                                onClick={() => handleSelect(specialty.id)}
+                                className="h-full rounded-[24px] border-slate-700/30 hover:shadow-wellness"
+                            />
+                        </div>
                     ))}
                     {filteredSpecialties.length === 0 && (
-                        <div className="col-span-full py-20 text-center bg-dark-900/30 rounded-3xl border border-dashed border-dark-700">
-                            <div className="h-20 w-20 bg-dark-800 rounded-full flex items-center justify-center mx-auto mb-4 text-dark-500">
+                        <div className="col-span-full py-24 text-center bg-slate-900/30 rounded-[32px] border border-dashed border-slate-700/50 animate-fade-in">
+                            <div className="h-20 w-20 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-600">
                                 <Search size={32} />
                             </div>
-                            <h3 className="text-xl font-bold text-dark-200">Không tìm thấy chuyên khoa</h3>
-                            <p className="text-dark-400 mt-2">Vui lòng thử từ khóa khác hoặc liên hệ hotline để được hỗ trợ.</p>
-                            <Button variant="ghost" className="mt-6 text-primary-500" onClick={() => setSearchTerm('')}>
-                                Xóa tìm kiếm
+                            <h3 className="text-2xl font-bold text-slate-100">Không tìm thấy chuyên khoa nào</h3>
+                            <p className="text-slate-400 mt-2 max-w-sm mx-auto leading-relaxed">
+                                Vui lòng thử từ khóa khác hoặc liên hệ hotline <span className="text-primary-400 font-bold">1900 1234</span> để được hỗ trợ nhanh nhất.
+                            </p>
+                            <Button variant="outline" className="mt-8 rounded-xl px-10" onClick={() => setSearchTerm('')}>
+                                Quay lại danh sách
                             </Button>
                         </div>
                     )}

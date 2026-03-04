@@ -52,8 +52,8 @@ export const ReviewModal = ({ isOpen, onClose, doctorName, appointmentId }: Revi
         <Modal isOpen={isOpen} onClose={onClose} title="Đánh giá dịch vụ">
             <div className="space-y-6">
                 <div className="text-center">
-                    <p className="text-dark-400">Trải nghiệm của bạn với bác sĩ</p>
-                    <h4 className="text-xl font-bold text-dark-50 mt-1">{doctorName}</h4>
+                    <p className="text-slate-400">Trải nghiệm của bạn với bác sĩ</p>
+                    <h4 className="text-xl font-bold text-slate-50 mt-1">{doctorName}</h4>
                 </div>
 
                 <div className="flex flex-col items-center py-4">
@@ -76,9 +76,9 @@ export const ReviewModal = ({ isOpen, onClose, doctorName, appointmentId }: Revi
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-dark-300">Chia sẻ chi tiết (Tùy chọn)</label>
+                    <label className="text-sm font-medium text-slate-300">Chia sẻ chi tiết (Tùy chọn)</label>
                     <textarea
-                        className="w-full bg-dark-800 border border-dark-700 rounded-xl p-4 text-dark-50 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all h-32 resize-none"
+                        className="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 text-slate-50 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all h-32 resize-none"
                         placeholder="Hãy chia sẻ thêm về trải nghiệm của bạn (bác sĩ có tận tâm không, thời gian khám có đúng giờ không...)"
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
@@ -89,13 +89,13 @@ export const ReviewModal = ({ isOpen, onClose, doctorName, appointmentId }: Revi
                     <input
                         type="checkbox"
                         id="isAnonymous"
-                        className="w-5 h-5 rounded-lg bg-dark-800 border-dark-700 text-primary-500 focus:ring-primary-500/30 transition-all cursor-pointer"
+                        className="w-5 h-5 rounded-lg bg-slate-800 border-slate-700 text-primary-500 focus:ring-primary-500/30 transition-all cursor-pointer"
                         checked={isAnonymous}
                         onChange={(e) => setIsAnonymous(e.target.checked)}
                     />
                     <label
                         htmlFor="isAnonymous"
-                        className="text-sm font-medium text-dark-300 cursor-pointer select-none"
+                        className="text-sm font-medium text-slate-300 cursor-pointer select-none"
                     >
                         Gửi đánh giá ẩn danh
                     </label>

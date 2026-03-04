@@ -6,7 +6,7 @@ export const MainLayout = ({ children }: { children: ReactNode }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
-        <div className="flex h-screen bg-dark-950 overflow-hidden">
+        <div className="flex h-screen bg-slate-950 overflow-hidden">
             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
             <div className="flex flex-col flex-1 min-w-0 overflow-hidden">

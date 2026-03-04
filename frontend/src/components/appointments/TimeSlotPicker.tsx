@@ -32,8 +32,8 @@ export const TimeSlotPicker = ({
                             isSelected
                                 ? "bg-primary-600 border-primary-500 text-white shadow-xl shadow-primary-900/40 scale-105 z-10"
                                 : isDisabled
-                                    ? "bg-dark-900 border-dark-800 text-dark-600 cursor-not-allowed grayscale"
-                                    : "bg-dark-800 border-dark-700/50 text-dark-100 hover:border-primary-500/50 hover:bg-dark-700 hover:text-primary-400 active:scale-95"
+                                    ? "bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed grayscale"
+                                    : "bg-slate-800 border-slate-700/50 text-slate-100 hover:border-primary-500/50 hover:bg-slate-700 hover:text-primary-400 active:scale-95"
                         )}
                     >
                         {/* Selected Indicator Glow */}

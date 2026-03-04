@@ -137,7 +137,7 @@ const PatientEditModal = ({ isOpen, onClose, onSuccess, patient }: PatientEditMo
                         </h3>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-dark-200">Họ và tên *</label>
+                            <label className="text-sm font-medium text-slate-200">Họ và tên *</label>
                             <Input
                                 name="fullName"
                                 value={formData.fullName}
@@ -149,7 +149,7 @@ const PatientEditModal = ({ isOpen, onClose, onSuccess, patient }: PatientEditMo
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-dark-200">Ngày sinh</label>
+                                <label className="text-sm font-medium text-slate-200">Ngày sinh</label>
                                 <Input
                                     type="date"
                                     name="dateOfBirth"
@@ -158,12 +158,12 @@ const PatientEditModal = ({ isOpen, onClose, onSuccess, patient }: PatientEditMo
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-dark-200">Giới tính</label>
+                                <label className="text-sm font-medium text-slate-200">Giới tính</label>
                                 <select
                                     name="gender"
                                     value={formData.gender}
                                     onChange={handleChange}
-                                    className="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-dark-200 focus:ring-1 focus:ring-primary-500 outline-none"
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-1 focus:ring-primary-500 outline-none"
                                 >
                                     <option value="">Chọn giới tính</option>
                                     <option value="MALE">Nam</option>
@@ -174,7 +174,7 @@ const PatientEditModal = ({ isOpen, onClose, onSuccess, patient }: PatientEditMo
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-dark-200">Số điện thoại</label>
+                            <label className="text-sm font-medium text-slate-200">Số điện thoại</label>
                             <Input
                                 name="phoneNumber"
                                 value={formData.phoneNumber}
@@ -184,7 +184,7 @@ const PatientEditModal = ({ isOpen, onClose, onSuccess, patient }: PatientEditMo
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-dark-200">Địa chỉ</label>
+                            <label className="text-sm font-medium text-slate-200">Địa chỉ</label>
                             <Input
                                 name="address"
                                 value={formData.address}
@@ -195,7 +195,7 @@ const PatientEditModal = ({ isOpen, onClose, onSuccess, patient }: PatientEditMo
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-dark-200">Thành phố</label>
+                                <label className="text-sm font-medium text-slate-200">Thành phố</label>
                                 <Input
                                     name="city"
                                     value={formData.city}
@@ -204,7 +204,7 @@ const PatientEditModal = ({ isOpen, onClose, onSuccess, patient }: PatientEditMo
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-dark-200">Số BHYT</label>
+                                <label className="text-sm font-medium text-slate-200">Số BHYT</label>
                                 <Input
                                     name="insuranceNumber"
                                     value={formData.insuranceNumber}
@@ -223,12 +223,12 @@ const PatientEditModal = ({ isOpen, onClose, onSuccess, patient }: PatientEditMo
                             </h3>
 
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-dark-200">Nhóm máu</label>
+                                <label className="text-sm font-medium text-slate-200">Nhóm máu</label>
                                 <select
                                     name="bloodType"
                                     value={formData.bloodType}
                                     onChange={handleChange}
-                                    className="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-dark-200 focus:ring-1 focus:ring-primary-500 outline-none"
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:ring-1 focus:ring-primary-500 outline-none"
                                 >
                                     <option value="">Chọn nhóm máu</option>
                                     <option value="A+">A+</option>
@@ -244,7 +244,7 @@ const PatientEditModal = ({ isOpen, onClose, onSuccess, patient }: PatientEditMo
 
                             {/* Allergies */}
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-dark-200">Dị ứng</label>
+                                <label className="text-sm font-medium text-slate-200">Dị ứng</label>
                                 <div className="flex gap-2">
                                     <Input
                                         value={newAllergy}
@@ -270,7 +270,7 @@ const PatientEditModal = ({ isOpen, onClose, onSuccess, patient }: PatientEditMo
 
                             {/* Chronic Diseases */}
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-dark-200">Bệnh mãn tính</label>
+                                <label className="text-sm font-medium text-slate-200">Bệnh mãn tính</label>
                                 <div className="flex gap-2">
                                     <Input
                                         value={newDisease}
@@ -302,7 +302,7 @@ const PatientEditModal = ({ isOpen, onClose, onSuccess, patient }: PatientEditMo
                             </h3>
 
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-dark-200">Tên người liên hệ</label>
+                                <label className="text-sm font-medium text-slate-200">Tên người liên hệ</label>
                                 <Input
                                     name="emergencyContactName"
                                     value={formData.emergencyContactName}
@@ -312,7 +312,7 @@ const PatientEditModal = ({ isOpen, onClose, onSuccess, patient }: PatientEditMo
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-dark-200">SĐT người liên hệ</label>
+                                <label className="text-sm font-medium text-slate-200">SĐT người liên hệ</label>
                                 <Input
                                     name="emergencyContactPhone"
                                     value={formData.emergencyContactPhone}

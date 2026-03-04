@@ -115,10 +115,10 @@ const UsersListPage = () => {
             header: 'Người dùng',
             accessor: (u: UserResponse) => (
                 <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-full bg-dark-700 flex items-center justify-center font-bold text-primary-400 capitalize">
+                    <div className="h-9 w-9 rounded-full bg-slate-700 flex items-center justify-center font-bold text-primary-400 capitalize">
                         {(u.fullName || 'U').charAt(0)}
                     </div>
-                    <span className="font-medium text-dark-50">{u.fullName || 'Unknown User'}</span>
+                    <span className="font-medium text-slate-50">{u.fullName || 'Unknown User'}</span>
                 </div>
             )
         },
@@ -126,10 +126,10 @@ const UsersListPage = () => {
             header: 'Email / SĐT',
             accessor: (u: UserResponse) => (
                 <div className="space-y-1">
-                    <div className="flex items-center gap-2 text-xs text-dark-200">
-                        <Mail size={12} className="text-dark-400" /> {u.email}
+                    <div className="flex items-center gap-2 text-xs text-slate-200">
+                        <Mail size={12} className="text-slate-400" /> {u.email}
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-dark-400">
+                    <div className="flex items-center gap-2 text-xs text-slate-400">
                         <Phone size={12} /> {u.phone || 'N/A'}
                     </div>
                 </div>
@@ -190,11 +190,11 @@ const UsersListPage = () => {
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-dark-50 flex items-center gap-2">
+                    <h1 className="text-2xl font-bold text-slate-50 flex items-center gap-2">
                         <Users className="text-primary-500" size={24} />
                         Quản lý người dùng
                     </h1>
-                    <p className="text-dark-400 text-sm mt-1">
+                    <p className="text-slate-400 text-sm mt-1">
                         Quản lý tài khoản, phân quyền và trạng thái hoạt động của thành viên
                     </p>
                 </div>
@@ -212,7 +212,7 @@ const UsersListPage = () => {
             <Card>
                 <CardContent className="p-4 flex flex-col md:flex-row gap-4">
                     <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-500" size={18} />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                         <Input
                             placeholder="Tìm kiếm theo tên hoặc email..."
                             className="pl-10"
@@ -221,9 +221,9 @@ const UsersListPage = () => {
                         />
                     </div>
                     <div className="flex items-center gap-2 min-w-[200px]">
-                        <Filter className="text-dark-500" size={18} />
+                        <Filter className="text-slate-500" size={18} />
                         <select
-                            className="w-full bg-dark-900 border border-dark-700 rounded-lg px-3 py-2 text-dark-200 text-sm focus:ring-1 focus:ring-primary-500 focus:border-primary-500 outline-none"
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-sm focus:ring-1 focus:ring-primary-500 focus:border-primary-500 outline-none"
                             value={roleFilter}
                             onChange={(e) => setRoleFilter(e.target.value)}
                         >
