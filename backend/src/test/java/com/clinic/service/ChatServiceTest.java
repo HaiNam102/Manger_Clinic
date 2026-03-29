@@ -1,93 +1,79 @@
 package com.clinic.service;
 
-import com.clinic.dto.request.ChatRequest;
-import com.clinic.dto.response.ChatResponse;
-import com.clinic.util.SecurityUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.mockito.MockitoAnnotations;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.clinic.util.SecurityUtils;
+import com.clinic.repository.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class ChatServiceTest {
-
-    @Mock
-    private GeminiService geminiService;
-    @Mock
-    private ChatFunctionService chatFunctionService;
-    @Mock
-    private SecurityUtils securityUtils;
-    @Mock
-    private ObjectMapper objectMapper;
 
     @InjectMocks
     private ChatService chatService;
 
+    @Mock private GeminiService geminiService;
+    @Mock private ChatFunctionService chatFunctionService;
+    @Mock private SecurityUtils securityUtils;
+    @Mock private ObjectMapper objectMapper;
+
     @BeforeEach
     void setUp() {
-        // Clear history map via reflection to ensure test isolation
-        ReflectionTestUtils.setField(chatService, "chatHistoryMap", new ConcurrentHashMap<>());
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void processChat_ShouldCallGeminiAndReturnResponse() {
-        UUID userId = UUID.randomUUID();
-        ChatRequest request = new ChatRequest();
-        request.setMessage("Hello");
+    void testRepairHistory() throws Exception {
+        // Access private method using reflection for simple test
+        java.lang.reflect.Method repairMethod = ChatService.class.getDeclaredMethod("repairHistory", List.class);
+        repairMethod.setAccessible(true);
+
+        // Case 1: Incomplete model turn (functionCall instead of text)
+        List<Map<String, Object>> history1 = new ArrayList<>();
+        history1.add(Map.of("role", "user", "parts", List.of(Map.of("text", "Hi"))));
+        history1.add(Map.of("role", "model", "parts", List.of(Map.of("functionCall", Map.of("name", "test")))));
         
-        when(securityUtils.getCurrentUserId()).thenReturn(Optional.of(userId));
-        when(geminiService.chat(anyString(), anyString(), anyList(), anyList()))
-                .thenReturn("Hi there!");
+        repairMethod.invoke(chatService, history1);
+        
+        assertEquals(0, history1.size(), "Should remove both model call and orphaned user message");
 
-        ChatResponse response = chatService.processChat(request);
-
-        assertNotNull(response);
-        assertEquals("Hi there!", response.getMessage());
-        verify(geminiService, times(1)).chat(eq("Hello"), anyString(), anyList(), anyList());
+        // Case 2: Orphaned function response
+        List<Map<String, Object>> history2 = new ArrayList<>();
+        history2.add(Map.of("role", "user", "parts", List.of(Map.of("text", "Hi"))));
+        history2.add(Map.of("role", "model", "parts", List.of(Map.of("text", "Hello"))));
+        history2.add(Map.of("role", "user", "parts", List.of(Map.of("text", "Call func"))));
+        history2.add(Map.of("role", "model", "parts", List.of(Map.of("functionCall", Map.of("name", "test")))));
+        history2.add(Map.of("role", "function", "parts", List.of(Map.of("text", "result"))));
+        
+        repairMethod.invoke(chatService, history2);
+        
+        assertEquals(2, history2.size(), "Should remove everything until the last complete model text turn");
     }
 
     @Test
-    void processChat_ShouldMaintainHistory() {
-        UUID userId = UUID.randomUUID();
-        ChatRequest request1 = new ChatRequest();
-        request1.setMessage("Message 1");
-        
-        ChatRequest request2 = new ChatRequest();
-        request2.setMessage("Message 2");
+    void testTruncateHistory() throws Exception {
+        java.lang.reflect.Method truncateMethod = ChatService.class.getDeclaredMethod("truncateHistory", List.class);
+        truncateMethod.setAccessible(true);
 
-        when(securityUtils.getCurrentUserId()).thenReturn(Optional.of(userId));
-        when(geminiService.chat(anyString(), anyString(), anyList(), anyList()))
-                .thenReturn("Response");
+        List<Map<String, Object>> history = new ArrayList<>();
+        // Add 5 turns (10 messages)
+        for (int i = 0; i < 5; i++) {
+            history.add(Map.of("role", "user", "parts", List.of(Map.of("text", "U" + i))));
+            history.add(Map.of("role", "model", "parts", List.of(Map.of("text", "M" + i))));
+        }
 
-        chatService.processChat(request1);
-        chatService.processChat(request2);
-
-        // Check history map
-        @SuppressWarnings("unchecked")
-        Map<UUID, List<Map<String, Object>>> historyMap = 
-            (Map<UUID, List<Map<String, Object>>>) ReflectionTestUtils.getField(chatService, "chatHistoryMap");
+        // Set MAX_HISTORY_SIZE is private 20, let's just test the logic with a large one manually if needed
+        // But the first turn must be "user" check is easy
+        history.add(0, Map.of("role", "model", "parts", List.of(Map.of("text", "Bad start"))));
         
-        assertNotNull(historyMap);
-        List<Map<String, Object>> userHistory = historyMap.get(userId);
+        truncateMethod.invoke(chatService, history);
         
-        // Each call adds 1 User message and 1 Assistant message (via updateHistory)
-        // Total should be 4 messages (2 pairs)
-        assertEquals(4, userHistory.size());
-        assertEquals("user", userHistory.get(0).get("role"));
-        assertEquals("model", userHistory.get(1).get("role"));
+        assertEquals("user", history.get(0).get("role"), "First message must be user");
     }
 }

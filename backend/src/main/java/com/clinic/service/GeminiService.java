@@ -41,25 +41,29 @@ public class GeminiService {
     }
 
     /**
-     * Gửi prompt với system instruction, conversation history và function declarations.
+     * Gửi prompt với system instruction, conversation history và function
+     * declarations.
      *
-     * @param userMessage      Tin nhắn người dùng
-     * @param systemInstruction System prompt (vai trò AI)
-     * @param conversationHistory Lịch sử hội thoại (list of {role, parts})
+     * @param userMessage          Tin nhắn người dùng
+     * @param systemInstruction    System prompt (vai trò AI)
+     * @param conversationHistory  Lịch sử hội thoại (list of {role, parts})
      * @param functionDeclarations Danh sách functions AI có thể gọi (nullable)
      * @return Response text từ Gemini, hoặc JSON function call
      */
     public String chat(String userMessage, String systemInstruction,
-                       List<Map<String, Object>> conversationHistory,
-                       List<Map<String, Object>> functionDeclarations) {
+            List<Map<String, Object>> conversationHistory,
+            List<Map<String, Object>> functionDeclarations) {
         try {
             ObjectNode requestBody = buildRequestBody(
                     userMessage, systemInstruction, conversationHistory, functionDeclarations);
 
-            String url = "/models/" + geminiConfig.getModel() + ":generateContent?key=" + geminiConfig.getApiKey();
+            String apiUrl = String.format("%smodels/%s:generateContent?key=%s",
+                    geminiConfig.getBaseUrl(), geminiConfig.getModel(), geminiConfig.getApiKey());
+            log.debug("Gemini request to: {}", apiUrl);
 
             String responseJson = geminiWebClient.post()
-                    .uri(url)
+                    .uri(apiUrl)
+                    .header("x-goog-api-key", geminiConfig.getApiKey())
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(requestBody.toString())
                     .retrieve()
@@ -67,12 +71,14 @@ public class GeminiService {
                     .timeout(Duration.ofSeconds(geminiConfig.getTimeoutSeconds()))
                     .block();
 
+            log.debug("Gemini response: {}", responseJson);
             return extractResponse(responseJson);
 
         } catch (WebClientResponseException e) {
-            log.error("Gemini API error: {} - {}", e.getStatusCode(), e.getResponseBodyAsString());
+            log.error("Gemini API error: {} - {} - Request payload preview: {}",
+                    e.getStatusCode(), e.getResponseBodyAsString(), userMessage);
             if (e.getStatusCode().value() == 400) {
-                throw new RuntimeException("Yêu cầu không hợp lệ. Vui lòng thử lại.");
+                throw new RuntimeException("Gemini 400 Error: " + e.getResponseBodyAsString());
             } else if (e.getStatusCode().value() == 401 || e.getStatusCode().value() == 403) {
                 throw new RuntimeException("API Key không hợp lệ hoặc đã hết hạn.");
             } else if (e.getStatusCode().value() == 429) {
@@ -92,9 +98,9 @@ public class GeminiService {
      * Gửi function result về cho Gemini để nó soạn câu trả lời cuối cùng.
      */
     public String sendFunctionResult(String functionName, String resultJson,
-                                     String systemInstruction,
-                                     List<Map<String, Object>> conversationHistory,
-                                     List<Map<String, Object>> functionDeclarations) {
+            String systemInstruction,
+            List<Map<String, Object>> conversationHistory,
+            List<Map<String, Object>> functionDeclarations) {
         try {
             ObjectNode requestBody = objectMapper.createObjectNode();
 
@@ -141,11 +147,14 @@ public class GeminiService {
 
             // Generation config
             addGenerationConfig(requestBody);
-            
-            String url = "/models/" + geminiConfig.getModel() + ":generateContent?key=" + geminiConfig.getApiKey();
+
+            String apiUrl = String.format("%smodels/%s:generateContent?key=%s",
+                    geminiConfig.getBaseUrl(), geminiConfig.getModel(), geminiConfig.getApiKey());
+            log.debug("Gemini function result request to: {}", apiUrl);
 
             String responseJson = geminiWebClient.post()
-                    .uri(url)
+                    .uri(apiUrl)
+                    .header("x-goog-api-key", geminiConfig.getApiKey())
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(requestBody.toString())
                     .retrieve()
@@ -153,10 +162,12 @@ public class GeminiService {
                     .timeout(Duration.ofSeconds(geminiConfig.getTimeoutSeconds()))
                     .block();
 
+            log.debug("Gemini function result response: {}", responseJson);
             return extractResponse(responseJson);
 
         } catch (WebClientResponseException e) {
-            log.error("Gemini API error in sendFunctionResult: {} - {}", e.getStatusCode(), e.getResponseBodyAsString());
+            log.error("Gemini API error in sendFunctionResult: {} - {} - Function: {}",
+                    e.getStatusCode(), e.getResponseBodyAsString(), functionName);
             throw new RuntimeException("Lỗi xử lý kết quả AI. Chi tiết: " + e.getResponseBodyAsString());
         } catch (Exception e) {
             log.error("Error sending function result to Gemini", e);
@@ -178,6 +189,7 @@ public class GeminiService {
 
     /**
      * Parse function call từ response.
+     * 
      * @return Map với "name" và "args"
      */
     public Map<String, Object> parseFunctionCall(String response) {
@@ -197,8 +209,8 @@ public class GeminiService {
     // ─── Private helpers ───────────────────────────────────
 
     private ObjectNode buildRequestBody(String userMessage, String systemInstruction,
-                                         List<Map<String, Object>> conversationHistory,
-                                         List<Map<String, Object>> functionDeclarations) {
+            List<Map<String, Object>> conversationHistory,
+            List<Map<String, Object>> functionDeclarations) {
         ObjectNode requestBody = objectMapper.createObjectNode();
 
         // System instruction
@@ -298,4 +310,5 @@ public class GeminiService {
             return "Xin lỗi, có lỗi xảy ra khi xử lý phản hồi.";
         }
     }
+    // getApiUrl removed as we now build absolute URLs in situ
 }
