@@ -45,7 +45,8 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v3/api-docs/**",
-            "/api-docs/**"
+            "/api-docs/**",
+            "/error"
     };
 
     private final com.clinic.security.jwt.JwtAuthenticationEntryPoint unauthorizedHandler;
@@ -89,6 +90,7 @@ public class SecurityConfig {
                 // Authorization rules
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_URLS).permitAll()
+                        .requestMatchers("/api/chat/**").authenticated() // AI Chatbot needs authentication
                         .anyRequest().authenticated());
 
         // Add JWT Filter
